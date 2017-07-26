@@ -1,0 +1,15 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../../src/ext/controller/demo/index.js"
+    ],
+    "names": [
+        "indexAction",
+        "display"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAOA;;;;;;;;;;;;;;AAEE;;;;;;mBAMMA,W;;;;;;+CAOG,KAAKC,OAAL,E",
+    "file": "../../../../src/ext/controller/demo/index.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n\n'use strict';\n/**\n * 插件前台控制器\n * 如果插件有前台展示业务，写在这个控制器里面\n * 插件如需建立表务必遵循下面格式：\n * 单表：表前缀_ext_插件目录名\n * 多表：表前缀_ext_插件目录名，表前缀_ext_插件目录名_分表1，表前缀_ext_插件目录名_分表2...\n */\nimport Base from '../index.js';\nexport default class extends Base {\n  /**\n   * index action\n   *\n   * @return {Promise} []\n   */\n\n  async indexAction(){\n    //获取插件目录名\n    //this.ext.ext;\n    //获取当前分类\n      //await this.gettype()\n    //获取友情链接\n   //渲染模版\n    return this.display();\n  }\n}"
+    ]
+}

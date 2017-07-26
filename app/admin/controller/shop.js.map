@@ -1,0 +1,29 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/admin/controller/shop.js"
+    ],
+    "names": [
+        "init",
+        "http",
+        "tactive",
+        "indexAction",
+        "display",
+        "goodsAction",
+        "ipAction",
+        "ip",
+        "_ip2int",
+        "_int2iP",
+        "end",
+        "editAction",
+        "isPost",
+        "post",
+        "console",
+        "log"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;;;;;;;;;AAEA;;;;;;;;;;;;;;qBAGKA,I,iBAAKC,I,EAAM;AACR,wBAAMD,IAAN,YAAWC,IAAX;AACA,aAAKC,OAAL,GAAe,MAAf;AACH,K;AACH;;;;;;qBAIAC,W,0BAAa;AACX;AACA,eAAO,KAAKC,OAAL,EAAP;AACD,K;;qBAEMC,W;;;;;;6DAOI,KAAKD,OAAL,E;;;;;;;;;;;;;;;;;qBAGTE,Q,uBAAU;AACN,YAAIC,KAAK,KAAKN,IAAL,CAAUM,EAAV,EAAT;AACAA,aAAGC,QAAQD,EAAR,CAAH;AACAA,aAAKE,QAAQF,EAAR,CAAL;AACA,aAAKG,GAAL,CAASH,EAAT;AACH,K;;qBACDI,U,yBAAY;AACR,YAAG,KAAKC,MAAL,EAAH,EAAiB;AACb,gBAAIC,OAAO,KAAKA,IAAL,EAAX;AACAC,oBAAQC,GAAR,CAAYF,IAAZ;AACA;AACH,SAJD,MAIK;AACA,mBAAO,KAAKT,OAAL,EAAP;AACJ;AAEJ,K",
+    "file": "../../../src/admin/controller/shop.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n\nimport Base from './base.js';\n\nexport default class extends Base {\n     init(http) {\n        super.init(http);\n        this.tactive = \"shop\"\n    }\n  /**\n   * index action\n   * @return {Promise} []\n   */\n  indexAction(){\n    //auto render template file index_index.html\n    return this.display();\n  }\n  \n   async goodsAction(){\n    // let model = this.model('menu');\n    // let data = await model.select();\n    // data= arr_to_tree(data,0)\n    //this.end(data);\n    //data returns [{name: 'thinkjs', email: 'admin@thinkjs.org', ...},...]\n    \n      return this.display();\n      }\n      \n    ipAction(){\n        let ip = this.http.ip();\n        ip=_ip2int(ip);\n        ip = _int2iP(ip);\n        this.end(ip);\n    }\n    editAction(){\n        if(this.isPost()){\n            let post = this.post();\n            console.log(post);\n            //this.end(post);\n        }else{\n             return this.display();\n        }\n      \n    }\n}"
+    ]
+}

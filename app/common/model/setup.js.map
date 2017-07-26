@@ -1,0 +1,36 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/common/model/setup.js"
+    ],
+    "names": [
+        "getset",
+        "think",
+        "cache",
+        "lists",
+        "timeout",
+        "value",
+        "map",
+        "status",
+        "where",
+        "order",
+        "field",
+        "select",
+        "list",
+        "obj",
+        "forEach",
+        "v",
+        "search",
+        "type",
+        "split",
+        "n",
+        "name",
+        "model",
+        "base"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAII;;;;qBAIMA,M;;;;;;;;;;mCACgBC,MAAMC,KAAN,CAAY,OAAZ,EAAqB,YAAM;AACzC,uCAAO,OAAKC,KAAL,EAAP;AACH,6BAFiB,EAEf,EAACC,SAAS,MAAM,EAAN,GAAW,IAArB,EAFe,C;;;AAAdC,iC;6DAIGA,K;;;;;;;;;;;;;;;;;AAGX;;;;;;qBAIMF,K;;;;;;;AACEG,+B,GAAM,E;;AACVA,gCAAIC,MAAJ,GAAa,CAAb;;mCACiB,KAAKC,KAAL,CAAWF,GAAX,EAAgBG,KAAhB,CAAsB,UAAtB,EAAkCC,KAAlC,CAAwC,CAAC,MAAD,EAAQ,OAAR,EAAgB,MAAhB,CAAxC,EAAiEC,MAAjE,E;;;AAAbC,gC;AACAC,+B,GAAM,E;AACV;;AACAD,iCAAKE,OAAL,CAAa,aAAI;AACb,oCAAGC,EAAEV,KAAF,CAAQW,MAAR,CAAe,QAAf,IAAyB,CAAC,CAA1B,IAA+BD,EAAEE,IAAF,IAAS,CAA3C,EAA6C;AACzCF,sCAAEV,KAAF,GAAQU,EAAEV,KAAF,CAAQa,KAAR,CAAc,MAAd,CAAR;AACA,wCAAIL,OAAK,EAAT;AACAE,sCAAEV,KAAF,CAAQS,OAAR,CAAgB,aAAI;AAChBK,4CAAEA,EAAED,KAAF,CAAQ,GAAR,CAAF;AACAL,6CAAIM,EAAE,CAAF,CAAJ,IAAUA,EAAE,CAAF,CAAV;AACA;AACH,qCAJD;;AAMAJ,sCAAEV,KAAF,GAAUQ,IAAV;AACH;AACDA,oCAAIE,EAAEK,IAAN,IAAYL,EAAEV,KAAd;AAGH,6BAfD;AAgBA;8DACOQ,G;;;;;;;;;;;;;;;;;;EAxCcZ,MAAMoB,KAAN,CAAYC,I",
+    "file": "../../../src/common/model/setup.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n\n'use strict';\n/**\n * model\n */\nexport default class extends think.model.base {\n    /**\n     * 缓存网站配置\n     * @returns {*}\n     */\n    async getset(){\n        let value = await think.cache(\"setup\", () => {\n            return this.lists();\n        }, {timeout: 365 * 24 * 3600});\n\n        return value;\n    }\n\n    /**\n     * 获取网站配置\n     * @returns {{}}\n     */\n    async lists (){\n        let map = {}\n        map.status = 1;\n        let list = await this.where(map).order(\"sort ASC\").field([\"name\",\"value\",\"type\"]).select();\n        let obj = {};\n        // console.log(list);\n        list.forEach(v =>{\n            if(v.value.search(/\\r\\n/ig)>-1 && v.type !=2){\n                v.value=v.value.split(\"\\r\\n\");\n                let obj ={}\n                v.value.forEach(n =>{\n                    n=n.split(\":\");\n                    obj[n[0]]=n[1];\n                    // console.log(\"获取网站配置\"+n[1]);\n                })\n\n                v.value = obj;\n            }\n            obj[v.name]=v.value;\n\n\n        });\n        // console.log(\"获取网站配置\"+obj);\n        return obj;\n    }\n}\n"
+    ]
+}

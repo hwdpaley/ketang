@@ -1,0 +1,47 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/common/model/search.js"
+    ],
+    "names": [
+        "addsearch",
+        "m_id",
+        "d_id",
+        "data",
+        "model",
+        "where",
+        "mod",
+        "find",
+        "search_model",
+        "think",
+        "isEmpty",
+        "obj",
+        "add_time",
+        "addtime",
+        "Date",
+        "getTime",
+        "dataarr",
+        "split",
+        "v",
+        "push",
+        "segment",
+        "useDefault",
+        "segment_q",
+        "doSegment",
+        "join",
+        "simple",
+        "stripPunctuation",
+        "add",
+        "updatesearch",
+        "pk",
+        "update",
+        "delsearch",
+        "delete",
+        "base"
+    ],
+    "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;AAWA;;;;;;;;;;;;;;AAEI;;;;;;;;qBAQMA,S;+FAAUC,I,EAAKC,I,EAAKC,I;;;;;;;;mCACA,KAAKC,KAAL,CAAW,cAAX,EAA2BC,KAA3B,CAAiC,EAACC,KAAIL,IAAL,EAAjC,EAA6CM,IAA7C,E;;;AAArBC,wC;;gCACDC,MAAMC,OAAN,CAAcF,YAAd,C;;;;;AACIG,+B,GAAK,E;;AACTA,gCAAIV,IAAJ,GAASA,IAAT;AACAU,gCAAIT,IAAJ,GAASA,IAAT;AACAS,gCAAIC,QAAJ,GAAaT,KAAKK,aAAaK,OAAlB,KAA4B,IAAIC,IAAJ,GAAWC,OAAX,EAAzC;AACIC,mC,GAAQ,E;wCACER,aAAaL,IAAb,CAAkBc,KAAlB,CAAwB,GAAxB,C;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAALC,6B;;AACLF,oCAAQG,IAAR,CAAahB,KAAKe,CAAL,CAAb;;;;;;;AAEJ;AACIE,mC,GAAU,uB;AACd;;AACAA,oCAAQC,UAAR;AACA;AACIC,qC,GAAWF,QAAQG,SAAR,CAAkBP,QAAQQ,IAAR,CAAa,GAAb,CAAlB,EAAqC;AAChDC,wCAAQ,IADwC;AAEhDC,kDAAkB;AAF8B,6BAArC,C;;AAIff,gCAAIR,IAAJ,GAAWa,QAAQQ,IAAR,CAAa,GAAb,IAAkB,GAAlB,GAAsBF,UAAUE,IAAV,CAAe,GAAf,CAAjC;;mCACM,KAAKG,GAAL,CAAShB,GAAT,C;;;;;;;;;;;;;;;;;AAKV;;;;;;;;;qBAOGiB,Y;iGAAa3B,I,EAAKE,I;;;;;;;;mCACM,KAAKC,KAAL,CAAW,cAAX,EAA2BC,KAA3B,CAAiC,EAACC,KAAIL,IAAL,EAAjC,EAA6CM,IAA7C,E;;;AAArBC,wC;;gCACDC,MAAMC,OAAN,CAAcF,YAAd,C;;;;;AACIG,+B,GAAK,E;;AACTA,gCAAIV,IAAJ,GAASA,IAAT;AACAU,gCAAIT,IAAJ,GAASC,KAAKK,aAAaqB,EAAlB,CAAT;AACIb,mC,GAAQ,E;yCACER,aAAaL,IAAb,CAAkBc,KAAlB,CAAwB,GAAxB,C;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAALC,6B;;AACLF,oCAAQG,IAAR,CAAahB,KAAKe,CAAL,CAAb;;;;;;;AAEJ;AACIE,mC,GAAU,uB;AACd;;AACAA,oCAAQC,UAAR;AACA;AACIC,qC,GAAWF,QAAQG,SAAR,CAAkBP,QAAQQ,IAAR,CAAa,GAAb,CAAlB,EAAqC;AAChDC,wCAAQ,IADwC;AAEhDC,kDAAkB;AAF8B,6BAArC,C;;AAIff,gCAAIR,IAAJ,GAAWa,QAAQQ,IAAR,CAAa,GAAb,IAAkB,GAAlB,GAAsBF,UAAUE,IAAV,CAAe,GAAf,CAAjC;;mCACM,KAAKnB,KAAL,CAAW,EAACH,MAAKS,IAAIT,IAAV,EAAeD,MAAKA,IAApB,EAAX,EAAsC6B,MAAtC,CAA6CnB,GAA7C,C;;;;;;;;;;;;;;;;;AAIX;;;;;;;;;qBAOGoB,S;iGAAU9B,I,EAAKC,I;;;;;gCACbO,MAAMC,OAAN,CAAcR,IAAd,C;;;;;;mCACM,KAAKG,KAAL,CAAW,EAACH,MAAKA,IAAN,EAAWD,MAAKA,IAAhB,EAAX,EAAkC+B,MAAlC,E;;;;;;;;;;;;;;;;;;EA3EcvB,MAAML,KAAN,CAAY6B,I,GAZzC;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA",
+    "file": "../../../src/common/model/search.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n\n/**\n * model\n */\nimport Segment from 'segment';\nexport default class extends think.model.base {\n    /**\n     * 添加搜索\n     * await this.model(\"search\").addsearch(m_id,d_id,data);\n     * @param m_id\n     * @param d_id\n     * @param data\n     * @returns {Promise.<void>}\n     */\n    async addsearch(m_id,d_id,data){\n    let  search_model = await this.model(\"search_model\").where({mod:m_id}).find();\n    if(!think.isEmpty(search_model)){\n        let obj ={};\n        obj.m_id=m_id;\n        obj.d_id=d_id;\n        obj.add_time=data[search_model.addtime]||new Date().getTime();\n        let dataarr=[];\n        for (let v of search_model.data.split(\",\")){\n            dataarr.push(data[v]);\n        }\n        //obj.data = dataarr.join(\" \");\n        let segment = new Segment();\n        // 使用默认的识别模块及字典，载入字典文件需要1秒，仅初始化时执行一次即可\n        segment.useDefault();\n        // 开始分词\n        let segment_q= segment.doSegment(dataarr.join(\" \"), {\n            simple: true,\n            stripPunctuation: true\n        });\n        obj.data = dataarr.join(\" \")+\" \"+segment_q.join(\" \");\n        await this.add(obj);\n    }\n\n }\n\n    /**\n     * 更新搜索\n     * await this.model(\"search\").updatesearch(m_id,data);\n     * @param m_id\n     * @param data\n     * @returns {Promise.<void>}\n     */\n async updatesearch(m_id,data){\n     let  search_model = await this.model(\"search_model\").where({mod:m_id}).find();\n     if(!think.isEmpty(search_model)){\n         let obj ={};\n         obj.m_id=m_id;\n         obj.d_id=data[search_model.pk];\n         let dataarr=[];\n         for (let v of search_model.data.split(\",\")){\n             dataarr.push(data[v]);\n         }\n         //obj.data = dataarr.join(\" \");\n         let segment = new Segment();\n         // 使用默认的识别模块及字典，载入字典文件需要1秒，仅初始化时执行一次即可\n         segment.useDefault();\n         // 开始分词\n         let segment_q= segment.doSegment(dataarr.join(\" \"), {\n             simple: true,\n             stripPunctuation: true\n         });\n         obj.data = dataarr.join(\" \")+\" \"+segment_q.join(\" \");\n         await this.where({d_id:obj.d_id,m_id:m_id}).update(obj);\n     }\n }\n\n    /**\n     * 删除搜索\n     * await this.model('search').delsearch(m_id,d_id)\n     * @param d_id\n     * @param m_id\n     * @returns {Promise.<void>}\n     */\n async delsearch(m_id,d_id){\n     if(!think.isEmpty(d_id)){\n         await this.where({d_id:d_id,m_id:m_id}).delete();\n     }\n }\n}"
+    ]
+}

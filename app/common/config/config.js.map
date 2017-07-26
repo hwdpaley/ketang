@@ -1,0 +1,20 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/common/config/config.js"
+    ],
+    "names": [
+        "http_",
+        "default_module",
+        "route_on",
+        "resource_on",
+        "resource_reg",
+        "document_model_type",
+        "user_administrator"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;kBAGe;AACX;AACA;AACAA,WAAO,CAHI,EAGD;AACVC,oBAAgB,OAJL,EAIc;AACzBC,cAAU,IALC;AAMXC,iBAAa,IANF;AAOXC,kBAAc,uDAPH;AAQX;AACAC,yBAAqB,EAAE,GAAG,IAAL,EAAW,GAAG,IAAd,EAAoB,GAAG,IAAvB,EATV;AAUXC,wBAAoB,CAAC,CAAD,CAVT,CAUc;AAVd,C",
+    "file": "../../../src/common/config/config.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n/**\n * config\n */\nexport default {\n    //key: value\n    //port:8888\n    http_: 1, //1:http,2:https\n    default_module: \"topic\", //默认模块\n    route_on: true,\n    resource_on: true,\n    resource_reg: /^(upload\\/|backup\\/|static\\/|[^\\/]+\\.(?!js|html)\\w+$)/,\n    /* 文档模型配置 (文档模型核心配置，请勿更改) */\n    document_model_type: { 2: '主题', 1: '目录', 3: '段落' },\n    user_administrator: [1], //数组格式，可以配置多个[1,2,3]\n};\n"
+    ]
+}

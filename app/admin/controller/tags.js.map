@@ -1,0 +1,36 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/admin/controller/tags.js"
+    ],
+    "names": [
+        "indexAction",
+        "display",
+        "ajaxaddtagsAction",
+        "data",
+        "post",
+        "model_id",
+        "Number",
+        "model",
+        "where",
+        "name",
+        "thenAdd",
+        "res",
+        "type",
+        "id",
+        "increment",
+        "fail",
+        "rdata",
+        "errno",
+        "json",
+        "ajaxgettagsAction",
+        "map",
+        "get",
+        "select"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;;;;;;;;;AAEA;;;;;;;;;;;;;;AAGE;;;;mBAIAA,W,0BAAa;AACX;AACA,WAAO,KAAKC,OAAL,EAAP;AACD,G;AACD;;;mBACMC,iB;;;;;;;AACAC,kB,GAAO,KAAKC,IAAL,E;;AACXD,mBAAKE,QAAL,GAAgBC,OAAOH,KAAKE,QAAZ,CAAhB;AACIE,mB,GAAO,KAAKA,KAAL,CAAW,MAAX,C;;qBACKA,MAAMC,KAAN,CAAY,EAACC,MAAKN,KAAKM,IAAX,EAAZ,EAA8BC,OAA9B,CAAsCP,IAAtC,C;;;AAAZQ,iB;;oBACDA,IAAIC,IAAJ,IAAY,O;;;;;;qBACPL,MAAMC,KAAN,CAAY,EAACK,IAAGF,IAAIE,EAAR,EAAZ,EAAyBC,SAAzB,CAAmC,KAAnC,C;;;+CACC,KAAKC,IAAL,CAAU,oBAAV,C;;;AAELC,mB,GAAQ;AACVC,uBAAM,CADI;AAEVJ,oBAAGF,IAAIE,EAFG;AAGVJ,sBAAKN,KAAKM;AAHA,e;+CAKL,KAAKS,IAAL,CAAUF,KAAV,C;;;;;;;;;;;;;;;;;mBAEHG,iB;;;;;;;AACAC,iB,GAAM,KAAKC,GAAL,E;AACNd,mB,GAAO,KAAKA,KAAL,CAAW,MAAX,C;;qBACKA,MAAMC,KAAN,CAAYY,GAAZ,EAAiBE,MAAjB,E;;;AAAZX,iB;gDACG,KAAKO,IAAL,CAAUP,GAAV,C",
+    "file": "../../../src/admin/controller/tags.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n\nimport Base from './base.js';\n\nexport default class extends Base {\n  /**\n   * index action\n   * @return {Promise} []\n   */\n  indexAction(){\n    //auto render template file index_index.html\n    return this.display();\n  }\n  //ajax添加tags\n  async ajaxaddtagsAction(){\n    let data = this.post();\n    data.model_id = Number(data.model_id);\n    let model= this.model(\"tags\");\n    let res = await model.where({name:data.name}).thenAdd(data);\n    if(res.type == \"exist\"){\n      await model.where({id:res.id}).increment('num');\n      return this.fail(\"已经存在，不要重复添加，请直接选择！\")\n    }\n    let rdata = {\n      errno:0,\n      id:res.id,\n      name:data.name\n    }\n    return this.json(rdata);\n  }\n  async ajaxgettagsAction(){\n    let map = this.get();\n    let model= this.model(\"tags\");\n    let res = await model.where(map).select();\n    return this.json(res);\n  }\n}"
+    ]
+}

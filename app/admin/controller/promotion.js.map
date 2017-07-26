@@ -1,0 +1,25 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/admin/controller/promotion.js"
+    ],
+    "names": [
+        "init",
+        "http",
+        "tactive",
+        "indexAction",
+        "display",
+        "goodsAction",
+        "end",
+        "orderAction",
+        "bundingAction",
+        "tuanAction",
+        "flashAction",
+        "voucherAction"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;AAEA;;;;;;;;;;;;;;mBAGEA,I,iBAAKC,I,EAAK;AACR,oBAAMD,IAAN,YAAWC,IAAX;AACA,SAAKC,OAAL,GAAe,WAAf;AACD,G;AACD;;;;;;mBAIAC,W,0BAAa;AACX;AACA,WAAO,KAAKC,OAAL,EAAP;AACD,G;;AAED;;;;;;mBAIAC,W,0BAAa;AACX,SAAKC,GAAL,CAAS,MAAT;AACD,G;;AAED;;;;;mBAGAC,W,0BAAa;AACX,SAAKD,GAAL,CAAS,MAAT;AACD,G;;AAED;;;;;mBAGAE,a,4BAAe;AACb,SAAKF,GAAL,CAAS,MAAT;AACD,G;;AAED;;;;;mBAGAG,U,yBAAY;AACV,SAAKH,GAAL,CAAS,IAAT;AACD,G;;AAED;;;;;mBAGAI,W,0BAAa;AACX,SAAKJ,GAAL,CAAS,MAAT;AACD,G;;AAED;;;;;mBAGAK,a,4BAAe;AACb,SAAKL,GAAL,CAAS,KAAT;AACD,G",
+    "file": "../../../src/admin/controller/promotion.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n\nimport Base from './base.js';\n\nexport default class extends Base {\n  init(http){\n    super.init(http);\n    this.tactive = \"promotion\"\n  }\n  /**\n   * index action\n   * @return {Promise} []\n   */\n  indexAction(){\n    //auto render template file index_index.html\n    return this.display();\n  }\n\n  /**\n   * goods action\n   * 商品促销\n   */\n  goodsAction(){\n    this.end(\"商品促销\");\n  }\n\n  /**\n   * 订单促销\n   */\n  orderAction(){\n    this.end(\"订单促销\")\n  }\n\n  /**\n   * 捆绑销售\n   */\n  bundingAction(){\n    this.end(\"捆绑销售\")\n  }\n\n  /**\n   * 团购\n   */\n  tuanAction(){\n    this.end(\"团购\")\n  }\n\n  /**\n   * 限时抢购\n   */\n  flashAction(){\n    this.end(\"限时抢购\")\n  }\n\n  /**\n   * 代金卷\n   */\n  voucherAction(){\n    this.end(\"代金卷\")\n  }\n}"
+    ]
+}

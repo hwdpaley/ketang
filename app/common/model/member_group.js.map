@@ -1,0 +1,25 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/common/model/member_group.js"
+    ],
+    "names": [
+        "getgroup",
+        "map",
+        "think",
+        "cache",
+        "select",
+        "timeout",
+        "list",
+        "isEmpty",
+        "_",
+        "filter",
+        "model",
+        "base"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAII;;;;qBAIKA,Q;;;;gBAASC,G,uEAAI,E;;;;;;;mCACEC,MAAMC,KAAN,CAAY,kBAAZ,EAAgC,YAAM;AACnD,uCAAO,OAAKC,MAAL,EAAP;AACH,6BAFgB,EAEd,EAACC,SAAS,MAAM,EAAN,GAAW,IAArB,EAFc,C;;;AAAbC,gC;;iCAGDJ,MAAMK,OAAN,CAAcN,GAAd,C;;;;;6DACQK,I;;;6DAEAJ,MAAMM,CAAN,CAAQC,MAAR,CAAeH,IAAf,EAAqBL,GAArB,C;;;;;;;;;;;;;;;;;;EAZWC,MAAMQ,KAAN,CAAYC,I",
+    "file": "../../../src/common/model/member_group.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n\n'use strict';\n/**\n * model\n */\nexport default class extends think.model.base {\n    /**\n     * 获取用户组并进行缓存\n     * @returns {Promise}\n     */\n   async getgroup(map={}){\n       let list = await think.cache(\"all_member_group\", () => {\n           return this.select();\n       }, {timeout: 365 * 24 * 3600});\n       if(think.isEmpty(map)){\n           return list;\n       }else {\n           return think._.filter(list, map);\n       }\n    }\n\n}"
+    ]
+}

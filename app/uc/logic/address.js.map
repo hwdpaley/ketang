@@ -1,0 +1,21 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/uc/logic/address.js"
+    ],
+    "names": [
+        "indexAction",
+        "addaddrAction",
+        "rules",
+        "addr",
+        "accept_name",
+        "think",
+        "logic",
+        "base"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAME;;;;mBAIAA,W,0BAAa,CAEZ,C;;mBACDC,a,4BAAe;AACb,SAAKC,KAAL,GAAW;AACT,gBAAS,UADA;AAETC,YAAK,UAFI;AAGTC,mBAAY;AAHH,KAAX;AAKD,G;;;EAd0BC,MAAMC,KAAN,CAAYC,I",
+    "file": "../../../src/uc/logic/address.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n/**\n * logic\n * @param  {} []\n * @return {}     []\n */\nexport default class extends think.logic.base {\n  /**\n   * index action logic\n   * @return {} []\n   */\n  indexAction(){\n   \n  }\n  addaddrAction(){\n    this.rules={\n      \"mobile\":\"required\",\n      addr:\"required\",\n      accept_name:\"required\"\n    }\n  }\n}"
+    ]
+}

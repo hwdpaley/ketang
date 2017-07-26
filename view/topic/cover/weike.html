@@ -1,0 +1,197 @@
+{% extends "../inc/music_base.html" %}
+{% block content %}
+     <!--
+				PAGE HEADER
+
+				CLASSES:
+					.page-header-xs	= 20px margins
+					.page-header-md	= 50px margins
+					.page-header-lg	= 80px margins
+					.page-header-xlg= 130px margins
+					.dark			= dark page header
+
+					.shadow-before-1 	= shadow 1 header top
+					.shadow-after-1 	= shadow 1 header bottom
+					.shadow-before-2 	= shadow 2 header top
+					.shadow-after-2 	= shadow 2 header bottom
+					.shadow-before-3 	= shadow 3 header top
+					.shadow-after-3 	= shadow 3 header bottom
+			-->
+<section class="page-header dark page-header-xs parallax parallax-2" >
+    <div class="overlay dark-2"><!-- dark overlay [1 to 9 opacity] --></div>
+    <div class="container">
+
+        <h1>{{category.title}}</h1>
+
+        <!-- breadcrumbs -->
+        <ol class="breadcrumb f-14">
+            <li><a href="/">首页 </a></li>
+            {%for val in breadcrumb %}
+            {% if val.id == category.id %}
+            <li class="active">{{val.title}}</li>
+            {% else %}
+            <li><a href="{{val.url}}">{{val.title}}</a></li>
+
+            {% endif %}
+            {% endfor %}
+        </ol><!-- /breadcrumbs -->
+
+    </div>
+</section>
+			<!-- /PAGE HEADER -->
+            <!-- -->
+<section>
+    <div class="container">
+        <div class="row-fluid">
+            <ul class="margin-t20" id="weike-list">
+            	{% topic data = "list",limit= "10",cid=category.id,issub=1,isstu=1,uid=userid%}
+                {% for val in list %}
+                <li>
+                    <a href="{{val.name|get_url(val.id)}}" ><img src="{{val.cover_id|get_pic('m=1,w=300,h=200')}}" class="weike-list-img col-xs-12 col-sm-6 col-md-4">
+                        {%if val.vip==1%}
+                        <div class="vip"></div>
+                        {%endif%}
+                        <div class="clear"></div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-info-box">
+                            <label class="weike-title">{{val.title|block(16)}}</label>
+                            <p class="weike-desc">{{val.description|block(50)}}
+                            </p>
+                            <p class="weike-saleNum">{{val.view}}人购买</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-buy-box">
+                            <p class="weike-price">¥{{val.wkprice}}&nbsp;</p>
+                            <button class="btn weike-buy-btn">立即购买</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                {%endfor%}
+                <!-- <li>
+                    <a href="/site/videos/43265667"><img src="https://ohtagtxxx.qnssl.com/zpmj_1.jpg" class="weike-list-img col-xs-12 col-sm-6 col-md-4">
+                        <div class="clear"></div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-info-box">
+                            <label class="weike-title">美容院招聘秘籍</label>
+                            <p class="weike-desc">招聘战略---要什么人 招聘方式---怎么留人 招聘渠道---在哪儿招 招聘设计---怎么招人 招聘沟通---招人沟通
+                            </p>
+                            <p class="weike-saleNum">2463人购买</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-buy-box">
+                            <p class="weike-price">￥68&nbsp;/&nbsp;90天</p>
+                            <button class="btn weike-buy-btn">立即购买</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="/site/videos/25436646"><img src="https://ohtagtxxx.qnssl.com/quanminzhaixingxing.jpg" class="weike-list-img col-xs-12 col-sm-6 col-md-4">
+                        <div class="clear"></div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-info-box">
+                            <label class="weike-title">全民摘星星（操作视频）</label>
+                            <p class="weike-desc">美容院活动人气工具 “全民摘星星，快速集人气” 快速、直接、简单 顾客喜欢玩 员工喜欢玩 体验式营销 顾客疯狂进店
+                            </p>
+                            <p class="weike-saleNum">341人购买</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-buy-box">
+                            <button class="btn weike-buy-btn">立即购买</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="/site/videos/99665298"><img src="https://ohtagtxxx.qnssl.com/haibaochuandan.jpg" class="weike-list-img col-xs-12 col-sm-6 col-md-4">
+                        <div class="clear"></div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-info-box">
+                            <label class="weike-title">美容院海报传单工具（操作视频）</label>
+                            <p class="weike-desc">美容院海报工具——门店活动必备神器 活动宣传 项目宣传 产品宣传 门店宣传
+                            </p>
+                            <p class="weike-saleNum">673人购买</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-buy-box">
+                            <button class="btn weike-buy-btn">立即购买</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="/site/videos/41155447"><img src="https://ohtagtxxx.qnssl.com/fengkuangkanjia.jpg" class="weike-list-img col-xs-12 col-sm-6 col-md-4">
+                        <div class="clear"></div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-info-box">
+                            <label class="weike-title">疯狂砍价（操作视频）</label>
+                            <p class="weike-desc">学妹最新美容院营销工具 商品秒杀、省钱利器 活动神器、吸粉利器 好玩有趣、人气传播 独家提出“砍价砍到0元购” 拥有全新个性项目订制 是美容院必备的营销工具
+                            </p>
+                            <p class="weike-saleNum">463人购买</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-buy-box">
+                            <button class="btn weike-buy-btn">立即购买</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="/site/videos/75146595"><img src="https://ohtagtxxx.qnssl.com/jyrweHRKSRJNR.jpg" class="weike-list-img col-xs-12 col-sm-6 col-md-4">
+                        <div class="clear"></div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-info-box">
+                            <label class="weike-title">美容院员工高端销售的必修课</label>
+                            <p class="weike-desc">高端销售的难点不是产品的介绍，而是我们对人性、对顾客心理的把握，了解顾客心理真正想要的，销售就会很轻松！</p>
+                            <p class="weike-saleNum">1125人购买</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-buy-box">
+                            <p class="weike-price">￥68&nbsp;/&nbsp;90天</p>
+                            <button class="btn weike-buy-btn">立即购买</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="/site/videos/91440247"><img src="https://ohtagtxxx.qnssl.com/dsaktjarddfaf.jpg" class="weike-list-img col-xs-12 col-sm-6 col-md-4">
+                        <div class="clear"></div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-info-box">
+                            <label class="weike-title">美容院开店实战秘籍</label>
+                            <p class="weike-desc">美容院开店怎么选址？怎么布局？怎么做市场定位？怎么做自身定位？美容院实战秘籍全盘揭秘！</p>
+                            <p class="weike-saleNum">618人购买</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-buy-box">
+                            <p class="weike-price">￥98&nbsp;/&nbsp;90天</p>
+                            <button class="btn weike-buy-btn">立即购买</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="/site/videos/29650089"><img src="https://ohtagtxxx.qnssl.com/mrygjxs.jpg" class="weike-list-img col-xs-12 col-sm-6 col-md-4">
+                        <div class="clear"></div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-info-box">
+                            <label class="weike-title">美容院冠军销售</label>
+                            <p class="weike-desc">销售的本质就是跟顾客“引起共鸣”!疯狂赢销的状态是疯狂式销售;疯狂赢销的方法是幽默式赢销;疯狂赢销的专业是专家式赢销;疯狂赢销的定位是老板式销售;疯狂赢销的训练是疯狂式训练。</p>
+                            <p class="weike-saleNum">3115人购买</p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-8 weike-list-buy-box">
+                            <p class="weike-price">￥68&nbsp;/&nbsp;90天</p>
+                            <button class="btn weike-buy-btn">立即购买</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </a>
+                </li> -->
+            </ul>
+            <div class="clearfix"></div>
+            <!-- <div class="width100 text-center margin-t25">
+                <ul id="pagination" class="compact-theme simple-pagination">
+                    <li class="disabled"><span class="current prev">前一页</span></li>
+                    <li class="active"><span class="current">1</span></li>
+                    <li><a href="#page-2" class="page-link">2</a></li>
+                    <li><a href="#page-2" class="page-link next">后一页</a></li>
+                </ul>
+            </div> -->
+            <!-- PAGINATION -->
+                <div class="text-left">
+                    <!-- Pagination Default -->
+                    {{pagination | safe}}
+                    <!-- /Pagination Default -->
+                </div>
+                <!-- /PAGINATION -->
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</section>
+			<!-- / -->
+{% endblock %}

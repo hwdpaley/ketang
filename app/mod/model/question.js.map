@@ -1,0 +1,47 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/mod/model/question.js"
+    ],
+    "names": [
+        "updates",
+        "data",
+        "time",
+        "Date",
+        "getTime",
+        "id",
+        "update_time",
+        "think",
+        "isEmpty",
+        "create_time",
+        "focus_count",
+        "add",
+        "model",
+        "question_id",
+        "uid",
+        "add_time",
+        "addkey",
+        "keyname",
+        "mod_id",
+        "thenAdd",
+        "question_count",
+        "userup",
+        "type",
+        "where",
+        "increment",
+        "addsearch",
+        "status",
+        "update",
+        "console",
+        "log",
+        "updatekey",
+        "userid",
+        "updatesearch",
+        "base"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAIE;qBACQA,O;;gBAAQC,I,uEAAK,I;gBAAKC,I,uEAAK,IAAIC,IAAJ,GAAWC,OAAX,E;;;;;;AACzB;AACIC,8B,GAAK,I;;AACTJ,iCAAKK,WAAL,GAAiBJ,IAAjB;;iCACGK,MAAMC,OAAN,CAAcP,KAAKI,EAAnB,C;;;;;AAAyB;AACxBJ,iCAAKQ,WAAL,GAAmB,IAAIN,IAAJ,GAAWC,OAAX,EAAnB;AACAH,iCAAKS,WAAL,GAAkB,CAAlB;;mCACW,KAAKC,GAAL,CAASV,IAAT,C;;;AAAXI,8B;;iCAEGA,E;;;;;;mCACO,KAAKO,KAAL,CAAW,gBAAX,EAA6BD,GAA7B,CAAiC,EAACE,aAAYR,EAAb,EAAgBS,KAAIb,KAAKa,GAAzB,EAA6BC,UAAS,IAAIZ,IAAJ,GAAWC,OAAX,EAAtC,EAAjC,C;;;;mCAUA,KAAKQ,KAAL,CAAW,SAAX,EAAsBI,MAAtB,CAA6Bf,KAAKgB,OAAlC,EAA0CZ,EAA1C,EAA6CJ,KAAKa,GAAlD,EAAsDb,KAAKiB,MAA3D,EAAkE,CAAlE,C;;;;mCAGa,KAAKN,KAAL,CAAW,eAAX,EAA4BO,OAA5B,CAAoC,EAACC,gBAAe,CAAhB,EAAkBN,KAAIb,KAAKa,GAA3B,EAApC,EAAoE,EAACA,KAAIb,KAAKa,GAAV,EAApE,C;;;AAAfO,kC;;kCACDA,OAAOC,IAAP,IAAa,O;;;;;;mCACN,KAAKV,KAAL,CAAW,eAAX,EAA4BW,KAA5B,CAAkC,EAAClB,IAAGgB,OAAOhB,EAAX,EAAlC,EAAkDmB,SAAlD,CAA4D,gBAA5D,EAA8E,CAA9E,C;;;;mCAGJ,KAAKZ,KAAL,CAAW,QAAX,EAAqBa,SAArB,CAA+BxB,KAAKiB,MAApC,EAA2Cb,EAA3C,EAA8CJ,IAA9C,C;;;;;;;AAcP;AACCyB,kC,GAAS,KAAKC,MAAL,CAAY1B,IAAZ,C;;AACb2B,oCAAQC,GAAR,CAAY5B,IAAZ;AACA;AACA;;mCACM,KAAKW,KAAL,CAAW,SAAX,EAAsBkB,SAAtB,CAAgC7B,KAAKgB,OAArC,EAA6ChB,KAAKI,EAAlD,EAAqDJ,KAAK8B,MAA1D,EAAiE9B,KAAKiB,MAAtE,EAA6E,CAA7E,C;;;;mCAEA,KAAKN,KAAL,CAAW,QAAX,EAAqBoB,YAArB,CAAkC/B,KAAKiB,MAAvC,EAA8CjB,IAA9C,C;;;6DAEH,EAACA,MAAKA,IAAN,EAAWI,IAAGA,EAAd,E;;;;;;;;;;;;;;;;;;EArDcE,MAAMK,KAAN,CAAYqB,I",
+    "file": "../../../src/mod/model/question.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n\n'use strict';\n/**\n * model\n */\nexport default class extends think.model.base {\n  //更新主题\n    async updates(data=null,time=new Date().getTime()){\n        //添加或者新增基础内容\n        let id = null;\n        data.update_time=time;\n        if(think.isEmpty(data.id)) {//新增主题\n            data.create_time = new Date().getTime();\n            data.focus_count =1;\n            id = await this.add(data);\n                 //添加关注\n            if(id){\n                await this.model(\"question_focus\").add({question_id:id,uid:data.uid,add_time:new Date().getTime()});\n                //添加关键词\n                /**\n                 * 添加话题\n                 * @param keyname \"话题1,话题2.话题3\"\n                 * @param id  \"主题id\"\n                 * @param uid \"用户id\"\n                 * @param mod_id \"模型id\"\n                 * @param mod_type \"模型类型 0独立模型，1系统模型\"\n                 */\n                await this.model(\"keyword\").addkey(data.keyname,id,data.uid,data.mod_id,1);\n                //更新用户统计信息\n                //初始化如果没有就添加\n                let userup = await this.model(\"question_user\").thenAdd({question_count:1,uid:data.uid},{uid:data.uid});\n                if(userup.type==\"exist\"){\n                    await this.model(\"question_user\").where({id:userup.id}).increment(\"question_count\", 1);\n                }\n                //添加搜索\n                await this.model(\"search\").addsearch(data.mod_id,id,data);\n                // if(!think.isEmpty(data.keyname)){\n                //     let keywrods = data.keyname.split(\",\");\n                //     console.log(keywrods);\n                //     for (let v of keywrods){\n                //         let add = await this.model(\"keyword\").thenAdd({keyname:v}, {keyname:v});\n                //         if(add.type=='exist'){\n                //             await this.model(\"keyword\").where({id:add.id}).increment(\"videonum\", 1);\n                //         }\n                //         await this.model(\"keyword_data\").add({tagid:add.id,docid:id,add_time:new Date().getTime(),uid:data.uid,mod_type:1,mod_id:data.mod_id});\n                //     }\n                //\n                // }\n            }\n        }else {//更新主题\n            let status = this.update(data);\n            console.log(data);\n            //更新关键词\n            //获取相关话题;\n            await this.model(\"keyword\").updatekey(data.keyname,data.id,data.userid,data.mod_id,1);\n            //更新搜索\n            await this.model(\"search\").updatesearch(data.mod_id,data);\n        }\n        return {data:data,id:id};\n    }\n}"
+    ]
+}

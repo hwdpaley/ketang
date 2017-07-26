@@ -1,0 +1,44 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../../src/ext/controller/link/index.js"
+    ],
+    "names": [
+        "indexAction",
+        "table",
+        "ext",
+        "gettype",
+        "assign",
+        "model",
+        "where",
+        "passed",
+        "order",
+        "select",
+        "data",
+        "display",
+        "applyAction",
+        "setting",
+        "ispost",
+        "http",
+        "error",
+        "Error",
+        "think",
+        "statusAction",
+        "isPost",
+        "post",
+        "linktype",
+        "isEmpty",
+        "logo",
+        "fail",
+        "add",
+        "res",
+        "success",
+        "name",
+        "url"
+    ],
+    "mappings": "AAAA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAOA;;;;;;;;;;;;;;AAEE;;;;;mBAKMA,W;;;;;;;AACJ;AACIC,mB,GAAO,SAAO,KAAKC,GAAL,CAASA,G;AAC3B;AACA;;4BACA,I;;qBAAyB,KAAKC,OAAL,E;;;;;0BAApBC,M,mBAAO,M;;;qBAEK,KAAKC,KAAL,CAAWJ,KAAX,EAAkBK,KAAlB,CAAwB,EAACC,QAAO,CAAR,EAAxB,EAAoCC,KAApC,CAA0C,UAA1C,EAAsDC,MAAtD,E;;;AAAbC,kB;;AACJ;AACA,mBAAKN,MAAL,CAAY,MAAZ,EAAmBM,IAAnB;+CACO,KAAKC,OAAL,E;;;;;;;;;;;;;;;;;mBAGJC,W;;;;;;;oBACD,KAAKC,OAAL,CAAaC,MAAb,IAAqB,C;;;;;AACtB,mBAAKC,IAAL,CAAUC,KAAV,GAAkB,IAAIC,KAAJ,CAAU,mBAAV,CAAlB;gDACOC,MAAMC,YAAN,CAAmB,GAAnB,EAAwB,KAAKJ,IAA7B,C;;;mBAEL,KAAKK,MAAL,E;;;;;AACGV,kB,GAAO,KAAKW,IAAL,E;;AACXX,mBAAKH,MAAL,GAAY,CAAZ;;oBACGG,KAAKY,QAAL,IAAe,C;;;;;mBACbJ,MAAMK,OAAN,CAAcb,KAAKc,IAAnB,C;;;;;gDACM,KAAKC,IAAL,CAAU,qBAAV,C;;;;qBAGK,KAAKpB,KAAL,CAAW,UAAX,EAAuBqB,GAAvB,CAA2BhB,IAA3B,C;;;AAAZiB,iB;;mBACDA,G;;;;;gDACM,KAAKC,OAAL,CAAa,EAACC,MAAK,OAAN,EAAcC,KAAI,iBAAlB,EAAb,C;;;gDAEA,KAAKL,IAAL,CAAU,OAAV,C;;;;;;;6BAIT,I;;qBAAyB,KAAKtB,OAAL,E;;;;;2BAApBC,M,oBAAO,M;;gDACL,KAAKO,OAAL,E",
+    "file": "../../../../src/ext/controller/link/index.js",
+    "sourcesContent": [
+        "'use strict';\n/**\n * 插件前台控制器\n * 如果插件有前台展示业务，写在这个控制器里面\n * 插件如需建立表务必遵循下面格式：\n * 单表：表前缀_ext_插件目录名\n * 多表：表前缀_ext_插件目录名，表前缀_ext_插件目录名_分表1，表前缀_ext_插件目录名_分表2...\n */\nimport Base from '../index.js';\nexport default class extends Base {\n  /**\n   * index action\n   *\n   * @return {Promise} []\n   */\n  async indexAction(){\n    //auto render template file index_index.html\n    let table =\"ext_\"+this.ext.ext;\n    //console.log(table);\n    //获取当前分类\n    this.assign(\"type\",await this.gettype());\n    //获取友情链接\n    let data = await this.model(table).where({passed:1}).order(\"sort ASC\").select();\n    //console.log(data);\n    this.assign(\"list\",data)\n    return this.display();\n  }\n\n async applyAction(){\n   if(this.setting.ispost==0){\n     this.http.error = new Error('已关闭申请，请在后台插件设置开启！');\n     return think.statusAction(702, this.http);\n   }\n    if(this.isPost()){\n      let data = this.post();\n      data.passed=0;\n      if(data.linktype==1){\n        if(think.isEmpty(data.logo)){\n          return this.fail(\"logo链接类型，请填写logo地址！\")\n        }\n      }\n      let res = await this.model(\"ext_link\").add(data);\n      if(res){\n        return this.success({name:\"申请成功!\",url:\"/ext/link/index\"})\n      }else {\n        return this.fail(\"添加失败！\")\n      }\n    }else {\n      //获取当前分类\n      this.assign(\"type\",await this.gettype());\n      return this.display()\n    }\n\n  }\n}"
+    ]
+}

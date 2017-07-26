@@ -1,0 +1,23 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/admin/controller/mp.js"
+    ],
+    "names": [
+        "init",
+        "http",
+        "indexAction",
+        "console",
+        "log",
+        "adminmenu",
+        "meta_title",
+        "assign",
+        "display",
+        "aabbAction"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;AAEA;;;;;;;;;;;;;;AAGI;;;;qBAIAA,I,iBAAKC,I,EAAK;AACN,wBAAMD,IAAN,YAAWC,IAAX;AAEH,K;;qBAEDC,W,0BAAa;AACT;AACAC,gBAAQC,GAAR,CAAY,KAAKC,SAAL,CAAe,IAAf,CAAZ;AACA,aAAKC,UAAL,GAAiB,MAAjB;AACA,aAAKC,MAAL,CAAY;AACR,qBAAQ,IADA;AAER,kBAAK;AAFG,SAAZ;AAIA;AACA,eAAO,KAAKC,OAAL,EAAP;AACH,K;;qBACDC,U,yBAAY;AACRN,gBAAQC,GAAR,CAAY,CAAZ;AACH,K",
+    "file": "../../../src/admin/controller/mp.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n\nimport Base from './base.js';\n\nexport default class extends Base {\n    /**\n     * index action\n     * @return {Promise} []\n     */\n    init(http){\n        super.init(http);\n\n    }\n\n    indexAction(){\n        //auto render template file index_index.html\n        console.log(this.adminmenu[\"99\"]);\n        this.meta_title= '微信管理';\n        this.assign({\n            \"navxs\":true,\n            \"bg\":\"bg-dark\"\n        });\n        //fdsafsa\n        return this.display();\n    }\n    aabbAction(){\n        console.log(1)\n    }\n}"
+    ]
+}

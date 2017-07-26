@@ -1,0 +1,124 @@
+{% extends "../inc/picture_nofoot_base.html" %}
+{% block style %}
+<link rel="stylesheet" href="/static/assets/plugins/jquery-zsylbt/css/pgwslideshow.min.css">
+<script src="/static/admin/js/udeitor/ueditor.parse.min.js"></script>
+{% endblock %}
+{% block content %}
+<!--
+PAGE HEADER
+
+CLASSES:
+.page-header-xs	= 20px margins
+.page-header-md	= 50px margins
+.page-header-lg	= 80px margins
+.page-header-xlg= 130px margins
+.dark			= dark page header
+
+.shadow-before-1 	= shadow 1 header top
+.shadow-after-1 	= shadow 1 header bottom
+.shadow-before-2 	= shadow 2 header top
+.shadow-after-2 	= shadow 2 header bottom
+.shadow-before-3 	= shadow 3 header top
+.shadow-after-3 	= shadow 3 header bottom
+-->
+<section class="page-header dark page-header-xs" >
+    <div class="container">
+
+        <h1>{{category.title}}</h1>
+
+        <!-- breadcrumbs -->
+        <ol class="breadcrumb f-14">
+            <li><a href="/">首页</a></li>
+            {%for val in breadcrumb %}
+            <li><a href="{{val.url}}">{{val.title}}</a></li>
+            {% endfor %}
+        </ol><!-- /breadcrumbs -->
+
+        <!-- page tabs -->
+        {%column data="cate",pid=category.pid%}
+        {%if cate%}
+        <ul class="page-header-tabs list-inline">
+
+            <!--<li class="active"><a href="portfolio-masonry-3-columns.html">With Gutter</a></li>-->
+            {%for val in cate%}
+            <li  {%if val.id == category.id %}class="active"{%endif%}><a href="{{val.url}}">{{val.name}}</a></li>
+            {%endfor%}
+        </ul>
+        {%endif%}<!-- /page tabs -->
+    </div>
+</section>
+<!-- /PAGE HEADER -->
+<!-- -->
+<section class="padding-0 margin-top-3" style="background-color: #1a1a1a">
+    <div class="container">
+        <!-- OWL SLIDER 123-->
+
+            <ul class="pgwSlideshow">
+                {%set picurls = info.pictureurls|strToArray%}
+                {%set i =0%}
+                {%for v in picurls%}
+                <li>
+                    <a href="{{v|get_pic('')}}" >
+                    <img src="{{v|get_pic('m=1,w=80,h=80')}}"  data-large-src="{{v|get_pic('m=0,w=847,h=640')}}" alt="" data-description="{{info.content[i]|delhtmltags}}" ></a>
+                </li>
+                {%set i=i+1%}
+                {%endfor%}
+            </ul>
+
+
+        <!-- /OWL SLIDER -->
+    </div>
+</section>
+<!-- / -->
+<!--
+				PAGE HEADER
+
+				CLASSES:
+					.page-header-xs	= 20px margins
+					.page-header-md	= 50px margins
+					.page-header-lg	= 80px margins
+					.page-header-xlg= 130px margins
+					.dark			= dark page header
+
+					.shadow-before-1 	= shadow 1 header top
+					.shadow-after-1 	= shadow 1 header bottom
+					.shadow-before-2 	= shadow 2 header top
+					.shadow-after-2 	= shadow 2 header bottom
+					.shadow-before-3 	= shadow 3 header top
+					.shadow-after-3 	= shadow 3 header bottom
+			-->
+<section class="page-header dark page-header-xs shadow-after-3">
+    <div class="container">
+
+        <h1 class="blog-post-title size-18">{{info.title}}</h1>
+        <ul class="page-options list-inline">
+            {%if previous.id%}
+            <li><a href="{{previous.name|get_url(previous.id)}}" title="{{previous.title}}" class="glyphicon glyphicon-menu-left"></a></li>
+            {%endif%}
+            {%set backcate = info.category_id|get_cate%}
+            <li><a href="{{backcate.url}}" class="glyphicon glyphicon-th-large"></a></li>
+            {%if next.id%}
+            <li><a href="{{next.name|get_url(next.id)}}" title="{{next.title}}" class="glyphicon glyphicon-menu-right"></a></li>
+            {%endif%}
+        </ul>
+
+    </div>
+</section>
+<!-- /PAGE HEADER -->
+<!-- -->
+
+<!-- / -->
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript" src="/static/assets/plugins/jquery-zsylbt/js/pgwslideshow.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="//changyan.itc.cn/js/??lib/jquery.js,changyan.labs.js?appid={{controller.setup.CY_APPID}}"></script>
+<script>
+    $(document).ready(function() {
+        $('.pgwSlideshow').pgwSlideshow();
+    });
+    uParse('#content', {
+        rootPath: '/static/admin/js/udeitor/'
+    })
+</script>
+{% endblock %}

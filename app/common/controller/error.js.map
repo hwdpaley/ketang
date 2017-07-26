@@ -1,0 +1,48 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/common/controller/error.js"
+    ],
+    "names": [
+        "displayError",
+        "status",
+        "think",
+        "env",
+        "in_array",
+        "http",
+        "error",
+        "errorConfig",
+        "config",
+        "message",
+        "isJsonp",
+        "jsonp",
+        "key",
+        "msg",
+        "isAjax",
+        "fail",
+        "module",
+        "mode",
+        "mode_module",
+        "file",
+        "options",
+        "extend",
+        "type",
+        "file_depr",
+        "display",
+        "_400Action",
+        "_403Action",
+        "_404Action",
+        "_500Action",
+        "_503Action",
+        "_700Action",
+        "_701Action",
+        "_702Action",
+        "controller",
+        "base"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAIE;;;;;mBAKAA,Y,yBAAaC,M,EAAO;;AAElB;;AAEA,QAAGC,MAAMC,GAAN,KAAc,YAAjB,EAA8B;AAC5B,UAAG,CAACC,SAASH,MAAT,EAAgB,CAAC,GAAD,EAAK,GAAL,EAAS,GAAT,CAAhB,CAAJ,EAAmC;AACnC,aAAKI,IAAL,CAAUC,KAAV,GAAkB,IAAlB;AACC;AACF;;AAED,QAAIC,cAAc,KAAKC,MAAL,CAAY,OAAZ,CAAlB;AACA,QAAIC,UAAU,KAAKJ,IAAL,CAAUC,KAAV,IAAmB,KAAKD,IAAL,CAAUC,KAAV,CAAgBG,OAAnC,IAA8C,EAA5D;AACA,QAAG,KAAKC,OAAL,EAAH,EAAkB;AAAA;;AAChB,aAAO,KAAKC,KAAL,sBACJJ,YAAYK,GADR,IACcX,MADd,SAEJM,YAAYM,GAFR,IAEcJ,OAFd,UAAP;AAID,KALD,MAKM,IAAG,KAAKK,MAAL,EAAH,EAAiB;AACrB,aAAO,KAAKC,IAAL,CAAUd,MAAV,EAAkBQ,OAAlB,CAAP;AACD;;AAED,QAAIO,SAAS,QAAb;AACA,QAAGd,MAAMe,IAAN,KAAef,MAAMgB,WAAxB,EAAoC;AAClCF,eAAS,KAAKR,MAAL,CAAY,gBAAZ,CAAT;AACD;AACD,QAAIW,OAAUH,MAAV,eAA0Bf,MAA1B,UAAJ;AACA,QAAImB,UAAU,KAAKZ,MAAL,CAAY,KAAZ,CAAd;AACAY,cAAUlB,MAAMmB,MAAN,CAAa,EAAb,EAAiBD,OAAjB,EAA0B,EAACE,MAAM,KAAP,EAAcC,WAAW,GAAzB,EAA1B,CAAV;AACA,WAAO,KAAKC,OAAL,CAAaL,IAAb,EAAmBC,OAAnB,CAAP;AACA;AACA;AACA;AACA;AACA;AACD,G;AACD;;;;;;mBAIAK,U,yBAAY;AACV,WAAO,KAAKzB,YAAL,CAAkB,GAAlB,CAAP;AACD,G;AACD;;;;;;mBAIA0B,U,yBAAY;AACV,WAAO,KAAK1B,YAAL,CAAkB,GAAlB,CAAP;AACD,G;AACD;;;;;;mBAIA2B,U,yBAAY;AACV,WAAO,KAAK3B,YAAL,CAAkB,GAAlB,CAAP;AACD,G;AACD;;;;;;mBAIA4B,U,yBAAY;AACV,WAAO,KAAK5B,YAAL,CAAkB,GAAlB,CAAP;AACD,G;AACD;;;;;;mBAIA6B,U,yBAAY;AACV,WAAO,KAAK7B,YAAL,CAAkB,GAAlB,CAAP;AACD,G;AACD;;;mBACA8B,U,yBAAY;AACV,WAAO,KAAK9B,YAAL,CAAkB,GAAlB,CAAP;AACD,G;AACD;;;mBACA+B,U,yBAAY;AACV,WAAO,KAAK/B,YAAL,CAAkB,GAAlB,CAAP;AACD,G;AACD;;;mBACAgC,U,yBAAY;AACV,WAAO,KAAKhC,YAAL,CAAkB,GAAlB,CAAP;AACD,G;;;EAvF0BE,MAAM+B,UAAN,CAAiBC,I",
+    "file": "../../../src/common/controller/error.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n/**\n * error controller\n */\nexport default class extends think.controller.base {\n  /**\n   * display error page\n   * @param  {Number} status []\n   * @return {Promise}        []\n   */\n  displayError(status){\n\n    //hide error message on production env\n\n    if(think.env === 'production'){\n      if(!in_array(status,[700,701,702])){\n      this.http.error = null;\n      }\n    }\n\n    let errorConfig = this.config('error');\n    let message = this.http.error && this.http.error.message || '';\n    if(this.isJsonp()){\n      return this.jsonp({\n        [errorConfig.key]: status,\n        [errorConfig.msg]: message\n      })\n    }else if(this.isAjax()){\n      return this.fail(status, message);\n    }\n\n    let module = 'common';\n    if(think.mode !== think.mode_module){\n      module = this.config('default_module');\n    }\n    let file = `${module}/error/${status}.html`;\n    let options = this.config('tpl');\n    options = think.extend({}, options, {type: 'ejs', file_depr: '_'});\n    return this.display(file, options);\n    // this.fetch(file, {}, options).then(content => {\n    //   content = content.replace('ERROR_MESSAGE', message);\n    //   this.type(options.content_type);\n    //   this.end(content);\n    // });\n  }\n  /**\n   * Bad Request \n   * @return {Promise} []\n   */\n  _400Action(){\n    return this.displayError(400);\n  }\n  /**\n   * Forbidden \n   * @return {Promise} []\n   */\n  _403Action(){\n    return this.displayError(403);\n  }\n  /**\n   * Not Found \n   * @return {Promise}      []\n   */\n  _404Action(){\n    return this.displayError(404);\n  }\n  /**\n   * Internal Server Error\n   * @return {Promise}      []\n   */\n  _500Action(){\n    return this.displayError(500);\n  }\n  /**\n   * Service Unavailable\n   * @return {Promise}      []\n   */\n  _503Action(){\n    return this.displayError(503);\n  }\n  //未登录\n  _700Action(){\n    return this.displayError(700);\n  }\n  // 正确跳转对应的模板文件\n  _701Action(){\n    return this.displayError(701);\n  }\n  // 错误跳转对应的模板文件\n  _702Action(){\n    return this.displayError(702);\n  }\n}"
+    ]
+}

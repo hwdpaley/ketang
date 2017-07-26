@@ -1,0 +1,37 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/admin/controller/index.js"
+    ],
+    "names": [
+        "init",
+        "http",
+        "indexAction",
+        "meta_title",
+        "locale",
+        "model",
+        "query",
+        "mysqlv",
+        "node",
+        "process",
+        "versions",
+        "assign",
+        "think",
+        "BIEBER_VERSION",
+        "version",
+        "count",
+        "user_count",
+        "wxuser_count",
+        "action_count",
+        "cate_count",
+        "model_count",
+        "ext_count",
+        "type_count",
+        "display"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;;;;;;;;;AAEA;;;;AACA;;;;AACA;;;;;;;;;;;;;mBAMEA,I,iBAAKC,I,EAAK;AACR,oBAAMD,IAAN,YAAWC,IAAX;AAED,G;AACD;;;;;mBAKMC,W;;;;;;;AACJ;AACA;AACA;AACE;AACF,mBAAKC,UAAL,GAAgB,KAAKC,MAAL,CAAY,kBAAZ,CAAhB;;qBACiB,KAAKC,KAAL,CAAW,OAAX,EAAoBC,KAApB,CAA0B,kBAA1B,C;;;AAAbC,oB;AACAC,kB,GAAOC,QAAQC,Q;;AACjB,mBAAKC,MAAL,CAAY;AACR,2BAAUC,MAAMC,cADR;AAER,sBAAK,eAFG;AAGR,4BAAWL,KAAKA,IAHR;AAIR,2BAAUI,MAAME,OAJR;AAKR,0BAASP,OAAO,CAAP,EAAU,WAAV;AALD,eAAZ;AAOF;;qBACyB,KAAKF,KAAL,CAAW,QAAX,EAAqBU,KAArB,CAA2B,IAA3B,C;;;AAAnBC,wB;;qBACqB,KAAKX,KAAL,CAAW,SAAX,EAAsBU,KAAtB,CAA4B,IAA5B,C;;;AAArBE,0B;;qBAEqB,KAAKZ,KAAL,CAAW,QAAX,EAAqBU,KAArB,CAA2B,IAA3B,C;;;AAArBG,0B;;qBAEmB,KAAKb,KAAL,CAAW,UAAX,EAAuBU,KAAvB,CAA6B,IAA7B,C;;;AAAnBI,wB;;qBAEoB,KAAKd,KAAL,CAAW,OAAX,EAAoBU,KAApB,CAA0B,IAA1B,C;;;AAApBK,yB;;qBAEkB,KAAKf,KAAL,CAAW,KAAX,EAAkBU,KAAlB,E;;;AAAlBM,uB;;qBAEmB,KAAKhB,KAAL,CAAW,MAAX,EAAmBU,KAAnB,E;;;AAAnBO,wB;;AACN,mBAAKX,MAAL,CAAY;AACVM,8BAAaA,YADH;AAEVD,4BAAWA,UAFD;AAGRE,8BAAaA,YAHL;AAIRC,4BAAWA,UAJH;AAKRC,6BAAYA,WALJ;AAMRC,2BAAUA,SANF;AAORC,4BAAWA;AAPH,eAAZ;AASA;+CACO,KAAKC,OAAL,E",
+    "file": "../../../src/admin/controller/index.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n\nimport Base from './base.js';\nimport {type} from 'os';\n/**\n * 后台首页控制器\n * @author Tony <912697590@qq.com>\n * http://www.gzxinbibo.com\n */\nexport default class extends Base {\n  init(http){\n    super.init(http);\n\n  }\n  /**\n   * index action\n   * @return {Promise} []\n   */\n\n  async indexAction(){\n    //auto render template file index_index.html\n    //console.log(think.parseConfig(true,think.config(\"db\")).prefix);\n    //await this.model(\"action\").log(\"chufa\",\"member\",\"sdffds\",this.user.uid,this.ip(),this.http.url);//测试日志行为\n      //服务器信息\n    this.meta_title=this.locale('meta_title_admin');\n    let mysqlv=await this.model('mysql').query(\"select version()\");\n    let node = process.versions;\n      this.assign({\n          'version':think.BIEBER_VERSION,\n          'OS':type(),\n          'nodejs_v':node.node,\n          'thinkjs':think.version,\n          'mysqlv':mysqlv[0]['version()']\n      })\n    //用户统计\n      let user_count = await this.model(\"member\").count('id');\n      let wxuser_count = await this.model(\"wx_user\").count('id');\n      //行为\n      let action_count = await this.model(\"action\").count(\"id\");\n      //栏目\n      let cate_count = await this.model(\"category\").count(\"id\");\n      //模型\n      let model_count = await this.model(\"model\").count(\"id\");\n      //插件\n      let ext_count = await this.model(\"ext\").count();\n      //分类信息\n      let type_count = await this.model(\"type\").count();\n    this.assign({\n      wxuser_count:wxuser_count,\n      user_count:user_count,\n        action_count:action_count,\n        cate_count:cate_count,\n        model_count:model_count,\n        ext_count:ext_count,\n        type_count:type_count\n    });\n    //console.log(111)\n    return this.display();\n  }\n}\n"
+    ]
+}

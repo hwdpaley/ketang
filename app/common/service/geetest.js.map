@@ -1,0 +1,49 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/common/service/geetest.js"
+    ],
+    "names": [
+        "init",
+        "http",
+        "register",
+        "type",
+        "think",
+        "cache",
+        "setup",
+        "privateKey",
+        "publicKey",
+        "GEETEST_KEY_M",
+        "GEETEST_ID_M",
+        "GEETEST_KEY",
+        "GEETEST_ID",
+        "geetest",
+        "geetest_id",
+        "geetest_key",
+        "deferred",
+        "defer",
+        "err",
+        "data",
+        "console",
+        "log",
+        "resolve",
+        "gt",
+        "challenge",
+        "success",
+        "promise",
+        "validate",
+        "geetest_challenge",
+        "geetest_validate",
+        "seccode",
+        "geetest_seccode",
+        "result",
+        "status",
+        "service",
+        "base"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;;;;;;;;;;;;;;;;;;;;;;;;AACA;;;;;;;;;;;;;;AAEE;;;;qBAIAA,I,iBAAKC,I,EAAK;AACR,sCAAMD,IAAN,YAAWC,IAAX;AACD,K;AACD;;;qBACKC,Q;+FAASC,I;;;;;;;mCACMC,MAAMC,KAAN,CAAY,OAAZ,C;;;AAAdC,iC;AACCC,sC,WAAWC,S;;AACf,gCAAGL,QAAQ,QAAX,EAAoB;AAChBI,6CAAaD,MAAMG,aAAnB,CADgB,CACiB;AACjCD,4CAAYF,MAAMI,YAAlB,CAFgB,CAEe;AAClC,6BAHD,MAGM;AACFH,6CAAaD,MAAMK,WAAnB,CADE,CAC6B;AAC/BH,4CAAYF,MAAMM,UAAlB,CAFE,CAE2B;AAEhC;;AAEGC,mC,GAAU,sBAAY;AACtBC,4CAAYN,SADU;AAEtBO,6CAAaR;AAFS,6BAAZ,C;;AAKf;;AACQL,oC,GAAS,SAATA,QAAS,GAAK;AACb,oCAAIc,WAAWZ,MAAMa,KAAN,EAAf;AACA;AACAJ,wCAAQX,QAAR,CAAiB,UAAUgB,GAAV,EAAcC,IAAd,EAAoB;AACjCC,4CAAQC,GAAR,CAAYF,IAAZ;AACAH,6CAASM,OAAT,CAAiB;AACbC,4CAAIV,QAAQC,UADC;AAEbU,mDAAWL,KAAKK,SAFH;AAGbC,iDAASN,KAAKM;AAHD,qCAAjB;AAKH,iCAPD;AAQA,uCAAOT,SAASU,OAAhB;AACH,6B;;;mCAGKxB,U;;;;;;;;;;;;;;;;;;;AAEf;;;qBACQyB,Q;iGAASR,I,EAAKhB,I;;;;;;;mCACAC,MAAMC,KAAN,CAAY,OAAZ,C;;;AAAdC,iC;AACEC,sC,WAAWC,S;;AACf,gCAAGL,QAAQ,QAAX,EAAoB;AAChBI,6CAAaD,MAAMG,aAAnB,CADgB,CACiB;AACjCD,4CAAYF,MAAMI,YAAlB,CAFgB,CAEe;AAClC,6BAHD,MAGM;AACFH,6CAAaD,MAAMK,WAAnB,CADE,CAC6B;AAC/BH,4CAAYF,MAAMM,UAAlB,CAFE,CAE2B;AAEhC;;AAEGC,mC,GAAU,sBAAY;AACtBE,6CAAaR,UADS;AAEtBO,4CAAYN;AAFU,6BAAZ,C;AAIhB;;AACImB,oC,GAAW,SAAXA,QAAW,CAACR,IAAD,EAAQ;AACrB,oCAAIH,WAAWZ,MAAMa,KAAN,EAAf;AACAJ,wCAAQc,QAAR,CAAiB;;AAEfH,+CAAWL,KAAKS,iBAFD;AAGfD,8CAAUR,KAAKU,gBAHA;AAIfC,6CAASX,KAAKY;;AAJC,iCAAjB,EAMG,UAAUb,GAAV,EAAec,MAAf,EAAuB;AACxBZ,4CAAQC,GAAR,CAAYW,MAAZ;AACA,wCAAIb,OAAO,EAACc,QAAQ,SAAT,EAAX;;AAEA,wCAAIf,OAAO,CAACc,MAAZ,EAAoB;AAClBZ,gDAAQC,GAAR,CAAYH,GAAZ;AACAC,6CAAKc,MAAL,GAAc,MAAd;AACD;;AAEDjB,6CAASM,OAAT,CAAiBH,IAAjB;AACD,iCAhBD;AAiBA,uCAAOH,SAASU,OAAhB;AACD,6B;;;mCACYC,SAASR,IAAT,C;;;;;;;;;;;;;;;;;;;;;EAnFYf,MAAM8B,OAAN,CAAcC,I",
+    "file": "../../../src/common/service/geetest.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n\n'use strict';\nimport Geetest from 'geetest';\nexport default class extends think.service.base {\n  /**\n   * init\n   * @return {}         []\n   */\n  init(http){\n    super.init(http);\n  }\n  //初始化\n async register(type){\n    let setup = await think.cache(\"setup\");\n     let privateKey,publicKey\n     if(type == 'mobile'){\n         privateKey = setup.GEETEST_KEY_M;//key\n         publicKey = setup.GEETEST_ID_M;//id\n     }else {\n         privateKey = setup.GEETEST_KEY;//key\n         publicKey = setup.GEETEST_ID;//id\n\n     }\n\n     let geetest = new Geetest({\n         geetest_id: publicKey,\n         geetest_key: privateKey\n     });\n\n    //初始\n        let register=() =>{\n             let deferred = think.defer();\n             // 向极验申请一次验证所需的challenge\n             geetest.register(function (err,data) {\n                 console.log(data);\n                 deferred.resolve({\n                     gt: geetest.geetest_id,\n                     challenge: data.challenge,\n                     success: data.success\n                 });\n             });\n             return deferred.promise;\n         }\n\n\n  return await register();\n  }\n// 二次服务器验证\n  async validate(data,type){\n    let setup = await think.cache(\"setup\");\n      let privateKey,publicKey;\n      if(type == 'mobile'){\n          privateKey = setup.GEETEST_KEY_M;//key\n          publicKey = setup.GEETEST_ID_M;//id\n      }else {\n          privateKey = setup.GEETEST_KEY;//key\n          publicKey = setup.GEETEST_ID;//id\n\n      }\n\n      let geetest = new Geetest({\n          geetest_key: privateKey,\n          geetest_id: publicKey\n      });\n    //验证\n    let validate = (data)=>{\n      let deferred = think.defer();\n      geetest.validate({\n\n        challenge: data.geetest_challenge,\n        validate: data.geetest_validate,\n        seccode: data.geetest_seccode\n\n      }, function (err, result) {\n        console.log(result);\n        var data = {status: \"success\"};\n\n        if (err || !result) {\n          console.log(err);\n          data.status = \"fail\";\n        }\n\n        deferred.resolve(data);\n      });\n      return deferred.promise;\n    }\n    return await validate(data);\n  }\n}"
+    ]
+}

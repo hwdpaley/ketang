@@ -1,0 +1,14 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/topic/config/view.js"
+    ],
+    "names": [
+        "file_depr"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;kBAGe;AACXA,aAAW;AADA,C",
+    "file": "../../../src/topic/config/view.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n/**\n * template config\n */\nexport default {\n    file_depr: '/'\n};\n"
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../../src/mod/logic/question/sys.js"
+    ],
+    "names": [
+        "indexAction",
+        "updateanswerAction",
+        "rules",
+        "answer_content",
+        "think",
+        "logic",
+        "base"
+    ],
+    "mappings": "AAAA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAME;;;;mBAIAA,W,0BAAa,CAEZ,C;;mBACDC,kB,iCAAoB;AAClB,SAAKC,KAAL,GAAa;AACXC,sBAAgB,UADL,CACgB;AADhB,KAAb;AAGD,G;;;EAZ0BC,MAAMC,KAAN,CAAYC,I",
+    "file": "../../../../src/mod/logic/question/sys.js",
+    "sourcesContent": [
+        "'use strict';\n/**\n * logic\n * @param  {} []\n * @return {}     []\n */\nexport default class extends think.logic.base {\n  /**\n   * index action logic\n   * @return {} []\n   */\n  indexAction(){\n   \n  }\n  updateanswerAction(){\n    this.rules = {\n      answer_content: \"required\" //answer_content 的值必填\n    }\n  }\n}"
+    ]
+}

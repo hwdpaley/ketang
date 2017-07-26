@@ -1,0 +1,12 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/topic/config/route.js"
+    ],
+    "names": [],
+    "mappings": ";;;AAAA;AACA;AACA;AACA;AACA;AACA;AACA;kBACe,CACX,CAAC,eAAD,EAAkB,4BAAlB,CADW,EAEX,CAAC,SAAD,EAAY,mBAAZ,CAFW,EAGX,CAAC,WAAD,EAAc,0BAAd,CAHW,EAIX,CAAC,WAAD,EAAc,0BAAd,CAJW,EAKX,CAAC,eAAD,EAAkB,kCAAlB,CALW,EAMX,CAAC,kBAAD,EAAoB,4BAApB,CANW,EAOX,CAAC,eAAD,EAAiB,4BAAjB,CAPW,EAQX,CAAC,SAAD,EAAW,qBAAX,CARW;AASX;AACA,CAAC,eAAD,EAAiB,wBAAjB,CAVW,EAWX,CAAC,eAAD,EAAiB,kCAAjB,CAXW,EAYX,CAAC,UAAD,EAAY,oBAAZ,CAZW,EAaX,CAAC,WAAD,EAAa,2BAAb,CAbW,EAcX,CAAC,OAAD,EAAU,+BAAV,CAdW,C",
+    "file": "../../../src/topic/config/route.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\nexport default [\n    [/^index\\/(.*)$/, \"topic/index/index?order=:1\"],\n    [/^index$/, \"topic/index/index\"],\n    [/^p\\/(.*)$/, \"topic/detail/index?id=:1\"],\n    [/^w\\/(.*)$/, \"topic/detail/index?id=:1\"],\n    [/^dlink\\/(.*)$/, \"topic/detail/downloadgetid?id=:1\"],\n    [/^keywords\\/(.*)$/,\"topic/list/keywords?key=:1\"],\n    [/^topic\\/(.*)$/,\"topic/keyword/index?key=:1\"],\n    [/^topic$/,\"topic/keyword/index\"],\n    // [/^music$/,\"topic/music/index\"],\n    [/^music\\/(.*)$/,\"topic/music/audio?id:1\"],\n    [/^.well-known$/,\"topic/weike/pkivalidation?key=:1\"],\n    [/^search$/,\"topic/search/index\"],\n    [/^t\\/(.*)$/,\"topic/keyword/list?key=:1\"],\n    [/(.*)$/, \"topic/index/route?category=:1\"],\n    // [/^channel\\/(.*)$/, \"home/topic/index?category=:1\"],\n    // [/^column\\/(.*)$/, \"home/topic/list?category=:1\"],\n    // [/^detail\\/(.*)$/, \"home/topic/detail?id=:1\"],\n    // [/^sp\\/(.*)$/, \"home/sp/index?category=:1\"]\n];"
+    ]
+}

@@ -1,0 +1,17 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/admin/logic/tags.js"
+    ],
+    "names": [
+        "indexAction",
+        "think",
+        "logic",
+        "base"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAME;;;;mBAIAA,W,0BAAa,CAEZ,C;;;EAP0BC,MAAMC,KAAN,CAAYC,I",
+    "file": "../../../src/admin/logic/tags.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n/**\n * logic\n * @param  {} []\n * @return {}     []\n */\nexport default class extends think.logic.base {\n  /**\n   * index action logic\n   * @return {} []\n   */\n  indexAction(){\n   \n  }\n}"
+    ]
+}

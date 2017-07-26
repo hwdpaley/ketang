@@ -1,0 +1,189 @@
+{% extends "../inc/base.html" %} {% block style %}
+<link href="/static/assets/css/layout-question.css" rel="stylesheet" type="text/css" /> {% endblock %} {% block content %}
+<section class="alternate parallax-2">
+    <div class="overlay dark-0">
+        <!-- dark overlay [1 to 9 opacity] -->
+    </div>
+    <div class="container " style="position: relative;z-index: 10">
+        {% include "../inc/banner.html" %}
+        <div class="row">
+            <div class="col-md-12">
+                <div class="slider fullwidthbanner-container roundedcorners margin-bottom-0">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section>
+    <div class="row">
+        <div class="container">
+            <div class="row">
+                <ol id="home-data-list">
+                    <li>
+                        {% topic data ="hotlist",limit="1",cid=85,type="today",isstu=1,uid=userid%} 
+                        <div class="lineH60">
+                            <img src="/static/admin/img/icon_recent.png" class="section-one-header"></div>
+                        <ul class="common-list" id="recent-content">
+                            {% for v in hotlist %}
+                            <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                <a href="{{v|get_url_vip(userInfo)}}">
+                                    <div class="width100-relative">
+                                        <img src="{{v.cover_id|get_pic('')}}" class="width100">
+                                        <div class="type-mark">来自美媒视频</div>
+                                    </div>
+                                    <div class="width100-relative list-info">
+                                        <label class="title-text-hidden">{{v.title}}</label>
+                                    </div>
+                                </a>
+                            </li>
+                            {%endfor%}
+                        </ul>
+                    </li>
+                    <li style="padding-top: -15px;">
+                        <div class="header-title wrapper">
+                            <h2 class="icon_video">美媒视频</h2>
+                            <a href="/shipinceshi" class="home_more">更多美媒视频</a>
+                        </div>
+                        <ul class="common-list">
+                            {% topic data ="hotlist",limit="4",cid=85,type="hot",isstu=1,uid=userid%} {% for v in hotlist %}
+                            <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                
+                                <a href="{{v|get_url_vip(userInfo)}}">
+                                    <div class="width100-relative">
+                                        <img src="{{v.cover_id|get_pic('')}}" class="width100">
+                                        {%if v.vip==1%}
+                                        <div class="vip">
+                                        </div>
+                                        {%endif%}
+                                    </div>
+                                    <div class="width100-relative list-info">
+                                        <label class="title-text-hidden">{{v.title}}</label>
+                                        <p><span class="c3 font14">{{v.view}}人看过
+                                        {%if v.wkprice>0%}
+                                        </span><span class="c3 font14 pull-right">¥{{v.wkprice}}&nbsp;元</span>
+                                        {%endif%}
+                                        </p>
+                                    </div>
+                                </a>
+                            </li>
+                            {%endfor%}
+                        </ul>
+                    </li>
+                    <li style="padding-top: -15px;">
+                        <div class="header-title wrapper">
+                            <h2 class="icon_audio">美媒音频</h2>
+                            <a href="/music" class="home_more">更多美媒音频</a>
+                        </div>
+                        <ul class="common-list">
+                            {% topic data ="hotlist",limit="4",cid=138,type="hot",issub=1,isstu=1,uid=userid%} {% for v in hotlist %}
+                            <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                <a href="{{v|get_url_vip(userInfo)}}">
+                                    <div class="width100-relative">
+                                        <img src="{{v.cover_id|get_pic('')}}" class="width100"> {%if v.vip==1%}
+                                        <div class="vip">
+                                        </div>
+                                        {%endif%}
+                                    </div>
+                                    <div class="width100-relative list-info">
+                                        <label class="title-text-hidden">{{v.title|block(20)}}</label>
+                                        <p><span class="c3 font14">{{v.view}}人看过</span></p>
+                                    </div>
+                                </a>
+                            </li>
+                            {%endfor%}
+                        </ul>
+                    </li>
+                    <li>
+                        <div class="header-title wrapper">
+                            <h2 class="icon_data">美媒顾问</h2>
+                            <a href="/wenzhangceshi" class="home_more">更多美媒顾问</a>
+                        </div>
+                        <ul class="common-list">
+                            <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                <a href="/symodel">
+                                    <div class="width100-relative">
+                                        <img src="https://ohtawbude.qnssl.com/syms.jpg" class="width100">
+                                    </div>
+                                    <div class="width100-relative list-info">
+                                        <label class="title-text-hidden">商业模式</label>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                <a href="/touchuang">
+                                    <div class="width100-relative">
+                                        <img src="https://ohtawbude.qnssl.com/zszx.jpg" class="width100">
+                                    </div>
+                                    <div class="width100-relative list-info">
+                                        <label class="title-text-hidden">装饰装修</label>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                <a href="/hulianwang">
+                                    <div class="width100-relative">
+                                        <img src="https://ohtawbude.qnssl.com/qnyx.jpg" class="width100">
+                                    </div>
+                                    <div class="width100-relative list-info">
+                                        <label class="title-text-hidden">全年营销</label>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                                <!-- <a href="/zhinengyingjian"> -->
+                                <a href="javascript:_show();">
+                                    <div class="width100-relative">
+                                        <img src="https://ohtawbude.qnssl.com/qnyx.jpg" class="width100">
+                                    </div>
+                                    <div class="width100-relative list-info">
+                                        <label class="title-text-hidden">顾客管理</label>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</section>
+<!--
+controlls-over      = navigation buttons over the image
+buttons-autohide    = navigation buttons visible on mouse hover only
+
+data-plugin-options:
+"singleItem": true
+"autoPlay": true (or ms. eg: 4000)
+"navigation": true
+"pagination": true
+-->
+<!-- <section class="heading-title " style="padding-top: 10px ;padding-bottom: 10px;background-color: rgba(0,0,0,0.05)">
+    <div class="container">
+
+        
+        <div class="heading-title heading-border heading-color nomargin">
+            <h4 style="background-color: rgba(0,0,0,0);color: #333">友情链接 <span>Friendship link</span></h4>
+            <p class="font-lato size-14"><a href="/ext/link/index/apply">申请友情链接</a> | <a href="/ext/link/index">更多&gt;&gt;</a> </p>
+        </div>
+
+    </div>
+</section> -->
+<!-- <div class="text-center margin-top-20 margin-bottom-10 container link">
+    <div class="owl-carousel nomargin" data-plugin-options='{"items":6, "singleItem": false, "autoPlay": true}'>
+        {% model data ="link",table="ext_link",where='{"passed":1}',limit="24",order="sort ASC"%}
+        {%for l in link%}
+        {%if l.linktype==0%}
+        <div class="linkbox alternate">
+            <a href="{{l.url}}" target="_blank" title="{{l.name}}">{{l.name}}</a>
+        </div>
+        {%else%}
+        <div class="linkbox alternate">
+            <a href="{{l.url}}" target="_blank" title="{{l.name}}">
+                <img class="img-responsive" src="{{l.logo}}" alt="{{l.name}}">
+            </a>
+        </div>
+        {%endif%}
+        {%endfor%}
+    </div>
+</div> -->
+{% endblock %} {%block script%} {%endblock%}

@@ -1,0 +1,12 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/mod/config/route.js"
+    ],
+    "names": [],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;kBAIe,CACX,CAAC,0BAAD,EAA4B,iCAA5B,CADW,EAEX,CAAC,qBAAD,EAAuB,gCAAvB,CAFW,C",
+    "file": "../../../src/mod/config/route.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n/**\n * Created by Arterli on 2016/1/24.\n * 独立模型路由自定义；\n */\nexport default [\n    [/^mod\\/question\\/(\\d+).*$/,\"mod/question/index/detail?id=:1\"],\n    [/^mod\\/artist\\/(.*)$/,\"/mod/author/index/detail?id=:1\"],\n];"
+    ]
+}

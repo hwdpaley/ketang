@@ -1,0 +1,24 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/uc/controller/test.js"
+    ],
+    "names": [
+        "indexAction",
+        "display",
+        "snAction",
+        "prefix",
+        "think",
+        "parseConfig",
+        "config",
+        "model",
+        "query",
+        "oo",
+        "end"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;;;;;;;;;AAEA;;;;;;;;;;;;;;AAGE;;;;mBAIAA,W,0BAAa;AACX;AACA,WAAO,KAAKC,OAAL,EAAP;AACD,G;;mBACIC,Q;;;;;;;AACH;AACA;AACA;AACA;AACA;AACIC,oB,GAAOC,MAAMC,WAAN,CAAkB,IAAlB,EAAuBD,MAAME,MAAN,CAAa,IAAb,CAAvB,EAA2CH,M;;qBACvC,KAAKI,KAAL,GAAaC,KAAb,kB;;;AAAXC,gB;AAAgD;AACpD;AACA,mBAAKC,GAAL,CAASD,GAAG,CAAH,EAAM,CAAN,EAAS,UAAT,CAAT",
+    "file": "../../../src/uc/controller/test.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n\nimport Base from './base.js';\n\nexport default class extends Base {\n  /**\n   * index action\n   * @return {Promise} []\n   */\n  indexAction(){\n    //auto render template file index_index.html\n    return this.display();\n  }\n async snAction(){\n    // let date = new Date();\n    // let y = date.getFullYear();\n    // let m = date.getMonth()+1 <10 ?\"0\"+(date.getMonth()+1):date.getMonth()+1;\n    // let d = date.getDate()<10?\"0\"+date.getDate():date.getDate();\n    // let v_timestr = y+m+d;\n    let prefix=think.parseConfig(true,think.config(\"db\")).prefix;\n    let oo = await this.model().query(`call seq_no(1)`);//TODO\n    // let order_no= await this.query(`SELECT CONCAT(${v_timestr},LPAD(order_sn,7,0)) AS order_sn FROM cmswing_order_seq WHERE timestr=${v_timestr}`);\n    this.end(oo[0][0][\"order_sn\"])\n  }\n}"
+    ]
+}

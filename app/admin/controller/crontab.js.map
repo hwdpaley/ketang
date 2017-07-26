@@ -1,0 +1,50 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/admin/controller/crontab.js"
+    ],
+    "names": [
+        "init",
+        "http",
+        "indexAction",
+        "display",
+        "cloaAction",
+        "isCli",
+        "error",
+        "Error",
+        "think",
+        "statusAction",
+        "model",
+        "getset",
+        "setup",
+        "map",
+        "pay_status",
+        "status",
+        "create_time",
+        "Date",
+        "getTime",
+        "Number",
+        "ORDER_DELAY",
+        "type",
+        "where",
+        "field",
+        "select",
+        "order",
+        "isEmpty",
+        "v",
+        "id",
+        "update",
+        "admin_remark",
+        "stock",
+        "console",
+        "log",
+        "end",
+        "controller",
+        "base"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;mBAGEA,I,iBAAKC,I,EAAK;AACR,oCAAMD,IAAN,YAAWC,IAAX;AACA;AAED,G;AACD;;;;;;mBAIAC,W,0BAAa;AACX;AACA,WAAO,KAAKC,OAAL,EAAP;AACD,G;;mBACKC,U;;;;;;;;kBAGA,KAAKC,KAAL,E;;;;;AACF,mBAAKJ,IAAL,CAAUK,KAAV,GAAkB,IAAIC,KAAJ,CAAU,2BAAV,CAAlB;+CACOC,MAAMC,YAAN,CAAmB,GAAnB,EAAwB,KAAKR,IAA7B,C;;;;qBAIS,KAAKS,KAAL,CAAW,OAAX,EAAoBC,MAApB,E;;;AAAdC,mB;AACAC,iB,GAAM;AACRC,4BAAW,CADH;AAERC,wBAAO,CAFC;AAGRC,6BAAY,CAAC,GAAD,EAAM,IAAIC,IAAJ,GAAWC,OAAX,KAAsBC,OAAOP,MAAMQ,WAAb,IAA0B,KAAtD,CAHJ;AAIRC,sBAAM;AAJE,e;;qBAMQ,KAAKX,KAAL,CAAW,OAAX,EAAoBY,KAApB,CAA0BT,GAA1B,EAA+BU,KAA/B,CAAqC,IAArC,EAA2CC,MAA3C,E;;;AAAdC,mB;;kBACAjB,MAAMkB,OAAN,CAAcD,KAAd,C;;;;;0BACWA,K;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAALE,e;;qBACD,KAAKjB,KAAL,CAAW,OAAX,EAAoBY,KAApB,CAA0B,EAACM,IAAGD,EAAEC,EAAN,EAA1B,EAAqCC,MAArC,CAA4C,EAACd,QAAO,CAAR,EAAUe,cAAa,eAAvB,EAA5C,C;;;;qBAEC,KAAKpB,KAAL,CAAW,OAAX,EAAoBqB,KAApB,CAA0BJ,EAAEC,EAA5B,EAA+B,KAA/B,C;;;;;;;;AAIV;AACAI,sBAAQC,GAAR,CAAY,6BAAZ;AACA,mBAAKC,GAAL;;;;;;;;;;;;;;;;;;EAzCyB1B,MAAM2B,UAAN,CAAiBC,I",
+    "file": "../../../src/admin/controller/crontab.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n\nexport default class extends think.controller.base {\n  init(http){\n    super.init(http);\n    //网站配置\n\n  }\n  /**\n   * index action\n   * @return {Promise} []\n   */\n  indexAction(){\n    //auto render template file index_index.html\n    return this.display();\n  }\n  async cloaAction(){\n    //订单在规定时间为付款自动作废执行方法\n    // 禁止 URL 访问该 Action\n    if(!this.isCli()){\n      this.http.error = new Error('only invoked in cli mode！');\n      return think.statusAction(702, this.http);\n    }\n\n    //查询未付款，未作废的订单的订单\n    let setup = await this.model(\"setup\").getset();\n    let map = {\n      pay_status:0,\n      status:2,\n      create_time:[\"<\",(new Date().getTime()-(Number(setup.ORDER_DELAY)*60000))],\n      type: 0\n    }\n    let order = await this.model(\"order\").where(map).field(\"id\").select();\n    if(!think.isEmpty(order)){\n      for(let v of order){\n       await this.model(\"order\").where({id:v.id}).update({status:6,admin_remark:\"规定时间未付款系统自动作废\"})\n        //释放库存\n        await this.model(\"order\").stock(v.id,false);\n      }\n    }\n\n    //think.log(new Date(),\"订单作废任务执行时间\")\n    console.log('----------cloaAction-------');\n    this.end();\n  }\n}"
+    ]
+}

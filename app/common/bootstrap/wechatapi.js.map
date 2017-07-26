@@ -1,0 +1,38 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/common/bootstrap/wechatapi.js"
+    ],
+    "names": [
+        "global",
+        "massSendNews",
+        "api",
+        "media_id",
+        "receivers",
+        "deferred",
+        "think",
+        "defer",
+        "err",
+        "result",
+        "isEmpty",
+        "resolve",
+        "console",
+        "error",
+        "promise",
+        "massSendText",
+        "content",
+        "massSendImage",
+        "massSendVoice",
+        "massSendVideo",
+        "getUser",
+        "openid",
+        "createLimitQRCode",
+        "sceneId",
+        "self"
+    ],
+    "mappings": "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",
+    "file": "../../../src/common/bootstrap/wechatapi.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict'\n /* global massend 群发图文消息 */\nglobal.massSendNews=(api,media_id,receivers)=>{\n    let deferred = think.defer();\n    api.massSendNews(media_id,receivers,(err,result)=>{\n        //console.log(result)\n        if(!think.isEmpty(result)){\n            deferred.resolve(result);\n            //self.end(result);\n        }else{\n            console.error('err'+err);\n            //deferred.reject(err);\n        }\n    });\n    return deferred.promise;\n}\n\n /* global massend 群发文本消息 */\nglobal.massSendText=(api,content,receivers)=>{\n    let deferred = think.defer();\n    api.massSendText(content,receivers,(err,result)=>{\n        //console.log(result)\n        if(!think.isEmpty(result)){\n            deferred.resolve(result);\n            //self.end(result);\n        }else{\n            console.error('err'+err);\n            //deferred.reject(err);\n        }\n    });\n    return deferred.promise;\n}\n\n /* global massend 群发图片消息 */\nglobal.massSendImage=(api,media_id,receivers)=>{\n    let deferred = think.defer();\n    api.massSendImage(media_id,receivers,(err,result)=>{\n        //console.log(result)\n        if(!think.isEmpty(result)){\n            deferred.resolve(result);\n            //self.end(result);\n        }else{\n            console.error('err'+err);\n            //deferred.reject(err);\n        }\n    });\n    return deferred.promise;\n}\n\n /* global massend 群发语音消息 */\nglobal.massSendVoice=(api,media_id,receivers)=>{\n    let deferred = think.defer();\n    api.massSendVoice(media_id,receivers,(err,result)=>{\n        //console.log(result)\n        if(!think.isEmpty(result)){\n            deferred.resolve(result);\n            //self.end(result);\n        }else{\n            console.error('err'+err);\n            //deferred.reject(err);\n        }\n    });\n    return deferred.promise;\n}\n\n /* global massend 群发视频消息 */\nglobal.massSendVideo=(api,media_id,receivers)=>{\n    let deferred = think.defer();\n    api.massSendVideo(media_id,receivers,(err,result)=>{\n        //console.log(result)\n        if(!think.isEmpty(result)){\n            deferred.resolve(result);\n            //self.end(result);\n        }else{\n            console.error('err'+err);\n            //deferred.reject(err);\n        }\n    });\n    return deferred.promise;\n}\n/**\n * 获取用户基本信息\n * 详情请见：http://mp.weixin.qq.com/wiki/14/bb5031008f1494a59c6f71fa0f319c66.html\n * @param openid\n * @returns {Promise}\n */\nglobal.getUser=(api,openid)=>{\n    let deferred = think.defer();\n    api.getUser(openid, function (err, result) {\n        if(!think.isEmpty(result)){\n            deferred.resolve(result);\n            //self.end(result);\n        }else{\n            console.error('err'+err);\n            //deferred.reject(err);\n        }\n    });\n    return deferred.promise;\n}\n/**\n * 创建永久二维码 详细请看：http://mp.weixin.qq.com/wiki/18/28fc21e7ed87bec960651f0ce873ef8a.html\n * @param api\n * @param sceneId 场景ID。数字ID不能大于100000，字符串ID长度限制为1到64\n * @returns {Promise}\n */\nglobal.createLimitQRCode=(api,sceneId)=>{\n    let deferred = think.defer();\n    let self=this;\n    api.createLimitQRCode(sceneId, function (err, result) {\n        if(!think.isEmpty(result)){\n            deferred.resolve(result);\n            // console.log('result'+JSON.stringify(result) );\n            // self.end(result);\n        }else{\n            console.error('err'+err);\n            //deferred.reject(err);\n        }\n    });\n    return deferred.promise;\n}\n"
+    ]
+}

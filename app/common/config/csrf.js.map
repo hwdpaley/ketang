@@ -1,0 +1,17 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/common/config/csrf.js"
+    ],
+    "names": [
+        "session_name",
+        "form_name",
+        "errno",
+        "errmsg"
+    ],
+    "mappings": ";;;AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;kBAGe;AACXA,kBAAc,UADH,EACe;AAC1BC,eAAW,UAFA,EAEY;AACvBC,WAAO,GAHI,EAGC;AACZC,YAAQ,aAJG,CAIW;AAJX,C",
+    "file": "../../../src/common/config/csrf.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n/**\n * Created by arter on 2016/3/29.\n */\nexport default {\n    session_name: \"__CSRF__\", // Token 值存在 session 的名字\n    form_name: \"__CSRF__\", // CSRF 字段名字，从该字段获取值校验\n    errno: 400, //错误号\n    errmsg: \"token error\" // 错误信息\n};"
+    ]
+}

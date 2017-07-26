@@ -1,0 +1,46 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/api/controller/category.js"
+    ],
+    "names": [
+        "init",
+        "http",
+        "__before",
+        "getAction",
+        "data",
+        "id",
+        "modelInstance",
+        "getPk",
+        "pk",
+        "where",
+        "find",
+        "success",
+        "get_all_category",
+        "arr_to_tree",
+        "postAction",
+        "fail",
+        "think",
+        "locale",
+        "action",
+        "url",
+        "get",
+        "isEmpty",
+        "add",
+        "insertId",
+        "deleteAction",
+        "delete",
+        "rows",
+        "affectedRows",
+        "putAction",
+        "update",
+        "__call",
+        "controller",
+        "rest"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAKE;;;;;qBAKAA,I,iBAAKC,I,EAAK;AACR,wCAAMD,IAAN,YAAWC,IAAX;AACD,K;AACD;;;;;;qBAIAC,Q,uBAAU,CAET,C;;qBACOC,S;;;;;;;;AACF;AACA;AACA;AACIC,gC;;iCACA,KAAKC,E;;;;;;mCACU,KAAKC,aAAL,CAAmBC,KAAnB,E;;;AAAXC,8B;;mCACS,KAAKF,aAAL,CAAmBG,KAAnB,kDAA2BD,EAA3B,IAAgC,KAAKH,EAArC,yBAA0CK,IAA1C,E;;;AAAbN,gC;6DACO,KAAKO,OAAL,CAAaP,IAAb,C;;;;mCAEE,KAAKE,aAAL,CAAmBM,gBAAnB,E;;;AAAbR,gC;6DACO,KAAKO,OAAL,CAAaE,YAAYT,IAAZ,EAAiB,CAAjB,CAAb,C;;;;;;;;;;;;;;;;;qBAELU,U;;;;;;;8DACK,KAAKC,IAAL,CAAUC,MAAMC,MAAN,CAAa,gBAAb,EAA+B,KAAKhB,IAAL,CAAUiB,MAAzC,EAAiD,KAAKjB,IAAL,CAAUkB,GAA3D,CAAV,C;;;AACHX,8B;AACAJ,gC,GAAO,KAAKgB,GAAL,E;;AACX,mCAAOhB,KAAKI,EAAL,CAAP;;iCACGQ,MAAMK,OAAN,CAAcjB,IAAd,C;;;;;8DACQ,KAAKW,IAAL,CAAU,eAAV,C;;;;mCAEU,KAAKT,aAAL,CAAmBgB,GAAnB,CAAuBlB,IAAvB,C;;;AAAjBmB,oC;8DACG,KAAKZ,OAAL,CAAa,EAACN,IAAIkB,QAAL,EAAb,C;;;;;;;;;;;;;;;;;qBAELC,Y;;;;;;;;;8DACK,KAAKT,IAAL,CAAUC,MAAMC,MAAN,CAAa,gBAAb,EAA+B,KAAKhB,IAAL,CAAUiB,MAAzC,EAAiD,KAAKjB,IAAL,CAAUkB,GAA3D,CAAV,C;;;;mCAIQ,KAAKb,aAAL,CAAmBC,KAAnB,E;;;AAAXC,8B;;mCACa,KAAKF,aAAL,CAAmBG,KAAnB,oDAA2BD,EAA3B,IAAgC,KAAKH,EAArC,0BAA0CoB,MAA1C,E;;;AAAbC,gC;8DACG,KAAKf,OAAL,CAAa,EAACgB,cAAcD,IAAf,EAAb,C;;;;;;;;;;;;;;;;;qBAELE,S;;;;;;;;;8DACK,KAAKb,IAAL,CAAUC,MAAMC,MAAN,CAAa,gBAAb,EAA+B,KAAKhB,IAAL,CAAUiB,MAAzC,EAAiD,KAAKjB,IAAL,CAAUkB,GAA3D,CAAV,C;;;;mCAIQ,KAAKb,aAAL,CAAmBC,KAAnB,E;;;AAAXC,8B;AACAJ,gC,GAAO,KAAKgB,GAAL,E;;AACX,mCAAOhB,KAAKI,EAAL,CAAP;;iCACIQ,MAAMK,OAAN,CAAcjB,IAAd,C;;;;;8DACO,KAAKW,IAAL,CAAU,eAAV,C;;;;mCAEM,KAAKT,aAAL,CAAmBG,KAAnB,oDAA2BD,EAA3B,IAAgC,KAAKH,EAArC,0BAA0CwB,MAA1C,CAAiDzB,IAAjD,C;;;AAAbsB,gC;8DACG,KAAKf,OAAL,CAAa,EAACgB,cAAcD,IAAf,EAAb,C;;;;;;;;;;;;;;;;;qBAEXI,M,qBAAQ;AACJ,eAAO,KAAKf,IAAL,CAAUC,MAAMC,MAAN,CAAa,gBAAb,EAA+B,KAAKhB,IAAL,CAAUiB,MAAzC,EAAiD,KAAKjB,IAAL,CAAUkB,GAA3D,CAAV,CAAP;AACH,K;;;EAjEwBH,MAAMe,UAAN,CAAiBC,I",
+    "file": "../../../src/api/controller/category.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n/**\n * rest controller\n * @type {Class}\n */\nexport default class extends think.controller.rest {\n  /**\n   * init\n   * @param  {Object} http []\n   * @return {}      []\n   */\n  init(http){\n    super.init(http);\n  }\n  /**\n   * before magic method\n   * @return {Promise} []\n   */\n  __before(){\n\n  }\n    async getAction(){\n        // console.log(this.get(\"aa\"));\n        // let user = await this.model(\"member\").select();\n        // console.log(user);\n        let data;\n        if (this.id) {\n            let pk = await this.modelInstance.getPk();\n            data = await this.modelInstance.where({[pk]: this.id}).find();\n            return this.success(data);\n        }\n        data = await this.modelInstance.get_all_category();\n        return this.success(arr_to_tree(data,0));\n    }\n    async postAction(){\n        return this.fail(think.locale('ACTION_INVALID', this.http.action, this.http.url));\n        let pk = await this.modelInstance.getPk();\n        let data = this.get();\n        delete data[pk];\n        if(think.isEmpty(data)){\n            return this.fail('data is empty');\n        }\n        let insertId = await this.modelInstance.add(data);\n        return this.success({id: insertId});\n    }\n    async deleteAction(){\n        return this.fail(think.locale('ACTION_INVALID', this.http.action, this.http.url));\n        if (!this.id) {\n            return this.fail('params error');\n        }\n        let pk = await this.modelInstance.getPk();\n        let rows = await this.modelInstance.where({[pk]: this.id}).delete();\n        return this.success({affectedRows: rows});\n    }\n    async putAction(){\n        return this.fail(think.locale('ACTION_INVALID', this.http.action, this.http.url));\n        if (!this.id) {\n            return this.fail('params error');\n        }\n        let pk = await this.modelInstance.getPk();\n        let data = this.get();\n        delete data[pk];\n        if (think.isEmpty(data)) {\n            return this.fail('data is empty');\n        }\n        let rows = await this.modelInstance.where({[pk]: this.id}).update(data);\n        return this.success({affectedRows: rows});\n    }\n    __call(){\n        return this.fail(think.locale('ACTION_INVALID', this.http.action, this.http.url));\n    }\n}"
+    ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "CmsWing",
+  "description": "application created by thinkjs",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node www/development.js",
+    "compile": "babel src/ --out-dir app/",
+    "watch-compile": "node -e \"console.log('<npm run watch-compile> no longer need, use <npm start> command direct.');console.log();\"",
+    "watch": "npm run watch-compile"
+  },
+  "dependencies": {
+    "babel-runtime": "6.x.x",
+    "crypto": "0.0.3",
+    "debug": "^2.6.8",
+    "geetest": "latest",
+    "jimp": "latest",
+    "lodash": "4.x.x",
+    "moment": "latest",
+    "node-crontab": "latest",
+    "nunjucks": "^2.2.0",
+    "pingpp": "latest",
+    "qiniu": "^6.1.13",
+    "request": "^2.81.0",
+    "segment": "latest",
+    "source-map-support": "0.4.0",
+    "superagent": "latest",
+    "tar.gz": "^1.0.2",
+    "think-pagination": "latest",
+    "think-wechat": "latest",
+    "thinkjs": "2.2.x",
+    "urllib": ">=0.5.2",
+    "wechat-api": "latest",
+    "xml2js": "^0.4.17"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.18.0",
+    "babel-preset-es2015": "^6.18.0",
+    "babel-preset-stage-1": "^6.16.0",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-core": "^6.20.0"
+  },
+  "repository": "",
+  "license": "MIT"
+}

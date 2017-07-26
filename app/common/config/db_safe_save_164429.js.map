@@ -1,0 +1,24 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/common/config/db_safe_save_164429.js"
+    ],
+    "names": [
+        "type",
+        "adapter",
+        "mysql",
+        "host",
+        "port",
+        "database",
+        "user",
+        "password",
+        "prefix",
+        "encoding",
+        "mongo"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;kBAIe;AACbA,QAAM,OADO;AAEbC,WAAS;AACPC,WAAO;AACLC,YAAM,6CADD;AAELC,YAAM,MAFD;AAGLC,gBAAU,QAHL;AAILC,YAAM,MAJD;AAKLC,gBAAU,4BALL;AAMLC,cAAQ,KANH;AAOLC,gBAAU;AAPL,KADA;AAUPC,WAAO;AAVA;AAFI,C",
+    "file": "../../../src/common/config/db_safe_save_164429.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n/**\n * db config\n * @type {Object}\n */\nexport default {\n  type: 'mysql',\n  adapter: {\n    mysql: {\n      host: 'rm-wz9i6b839885mow0i.mysql.rds.aliyuncs.com',\n      port: '3306',\n      database: 'meidao',\n      user: 'root',\n      password: 'B163e802a1388B163e802a1388',\n      prefix: 'bb_',\n      encoding: 'UTF8MB4_GENERAL_CI'\n    },\n    mongo: {\n\n    }\n  }\n};\n"
+    ]
+}

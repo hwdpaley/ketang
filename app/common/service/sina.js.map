@@ -1,0 +1,50 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/common/service/sina.js"
+    ],
+    "names": [
+        "init",
+        "code",
+        "redirect_uri",
+        "baseUrl",
+        "gettoken",
+        "think",
+        "cache",
+        "setup",
+        "client_id",
+        "SINA_APPKEY",
+        "client_secret",
+        "SINA_APPSECRET",
+        "grant_type",
+        "URL_GET_USERINFO",
+        "deferred",
+        "defer",
+        "post",
+        "send",
+        "end",
+        "err",
+        "res",
+        "ok",
+        "isEmpty",
+        "body",
+        "resolve",
+        "JSON",
+        "parse",
+        "text",
+        "console",
+        "log",
+        "promise",
+        "getuserinfo",
+        "token",
+        "uid",
+        "get",
+        "service",
+        "base"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;;;;;;;;;;;;;;;;;;;;;;;;AACA;;;;AACA;;;;;;;;;;;;;;AAEE;;;;qBAIAA,I,iBAAKC,I,EAAKC,Y,EAAa;AACrB;AACE,aAAKD,IAAL,GAAYA,IAAZ;AACA,aAAKE,OAAL,GAAa,uBAAb;AACA,aAAKD,YAAL,GAAoBA,YAApB;AACH,K;AACD;;;qBACME,Q;;;;;;;;mCACgBC,MAAMC,KAAN,CAAY,OAAZ,C;;;AAAdC,iC;AACAC,qC,GAAYD,MAAME,W;AAClBC,yC,GAAgBH,MAAMI,c;AACtBC,sC,GAAa,oB;AACbX,gC,GAAO,KAAKA,I;AACZC,wC,GAAa,KAAKA,Y;AAClBW,4C,GAAmB,KAAKV,OAAL,yB;;AACnBC,oC,GAAS,SAATA,QAAS,CAACS,gBAAD,EAAoB;AAC7B,oCAAIC,WAAWT,MAAMU,KAAN,EAAf;AACA,qDAAWC,IAAX,CAAoBH,gBAApB,mBAAkDL,SAAlD,uBAA6EE,aAA7E,4CAAiIT,IAAjI,sBAAsJC,YAAtJ,EAAsKe,IAAtK,CAA2K,EAA3K,EAA+KC,GAA/K,CAAmL,UAASC,GAAT,EAAaC,GAAb,EAAiB;AACjM;AACC,wCAAIA,IAAIC,EAAR,EAAY;AACR,4CAAGhB,MAAMiB,OAAN,CAAcF,IAAIG,IAAlB,CAAH,EAA2B;AACvBT,qDAASU,OAAT,CAAiBC,KAAKC,KAAL,CAAWN,IAAIO,IAAf,CAAjB;AACH,yCAFD,MAEM;AACFb,qDAASU,OAAT,CAAiBJ,IAAIG,IAArB;AACH;AACA,qCANL,MAMW;AACHK,gDAAQC,GAAR,CAAY,kBAAkBT,IAAIO,IAAlC;AACJb,iDAASU,OAAT,CAAiBJ,IAAIO,IAArB;AACC;AACJ,iCAZL;AAaA,uCAAOb,SAASgB,OAAhB;AACH,6B;;;mCACY1B,SAASS,gBAAT,C;;;;;;;;;;;;;;;;;;;;qBAEXkB,W;iGAAYC,K,EAAMC,G;;;;;;;;AACnBF,uC,GAAc,SAAdA,WAAc,GAAI;AAClB,oCAAIjB,WAAWT,MAAMU,KAAN,EAAf;AACA,qDACKmB,GADL,CACY,OAAK/B,OADjB,wCAC2D6B,KAD3D,aACwEC,GADxE,EAEKf,GAFL,CAES,UAASC,GAAT,EAAaC,GAAb,EAAiB;AACtBN,6CAASU,OAAT,CAAiBC,KAAKC,KAAL,CAAWN,IAAIO,IAAf,CAAjB;AACC,iCAJL;AAKA,uCAAOb,SAASgB,OAAhB;AACH,6B;;;mCACYC,a;;;;;;;;;;;;;;;;;;;;;EAjDa1B,MAAM8B,OAAN,CAAcC,I",
+    "file": "../../../src/common/service/sina.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n\n'use strict';\nimport superagent from 'superagent';\nimport querystring  from 'querystring';\nexport default class extends think.service.base {\n  /**\n   * init\n   * @return {}         []\n   */\n  init(code,redirect_uri){\n    //super.init(...args);\n      this.code = code;\n      this.baseUrl=\"https://api.weibo.com\";\n      this.redirect_uri = redirect_uri;\n  }\n  //获取\n  async gettoken(){\n      let setup = await think.cache(\"setup\");\n      let client_id = setup.SINA_APPKEY;\n      let client_secret = setup.SINA_APPSECRET;\n      let grant_type = 'authorization_code';\n      let code = this.code;\n      let redirect_uri=this.redirect_uri;\n      let URL_GET_USERINFO = this.baseUrl + `/oauth2/access_token`;\n      let gettoken=(URL_GET_USERINFO)=>{\n          let deferred = think.defer();\n          superagent.post( `${URL_GET_USERINFO}?client_id=${client_id}&client_secret=${client_secret}&grant_type=authorization_code&code=${code}&redirect_uri=${redirect_uri}`).send({}).end(function(err,res){\n             // console.log(res);\n              if (res.ok) {\n                  if(think.isEmpty(res.body)){\n                      deferred.resolve(JSON.parse(res.text));\n                  }else {\n                      deferred.resolve(res.body);\n                  }\n                  } else {\n                      console.log('Oh no! error ' + res.text);\n                  deferred.resolve(res.text);\n                  }\n              });\n          return deferred.promise;\n      }\n      return await gettoken(URL_GET_USERINFO);\n  }\n  async getuserinfo(token,uid){\n   let getuserinfo = ()=>{\n       let deferred = think.defer();\n       superagent\n           .get(`${this.baseUrl}/2/users/show.json?access_token=${token}&uid=${uid}`)\n           .end(function(err,res){\n           deferred.resolve(JSON.parse(res.text))\n           });\n       return deferred.promise;\n   }\n   return await getuserinfo();\n  }\n}"
+    ]
+}

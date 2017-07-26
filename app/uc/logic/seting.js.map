@@ -1,0 +1,22 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/uc/logic/seting.js"
+    ],
+    "names": [
+        "indexAction",
+        "updatepasswordAction",
+        "rules",
+        "oldpassword",
+        "password",
+        "repassword",
+        "think",
+        "logic",
+        "base"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;AACA;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AAME;;;;mBAIAA,W,0BAAa,CAEZ,C;AACD;;;mBACAC,oB,mCAAsB;AACpB,SAAKC,KAAL,GAAa;AACXC,mBAAY,UADD;AAEXC,gBAAS,0BAFE;AAGXC,kBAAW;AAHA,KAAb;AAKD,G;;;EAf0BC,MAAMC,KAAN,CAAYC,I",
+    "file": "../../../src/uc/logic/seting.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n'use strict';\n/**\n * logic\n * @param  {} []\n * @return {}     []\n */\nexport default class extends think.logic.base {\n  /**\n   * index action logic\n   * @return {} []\n   */\n  indexAction(){\n   \n  }\n  //修改密码数据验证\n  updatepasswordAction(){\n    this.rules = {\n      oldpassword:\"required\",\n      password:\"byteLength:6,20|required\",\n      repassword:\"equals:password\"\n    }\n  }\n}"
+    ]
+}

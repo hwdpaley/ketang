@@ -1,0 +1,161 @@
+music{% extends "../inc/music_base.html" %} {% block style %}
+<link href="/static/assets/css/layout-question.css" rel="stylesheet" type="text/css" />
+<link href="/static/admin/css/music/audio.css" rel="stylesheet" type="text/css" /> <link href="/static/admin/css/music/simpleplayer.css" rel="stylesheet" type="text/css" /> 
+
+
+{% endblock %} {% block content %} {%set cate = category.id|get_cate()%}
+
+
+<nav class="mui-bar mui-bar-tab">
+    <a class="mui-tab-item mui-action-back" >
+        <span class="mui-icon iconfont icon-back"></span>
+        <span class="mui-tab-label">返回</span>
+    </a>
+    <!-- <a class="mui-tab-item" href="#SOHUCS">
+        <span class="mui-icon iconfont icon-comment"><span class="mui-badge" id="changyan_count_unit">0</span></span>
+        <span class="mui-tab-label">评论</span>
+    </a>
+    <a class="mui-tab-item" href="#shoucang">
+        <span class="mui-icon iconfont icon-favor"></span>
+        <span class="mui-tab-label">收藏</span>
+    </a> -->
+    <a class="mui-tab-item" href="#fenxiang">
+        <span class="mui-icon iconfont icon-share"></span>
+        <span class="mui-tab-label">分享</span>
+    </a>
+
+    {% if controller.is_login %}
+    <a class="mui-tab-item" href="/uc/index">
+        <span class="mui-icon iconfont icon-my"></span>
+        <span class="mui-tab-label">我的</span>
+    </a>
+    {%else%}
+    <a class="mui-tab-item" href="/uc/public/login">
+        <span class="mui-icon iconfont icon-myfill"></span>
+        <span class="mui-tab-label">登录</span>
+    </a>
+    {%endif%}
+
+    <a class="mui-tab-item" href="#top">
+        <span class="mui-icon iconfont icon-top"></span>
+        <span class="mui-tab-label">顶部</span>
+    </a>
+
+</nav>
+
+<div class="mui-content detail" >
+   
+        <div class="row audio_bg">
+
+            <!-- LEFT -->
+            
+
+            <div class="col-md-12 col-sm-12 ">
+            <div class="audio-header">
+                <h3 class="margin-t10">{{info.title}}</h3>
+                <h3 style="font-size: 20px;" class="margin-t10">{{info.teacher}}</h3>
+            </div>
+            <div class="share_center">
+                <div class="border margin-t15">
+                    <div class="share_head" style="background-image:url('{{info.cover_id|get_pic("")}}');"></div>
+                </div>
+            </div>
+            <div class="margin-t15">
+                <div class="share_audio">
+                    
+                    
+                    <audio id="audio" class="player">   
+      <source src="{%if info.videourl.length>10%}{{info.videourl}}{%else%}{%if info.video_id != 0%}//{{controller.setup.QINIU_DOMAIN_NAME}}/{{info.video_id|get_file("savename",false)}}{%else%}{{info.videourl}}{%endif%}{%endif%}" type="audio/mpeg">
+      Your browser does not support the audio tag.
+    </audio>
+                </div>
+            </div>
+            <div class="audio-footer">
+                <p class="font20">美媒教育—随时随地也能学习</p>
+                <!-- <button class="more">收听更多语音</button> -->
+            </div>
+        </div>
+        
+    </div>
+    
+    <div id="SOHUCS" sid="{{info.id}}"></div>
+
+</div>
+{% endblock %}
+{% block script %}
+<script id="changyan_mobile_js" charset="utf-8" type="text/javascript"
+        src="//changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id={{controller.setup.CY_APPID}}&conf={{controller.setup.CY_APPKEY}}">
+</script>
+<script type="text/javascript" src="//assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+
+<script type="text/javascript">
+    mui.init();
+    $(".player").player();
+    
+    var btn = document.querySelectorAll(".mui-bar-tab a.mui-tab-item");
+    for(var i = 0;i<btn.length;i++){
+        btn[i].addEventListener("tap",function () {
+            var href = this.getAttribute("href");
+            if(href=="#top"){
+                mui.scrollTo(0,500);
+            }else if(href=="#shoucang"){
+                //todo
+                mui.toast("功能开发中。。。")
+                return
+            }else if(href=="#fenxiang"){
+                //todo
+                mui.toast("功能开发中。。。")
+                return
+            }else {
+                mui.openWindow({url: href})
+            }
+
+        })
+    }
+    wx.config({
+        debug: false,
+        appId: '{{signPackage.appId}}',
+        timestamp: '{{signPackage.timestamp}}',
+        nonceStr: '{{signPackage.nonceStr}}',
+        signature: '{{signPackage.signature}}',
+        jsApiList: [
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ',
+            'onMenuShareWeibo',
+            'onMenuShareQZone'
+        ]
+    });
+    wx.ready(function() {
+        console.log('wx.ready');
+        var shareData = {
+            title: '{{info.title}}', // 分享标题
+            link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: '{{info.fmurl}}', // 分享图标
+            desc: '{{desc|block(30)}}',
+            trigger: function(res) {
+
+            },
+            success: function(res) {
+
+            },
+            cancel: function(res) {
+
+            },
+            fail: function(res) {
+                alert(JSON.stringify(res));
+            }
+        };
+        wx.onMenuShareAppMessage(shareData);
+        wx.onMenuShareTimeline(shareData);
+        wx.onMenuShareQQ(shareData);
+        wx.onMenuShareWeibo(shareData);
+        // 在这里调用 API
+    });
+    wx.error(function(res) {
+        alert(res.errMsg);
+    });
+
+</script>
+
+{% endblock %}

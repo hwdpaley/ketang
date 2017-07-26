@@ -1,0 +1,51 @@
+{
+    "version": 3,
+    "sources": [
+        "../../../src/mod/controller/admin.js"
+    ],
+    "names": [
+        "init",
+        "http",
+        "__before",
+        "get",
+        "category",
+        "m_cate",
+        "model",
+        "get_model",
+        "mod",
+        "indexAction",
+        "cxt",
+        "think",
+        "require",
+        "name",
+        "cc",
+        "action",
+        "log",
+        "message",
+        "assign",
+        "id",
+        "field",
+        "isEmpty",
+        "error",
+        "Error",
+        "statusAction",
+        "console",
+        "info",
+        "cate",
+        "status",
+        "display",
+        "modtemp",
+        "moblie",
+        "ctr",
+        "controller",
+        "split",
+        "ROOT_PATH",
+        "sep",
+        "config"
+    ],
+    "mappings": "AAAA;AACA;AACA;AACA;AACA;AACA;AACA;;AAEA;;;;;;;;;;;;;;;;;;;;;;;;AACA;;;;;;;;;;;;;;mBAEEA,I,iBAAKC,I,EAAM;AACT,oBAAMD,IAAN,YAAWC,IAAX;AACD,G;;AAED;;;;;;mBAIMC,Q;;;;;;;qBACC,gBAAMA,QAAN,W;;;mBACF,KAAKC,GAAL,CAAS,SAAT,C;;;;;;qBAEkB,KAAKC,QAAL,CAAc,KAAKD,GAAL,CAAS,SAAT,CAAd,C;;;AAAnB,mBAAKE,M;;qBAGY,KAAKC,KAAL,CAAW,OAAX,EAAoBC,SAApB,CAA8B,KAAKF,MAAL,CAAYC,KAA1C,C;;;AAAjB,mBAAKE,G;;;;;;;;;;;;;;;;;AAIT;;;;;;;mBAKMC,W;;;;;;;;AAGEC,iB,GAAOC,MAAMC,OAAN,CAAc,oBAAkB,KAAKJ,GAAL,CAASK,IAA3B,GAAgC,QAA9C,C;AACPC,gB,GAAI,IAAIJ,GAAJ,CAAQ,KAAKT,IAAb,C;;qBACF,KAAKc,MAAL,CAAYD,EAAZ,EAAe,OAAf,C;;;;;;;;;;AAINH,oBAAMK,GAAN,CAAU,aAAIC,OAAd,EAAsB,OAAtB;AACA,mBAAKC,MAAL,CAAY,KAAZ;gDACO,KAAKH,MAAL,CAAY,OAAZ,EAAoB,UAApB,C;;;;;;;;;;;;;;;;;AAKX;;;mBACMX,Q;6FAASe,E,EAAIC,K;;;;;;AACjBD,mBAAKA,MAAM,CAAX;AACAC,sBAAQA,SAAS,EAAjB;;mBACIT,MAAMU,OAAN,CAAcF,EAAd,C;;;;;AACF;AACA,mBAAKlB,IAAL,CAAUqB,KAAV,GAAkB,IAAIC,KAAJ,CAAU,WAAV,CAAlB;gDACOZ,MAAMa,YAAN,CAAmB,GAAnB,EAAwB,KAAKvB,IAA7B,C;;;AAETwB,sBAAQT,GAAR,CAAY,oBAAkBG,EAA9B;;qBACiB,KAAKb,KAAL,CAAW,UAAX,EAAuBoB,IAAvB,CAA4BP,EAA5B,EAAgCC,KAAhC,C;;;AAAbO,kB;;oBAEAA,QAAQ,KAAKA,KAAKC,M;;;;;6BAEZD,KAAKE,O;gDACN,C;;;;AACH;AACA,mBAAK5B,IAAL,CAAUqB,KAAV,GAAkB,IAAIC,KAAJ,CAAU,UAAV,CAAlB;gDACOZ,MAAMa,YAAN,CAAmB,GAAnB,EAAwB,KAAKvB,IAA7B,C;;;gDAKA0B,I;;;;;;;;AAKX;AACA,mBAAK1B,IAAL,CAAUqB,KAAV,GAAkB,IAAIC,KAAJ,CAAU,aAAV,CAAlB;gDACOZ,MAAMa,YAAN,CAAmB,GAAnB,EAAwB,KAAKvB,IAA7B,C;;;;;;;;;;;;;;;;;AAIX;;;mBACA6B,O,oBAAQtB,G,EAAiB;AAAA,QAAbuB,MAAa,uEAAN,KAAM;;AACvB,QAAIC,MAAO,KAAK/B,IAAL,CAAUgC,UAAX,CAAuBC,KAAvB,CAA6B,GAA7B,CAAV;AACA,QAAG,CAACH,MAAJ,EAAW;AACT,UAAGC,IAAI,CAAJ,CAAH,EAAU;AACR,eAAO,KAAKH,OAAL,EAAP;AACD,OAFD,MAEM;AACJ,eAAO,KAAKA,OAAL,CAAalB,MAAMwB,SAAN,GAAgBxB,MAAMyB,GAAtB,GAA0B,MAA1B,GAAiCzB,MAAMyB,GAAvC,GAA2C,KAA3C,GAAiDzB,MAAMyB,GAAvD,GAA2D5B,GAA3D,GAA+DG,MAAMyB,GAArE,GAAyE,KAAKnC,IAAL,CAAUgC,UAAnF,GAA8F,GAA9F,GAAkG,KAAKhC,IAAL,CAAUc,MAA5G,GAAmH,KAAKsB,MAAL,CAAY,eAAZ,CAAhI,CAAP;AACD;AAEF,KAPD,MAOM;AACJ,UAAGL,IAAI,CAAJ,CAAH,EAAU;AACR,eAAO,KAAKH,OAAL,CAAalB,MAAMwB,SAAN,GAAgBxB,MAAMyB,GAAtB,GAA0B,MAA1B,GAAiCzB,MAAMyB,GAAvC,GAA2C,KAA3C,GAAiDzB,MAAMyB,GAAvD,GAA2DJ,IAAI,CAAJ,CAA3D,GAAkErB,MAAMyB,GAAxE,GAA4EL,MAA5E,GAAmFpB,MAAMyB,GAAzF,GAA6FJ,IAAI,CAAJ,CAA7F,GAAoG,GAApG,GAAwG,KAAK/B,IAAL,CAAUc,MAAlH,GAAyH,KAAKsB,MAAL,CAAY,eAAZ,CAAtI,CAAP;AACD,OAFD,MAEM;AACJ,eAAO,KAAKR,OAAL,CAAalB,MAAMwB,SAAN,GAAgBxB,MAAMyB,GAAtB,GAA0B,MAA1B,GAAiCzB,MAAMyB,GAAvC,GAA2C,KAA3C,GAAiDzB,MAAMyB,GAAvD,GAA2D5B,GAA3D,GAA+DG,MAAMyB,GAArE,GAAyEL,MAAzE,GAAgFpB,MAAMyB,GAAtF,GAA0F,KAAKnC,IAAL,CAAUgC,UAApG,GAA+G,GAA/G,GAAmH,KAAKhC,IAAL,CAAUc,MAA7H,GAAoI,KAAKsB,MAAL,CAAY,eAAZ,CAAjJ,CAAP;AACD;AACF;AACF,G",
+    "file": "../../../src/mod/controller/admin.js",
+    "sourcesContent": [
+        "// +----------------------------------------------------------------------\n// | Bieber [ 美媒网站内容管理框架 ]\n// +----------------------------------------------------------------------\n// | Copyright (c) 2017 http://www.gzxinbibo.com All rights reserved.\n// +----------------------------------------------------------------------\n// | Author: Tony <912697590@qq.com>\n// +----------------------------------------------------------------------\n\n'use strict';\nimport Base from '../../admin/controller/base.js';\nexport default class extends Base {\n  init(http) {\n    super.init(http);\n  }\n\n  /**\n   * 模型公共参数\n   * @private\n   */\n  async __before() {\n   await super.__before();//继承父类before\n    if(this.get('cate_id')){\n      //获取当前模型栏目id\n      this.m_cate= await this.category(this.get('cate_id'));\n\n      //当前模型信息\n      this.mod = await this.model(\"model\").get_model(this.m_cate.model);\n    }\n  }\n\n  /**\n   * index action\n   * @return {Promise} []\n   * 封面入口\n   */\n  async indexAction(){\n    try\n    {\n      let cxt  = think.require(\"mod/controller/\"+this.mod.name+\"/admin\");\n      let cc =new cxt(this.http)\n      await this.action(cc,\"index\")\n    }\n    catch (err)\n    {\n      think.log(err.message,'ERROR');\n      this.assign(\"err\",err);\n      return this.action(\"index\",\"moderror\");\n    }\n  }\n\n\n  //获取分类信息\n  async category(id, field) {\n    id = id || 0;\n    field = field || \"\";\n    if (think.isEmpty(id)) {\n      //this.fail('没有指定数据分类！');\n      this.http.error = new Error('没有指定数据分类！');\n      return think.statusAction(702, this.http);\n    }\n    console.log(\"category-------\"+id);\n    let cate = await this.model(\"category\").info(id, field);\n    //console.log(cate);\n    if (cate && 1 == cate.status) {\n\n      switch (cate.display) {\n        case 0:\n          //this.fail('该分类禁止显示')\n          this.http.error = new Error('该分类禁止显示！');\n          return think.statusAction(702, this.http);\n          break;\n          //TODO:更多分类显示状态判断\n        default:\n\n          return cate;\n      }\n\n    } else {\n\n      //this.fail(\"分类不存在或者被禁用！\");\n      this.http.error = new Error('分类不存在或者被禁用！');\n      return think.statusAction(702, this.http);\n    }\n  }\n\n  //独立模型display方法封装\n  modtemp(mod,moblie=false){\n    let ctr = (this.http.controller).split(\"/\");\n    if(!moblie){\n      if(ctr[1]){\n        return this.display();\n      }else {\n        return this.display(think.ROOT_PATH+think.sep+\"view\"+think.sep+\"mod\"+think.sep+mod+think.sep+this.http.controller+\"_\"+this.http.action+this.config(\"view.file_ext\"));\n      }\n\n    }else {\n      if(ctr[1]){\n        return this.display(think.ROOT_PATH+think.sep+\"view\"+think.sep+\"mod\"+think.sep+ctr[0]+think.sep+moblie+think.sep+ctr[1]+\"_\"+this.http.action+this.config(\"view.file_ext\"));\n      }else {\n        return this.display(think.ROOT_PATH+think.sep+\"view\"+think.sep+\"mod\"+think.sep+mod+think.sep+moblie+think.sep+this.http.controller+\"_\"+this.http.action+this.config(\"view.file_ext\"));\n      }\n    }\n  }\n}"
+    ]
+}
