@@ -8,7 +8,7 @@
                     <img src="/static/webapp/img/logo.png">
                 </div>
                 <div class="tkb-person-center">
-                    <a href="/uc" class="glyphicon glyphicon-user">个人中心</a>
+                    <a href="/wechat/center" class="glyphicon glyphicon-user">个人中心</a>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -53,19 +53,19 @@
         </div>
         <p class="weui_tabbar_label">商家店铺</p>
     </a>
-    <a href="#" class="weui_tabbar_item ">
+    <a href="/wechat/points/43267709" class="weui_tabbar_item ">
         <div class="weui_tabbar_icon">
             <img src="/static/webapp/img/tabbar_integral_store.png" alt="积分商城">
         </div>
         <p class="weui_tabbar_label">积分商城</p>
     </a>
-    <a class="weui_tabbar_item bg-color-collection  hidden" id="focus_ok" onclick="GoFocus(true, {{groupid}});">
+    <a class="weui_tabbar_item bg-color-collection  hidden" id="focus_ok" onclick="GoFocus(true, '43267709');">
         <div class="weui_tabbar_icon">
             <img src="/static/webapp/img/tabbar_collect.png" class="tabbar-collecion-icon" alt="关注">
         </div>
         <p class="weui_tabbar_label color-white">关注</p>
     </a>
-    <a class="weui_tabbar_item bg-color-collection" id="focus_cancel" onclick="GoFocus(false, {{groupid}});">
+    <a class="weui_tabbar_item bg-color-collection" id="focus_cancel" onclick="GoFocus(false, '43267709');">
         <div class="weui_tabbar_icon">
             <img src="/static/webapp/img/tabbar_collect.png" class="tabbar-collecion-icon" alt="取消关注">
         </div>
@@ -77,8 +77,8 @@
     <div class="alert_detail_box" style="display: block;">
         <div class="favor-header-bar">
             <ul class="tabs">
-                <li class="default"><a href="javascript:void(0);" id="btn3" hidefocus="true">店铺介绍</a></li>
-                <li class=""><a href="javascript:void(0);" id="btn2" hidefocus="true">店铺地址</a></li>
+                <li class=""><a href="javascript:void(0);" id="btn3" hidefocus="true">店铺介绍</a></li>
+                <li class="default"><a href="javascript:void(0);" id="btn2" hidefocus="true">店铺地址</a></li>
             </ul>
         </div>
         <!-- slideTo tab -->
@@ -118,7 +118,20 @@
         uParse('#contentbieber', {
             rootPath: '/static/admin/js/udeitor/'
         })
+        // var signPackage = !{JSON.stringify("{{signPackage}}")};
+        // console.log(signPackage);
+        // var signPackage = "{{signPackage}}";
+    // console.log('{{signPackage.nonceStr}}');
+    // console.log('{{signPackage.signature}}');
+    // console.log('{{signPackage.timestamp}}');
     </script>
+    <!-- <script type="text/javascript">
+    $('#shop_code').qrcode({
+        width: 128,
+        height: 128,
+        text: '{{wx_http}}/wechat/shop/43267709'
+    });
+    </script> -->
     <script type="text/javascript">
         var mySwiper = new Swiper('.swiper-container', {
             autoHeight: true,

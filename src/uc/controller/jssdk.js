@@ -15,7 +15,7 @@ JSSDK.prototype = {
     },
     getSignPackage: function (url, done) {
         const instance = this;
-        console.log("jssdk----url-------------"+url);
+        // console.log("jssdk----url-------------"+url);
         this.getJsApiTicket(function (err, jsApiTicket) {
             if (err) {
                 return done(err);

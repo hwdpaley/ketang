@@ -8,7 +8,7 @@
 <head>
 	<meta charset="utf-8" />
 	<meta name="renderer" content="webkit" />
-	<title>{{controller.meta_title}} | {{controller.setup.WEB_SITE_TITLE}}</title>
+	<title>{{info.dpname}}</title>
 	<meta name="keywords" content="{{controller.keywords}}" />
 	<meta name="description" content="{{controller.description}}" />
 	<meta name="Author" content="Tony [www.gzxinbibo.com]" />
@@ -28,9 +28,6 @@
     <link rel="stylesheet" href="/static/admin/css/wechat/weui.min.css">
     <link rel="stylesheet" href="/static/admin/css/wechat/jquery-weui.css">
     <link rel="stylesheet" href="/static/admin/css/wechat/base.css">
-    
-    <link rel="stylesheet" href="/static/admin/css/wechat/swiper.min.css">
-	<link rel="stylesheet" href="/static/admin/css/wechat/shop_home.css">
     <style rel="stylesheet">
         .product-category li {
             float: left;
@@ -61,32 +58,14 @@
         	position: fixed;
         }
 </style>
+    <link rel="stylesheet" href="/static/admin/css/wechat/swiper.min.css">
+	<link rel="stylesheet" href="/static/admin/css/wechat/shop_home.css">
+    
 
 	{% block style %}{% endblock %}
 	
 </head>
 
-<!--
-		AVAILABLE BODY CLASSES:
-
-		smoothscroll 			= create a browser smooth scroll
-		enable-animation		= enable WOW animations
-
-		bg-grey					= grey background
-		grain-grey				= grey grain background
-		grain-blue				= blue grain background
-		grain-green				= green grain background
-		grain-blue				= blue grain background
-		grain-orange			= orange grain background
-		grain-yellow			= yellow grain background
-
-		boxed 					= boxed layout
-		pattern1 ... patern11	= pattern background
-		menu-vertical-hide		= hidden, open on click
-
-		BACKGROUND IMAGE [together with .boxed class]
-		data-background="assets/images/boxed_background/1.jpg"
-	-->
 
 <body class="smoothscroll enable-animation ">
 
@@ -105,23 +84,6 @@
 		{% endblock %}
 		
 
-	
-	<!-- /wrapper -->
-
-
-	<!--
-			SIDE PANEL
-
-				sidepanel-dark 			= dark color
-				sidepanel-light			= light color (white)
-				sidepanel-theme-color		= theme color
-
-				sidepanel-inverse		= By default, sidepanel is placed on right (left for RTL)
-								If you add "sidepanel-inverse", will be placed on left side (right on RTL).
-		-->
-	
-
-	
 
 
 	<!-- JAVASCRIPT FILES -->
@@ -130,12 +92,14 @@
     <script type="text/javascript" src="/static/admin/js/wechat/jquery.cookie.js"></script>
     <script type="text/javascript" src="/static/admin/js/wechat/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/admin/js/wechat/jquery-weui.min.js"></script>
-
+	<!-- <script type="text/javascript" src="/static/admin/js/wechat/jquery.qrcode.min.js"></script> -->
     <script src="/static/admin/js/idangerous.swiper.min.js"></script>
     
 
     <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
-<script type="text/javascript" src="/static/admin/js/wechat/focus.js"></script>
+	<script type="text/javascript" src="/static/admin/js/wechat/focus.js"></script>
+	<script src="/static/admin/js/udeitor/ueditor.parse.min.js"></script>
+
 	{% block script %}{% endblock %}
     <!--[if lte IE 9]>
     <script src="/static/assets/plugins/jquery-fly/requestAnimationFrame.js"></script>

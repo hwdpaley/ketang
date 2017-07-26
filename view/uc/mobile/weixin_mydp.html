@@ -1,4 +1,4 @@
- {% extends "./inc/myshop_base.html" %} {% block content %}
+ {% extends "./inc/mydp_base.html" %} {% block content %}
   <div id="contentbieber">  
     <div class="weui_tab">
     <div class="weui_tab_bd">
@@ -118,7 +118,57 @@
         uParse('#contentbieber', {
             rootPath: '/static/admin/js/udeitor/'
         })
+        wx.config({
+            debug: false,
+            appId: '{{signPackage.appId}}',
+            timestamp: '{{signPackage.timestamp}}',
+            nonceStr: '{{signPackage.nonceStr}}',
+            signature: '{{signPackage.signature}}',
+            jsApiList: [
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo',
+                'onMenuShareQZone'
+            ]
+        });
+        wx.ready(function() {
+            console.log('wx.ready');
+            var shareData = {
+                title: '{{info.title}}', // 分享标题
+                link: '{{wxhttp}}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: '{{info.fmurl}}', // 分享图标
+                desc: '{{desc|block(30)}}',
+                trigger: function(res) {
+
+                },
+                success: function(res) {
+
+                },
+                cancel: function(res) {
+
+                },
+                fail: function(res) {
+                    alert(JSON.stringify(res));
+                }
+            };
+            wx.onMenuShareAppMessage(shareData);
+            wx.onMenuShareTimeline(shareData);
+            wx.onMenuShareQQ(shareData);
+            wx.onMenuShareWeibo(shareData);
+            // 在这里调用 API
+        });
+        wx.error(function(res) {
+            alert(res.errMsg);
+        });
     </script>
+    <!-- <script type="text/javascript">
+    $('#shop_code').qrcode({
+        width: 128,
+        height: 128,
+        text: '{{wx_http}}/wechat/shop/43267709'
+    });
+    </script> -->
     <script type="text/javascript">
         var mySwiper = new Swiper('.swiper-container', {
             autoHeight: true,

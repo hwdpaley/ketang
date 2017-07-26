@@ -108,7 +108,7 @@ export default class extends Base {
         //记录用户登录行为
         // await this.model("action").log("user_login", "member", res.uid, res.uid, this.ip(), this.http.url);
         // console.log(111111111111121);
-        // console.log(res);
+        console.log("webuser---------"+JSON.stringify(res));
         await this.session('webuser', res);
         //TODO 用户密钥
         return this.success({name: '登录成功！'});

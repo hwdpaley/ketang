@@ -8,9 +8,19 @@ $(document).ready(function () {
 
 function GoFocus(focus, sid) {
     // $("#focus_cancel").removeClass("hidden");
-    $.toast('取消关注成功');
-    $("#focus_cancel").addClass("hidden");
-    $("#focus_ok").removeClass("hidden");
+    // $.toast('取消关注成功');
+    // $("#focus_cancel").addClass("hidden");
+    // $("#focus_ok").removeClass("hidden");
+    if (focus) {
+                $("#focus_cancel").removeClass("hidden");
+                $("#focus_ok").addClass("hidden");
+                $("#ln_qr_modal").modal('show');
+            }
+            else {
+                $.toast('取消关注成功');
+                $("#focus_cancel").addClass("hidden");
+                $("#focus_ok").removeClass("hidden");
+            }
                 // $("#focus_ok").addClass("hidden");
                 // $("#ln_qr_modal").modal('show');
     // $.ajax({

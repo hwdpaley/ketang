@@ -46,23 +46,26 @@ export default class extends think.controller.base {
             // }
             this.assign("wxhttp", this.setup.wx_url);
             if (is_weixin(this.userAgent())) {
-                let uurl = this.setup.wx_url + this.http.url;
-                    await this.action("uc/weixin", "oauth");
-                    let weixin = function(jssdk, url) {
-                        let deferred = think.defer();
-                        jssdk.getSignPackage(url, (err, signPackage) => {
-                            if (!think.isEmpty(signPackage)) {
-                                deferred.resolve(signPackage);
-                            } else {
-                                console.error(err);
-                            }
-                        });
-                        return deferred.promise;
-                    }
-                    let signPackage = await weixin(this.jssdk, uurl);
-                    console.log(signPackage);
-                    this.assign("signPackage", signPackage);
+                await this.action("uc/weixin", "oauth");
             }
+            // if (is_weixin(this.userAgent())) {
+            //     let uurl = this.setup.wx_url + this.http.url;
+            //         await this.action("uc/weixin", "oauth");
+            //         let weixin = function(jssdk, url) {
+            //             let deferred = think.defer();
+            //             jssdk.getSignPackage(url, (err, signPackage) => {
+            //                 if (!think.isEmpty(signPackage)) {
+            //                     deferred.resolve(signPackage);
+            //                 } else {
+            //                     console.error(err);
+            //                 }
+            //             });
+            //             return deferred.promise;
+            //         }
+            //         let signPackage = await weixin(this.jssdk, uurl);
+            //         // console.log(signPackage);
+            //         this.assign("signPackage", signPackage);
+            // }
             // if (checkMobile(this.userAgent())) {
             //     if (is_weixin(this.userAgent())) {
             //         let uurl = this.setup.wx_url + this.http.url;

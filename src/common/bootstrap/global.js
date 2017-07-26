@@ -817,7 +817,7 @@ global.get_cover2 = async (cover_id,qiniu) => {
         return false;
     }
     let picture = await think.model('picture', think.config("db")).where({ 'status': 1 }).find(cover_id);
-    let path='//' + qiniu + '/' +picture.path;
+    let path='http://' + qiniu + '/' +picture.path;
     return path;
 }
 /**
@@ -869,7 +869,7 @@ global.get_pic = async(id,m=null,w=null,h=null)=>{
              q = `?imageView2${m}${w}${h}`
         }
         let name = await think.cache("setup");
-        return `//${name.QINIU_DOMAIN_NAME}/${picture.path}${q}`;
+        return `http://${name.QINIU_DOMAIN_NAME}/${picture.path}${q}`;
     }else {
         return picture.path
     }
