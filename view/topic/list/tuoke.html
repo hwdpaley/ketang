@@ -146,10 +146,10 @@ CLASSES:
                                     <img class="img-responsive" src="{{val.cover_id|get_pic('m=1,w=200,h=120')}}" alt="shop first image" />
                                 </a> -->
                                 <a href="javascript:ShowProduct('{{val.id}}');" title="{{val.title}}">
-                                    <img class="img-responsive " src="{{val.cover_id|get_pic('m=1,w=200,h=120')}}" alt="">
+                                    <img class="img-responsive " src="{{val.cover_id|get_pic('m=5,w=300,h=180')}}" alt="">
                                 </a>
                                 {%if val.online==1%}
-                                <div class="vip">
+                                <div class="shangjia">
                                 </div>
                                 {%endif%}
                                 <!-- <div class="shop-option-over">
@@ -371,6 +371,7 @@ function tuokeCopy(id) {
         method: "post",
         data: {
             "docId": id,
+            "uid":{{userid}},
             "cname":"mytuoke"
             // "name": user_name.val(),
             // "phone": user_phone.val(),

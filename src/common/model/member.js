@@ -129,4 +129,13 @@ export default class extends think.model.base {
         return name;
 
     }
+    async get_dpuser(groupid) {
+        let result = await think.model('mysql', think.config("db")).query(`SELECT * FROM bb_member where status > -1 and FIND_IN_SET(groupid, getChildLst(`+groupid+`));`);
+        return result;
+    }
+    async get_dpcount(groupid) {
+        let result = await think.model('mysql', think.config("db")).query(`SELECT count(*) as count FROM bb_member where FIND_IN_SET(groupid, getChildLst(`+groupid+`));`);
+        // console.log("result-------" + JSON.stringify(result));
+        return result[0].count-1;
+    } 
 }

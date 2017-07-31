@@ -45,6 +45,126 @@ export default class extends Base {
             // console.log("oauthAction-----------" + oauthUrl)
             this.redirect(oauthUrl);
         }
+        let userinfo = await getUser(this.api, openid);
+        console.log("微信 userinfo oauthAction-------------" + JSON.stringify(userinfo));
+        //如果没有关注先跳到关注页面
+        if (userinfo.subscribe == 0) {
+
+            console.log("关注美媒课堂")
+            this.redirect('/uc/weixin/follow');
+            return false;
+        };
+
+        // else{
+        //     let wx_user = await this.model("wx_user").where({ openid: openid }).find();
+        //     if (think.isEmpty(wx_user)||think.isEmpty(wx_user.uid)) {
+        //         if (think.isEmpty(wx_user)){
+        //             let userinfo = await getUser(this.api, openid);
+        //             userinfo.username=userinfo.nickname;
+        //             userinfo.real_name=userinfo.nickname;
+        //             userinfo.email=userinfo.nickname+'@qq.com';
+        //             userinfo.password='7fe293a2a8994cca42668d5a37747d4f';
+        //             await this.model("wx_user").add(userinfo);
+        //         }
+        //         // this.redirect("/uc/weixin/signin");
+        //     }
+        // }
+
+    }
+    async oauth11Action() {
+        //判断是否是微信浏览器
+        //微信公众账号内自动登陆
+        let openid = await this.session("wx_openid");
+        //openid =null;// await this.session("wx_openid",null);
+        console.log("oauthAction 11 --------" + openid);
+        if (is_weixin(this.userAgent()) && (think.isEmpty(openid) || typeof openid == 'undefined')) {
+            // 先把url暂存起来
+            this.cookie("bieber_wx_url", this.http.url);
+            var oauthUrl = pingpp.wxPubOauth.createOauthUrlForCode(this.setup.wx_AppID, `${this.setup.wx_url}/uc/weixin/getopenid?showwxpaytitle=1`, true);
+            // console.log("oauthAction-----------" + oauthUrl)
+            this.redirect(oauthUrl);
+        }
+        let userinfo = await getUser(this.api, openid);
+        console.log("微信 userinfo oauthAction 11 -------------" + JSON.stringify(userinfo));
+        //如果没有关注先跳到关注页面
+        if (userinfo.subscribe == 0) {
+
+            console.log("关注美媒课堂")
+            this.redirect('/uc/weixin/follow');
+            return false;
+        };
+        if (!think.isEmpty(userinfo.openid)) {
+
+
+            userinfo.subscribe_time = new Date().getTime();
+            let wx_user = await this.model("wx_user").where({ openid: openid }).find();
+            if (think.isEmpty(wx_user)) {
+                //后台没有微信数据？还没有关注过，先记录下来
+                let member = await this.model("member").where({ openid: openid }).find();
+                // console.log("member-----------" + JSON.stringify(member));
+                if (!think.isEmpty(member)) {
+                    userinfo.uid = member.id;
+                } else {
+                    userinfo.username = userinfo.nickname;
+                    userinfo.real_name = userinfo.nickname;
+                    userinfo.email = userinfo.nickname + '@qq.com';
+                    userinfo.password = '7fe293a2a8994cca42668d5a37747d4f';
+                    member = await this.model("member").add(userinfo);
+                    userinfo.uid = member;
+                    // console.log("member-----------" + JSON.stringify(member));
+                }
+                await this.model("wx_user").add(userinfo);
+                this.redirect("/uc/weixin/signin");
+            } else {
+
+                //检查微信号是否跟网站会员绑定
+                if (think.isEmpty(wx_user.uid)) {
+                    // 没绑定跳转绑定页面
+                    // this.redirect("/uc/weixin/signin");
+                    let member = await this.model("member").where({ openid: userinfo.openid }).find();
+                    // console.log("member-----------" + JSON.stringify(member));
+                    if (!think.isEmpty(member)) {
+                        userinfo.uid = member.id;
+                    } else {
+                        userinfo.username = userinfo.nickname;
+                        userinfo.real_name = userinfo.nickname;
+                        userinfo.email = userinfo.nickname + '@qq.com';
+                        userinfo.password = '7fe293a2a8994cca42668d5a37747d4f';
+                        member = await this.model("member").add(userinfo);
+                        userinfo.uid = member;
+                        // console.log("member-----------" + JSON.stringify(member));
+                    }
+                    await this.model("wx_user").where({ openid: openid }).update(userinfo);
+                    this.redirect("/uc/weixin/signin");
+                } else
+
+                {
+                    //更新微信头像
+                    let filePath = think.RESOURCE_PATH + '/upload/avatar/' + wx_user.uid;
+                    think.mkdir(filePath)
+                    await this.spiderImage(userinfo.headimgurl, filePath + '/avatar.png')
+                    //绑定直接登陆
+                    let last_login_time = await this.model("member").where({ id: wx_user.uid }).getField("last_login_time", true);
+                    userinfo = await this.model("member").where({ id: wx_user.uid }).find();
+                    let isVip = await this.model("member").get_vip(wx_user.id);
+                    let wx_userInfo = {
+                        'uid': wx_user.uid,
+                        'username': userinfo.username,
+                        'last_login_time': last_login_time,
+                        'real_name': userinfo.real_name,
+                        'isVip': isVip,
+                        'groupid': userinfo.groupid
+                    };
+                    let now = await this.cookie('now');
+                    await this.model('smsignin').where({ now: now }).update({ name: userinfo.mobile, pass: userinfo.password });
+                    console.log("webuser 11-------------ok," + JSON.stringify(wx_userInfo));
+                    await this.session('webuser', wx_userInfo);
+                    this.redirect('/uc/weixin/follow');
+                    // this.redirect("/");
+                    return false;
+                }
+            }
+        }
         // else{
         //     let wx_user = await this.model("wx_user").where({ openid: openid }).find();
         //     if (think.isEmpty(wx_user)||think.isEmpty(wx_user.uid)) {
@@ -97,7 +217,7 @@ export default class extends Base {
         await this.session('wx_openid', openid);
         if (think.isEmpty(wx_user)) {
             //后台没有微信数据？还没有关注过，先记录下来
-            let member = await this.model("member").where({ openid: userinfo.openid }).find();
+            let member = await this.model("member").where({ openid: openid }).find();
             // console.log("member-----------" + JSON.stringify(member));
             if (!think.isEmpty(member)) {
                 userinfo.uid = member.id;
@@ -118,7 +238,7 @@ export default class extends Base {
             if (think.isEmpty(wx_user.uid)) {
                 // 没绑定跳转绑定页面
                 // this.redirect("/uc/weixin/signin");
-                let member = await this.model("member").where({ openid: userinfo.openid }).find();
+                let member = await this.model("member").where({ openid: openid }).find();
                 // console.log("member-----------" + JSON.stringify(member));
                 if (!think.isEmpty(member)) {
                     userinfo.uid = member.id;
@@ -472,11 +592,11 @@ export default class extends Base {
             //PC端
             let data = this.post();
             console.log(data);
-            let islogin = await this.islogin();
-            if (!islogin) {
-                //未登录，提示登录
-                return this.success({ status: -1, name: "请先登录，谢谢参与" });
-            }
+            let islogin = data.uid;
+            // if (!islogin) {
+            //     //未登录，提示登录
+            //     return this.success({ status: -1, name: "请先登录，谢谢参与" });
+            // }
             console.log("islogn----------" + islogin);
             let document = this.model('document');
             let info = await document.detail(data.docId);
@@ -485,37 +605,25 @@ export default class extends Base {
                 return this.success({ status: 0, name: "您已经拥有该拓客模板!" });
             }
             info.uid = islogin;
-            info.id = null;
-            info.create_time = null;
+            // info.id = null;
+            info.create_time = new Date().getTime();
             info.position = 0;
             let cname = data.cname;
             let mytuokeid = await this.model('category').where({ name: cname }).find();
             console.log("mytuokeid.id===================" + mytuokeid.id);
             info.category_id = mytuokeid.id; //我的拓客模板
-            // console.log("tuoke info------"+JSON.stringify(info));
+            // console.log("tuoke info. 111------"+JSON.stringify(info));
+            
+            let table =await this.model("model").get_table_name(info.model_id);
+            let details = await think.model(table,think.config("db")).find(info.id);
+            details.online=0;
+            // console.log("details------"+JSON.stringify(details));
+            info=think.extend({},info,details);
+            // console.log("tuoke info. 222------"+JSON.stringify(info));
+            info.id=null;
             let res = await document.updates(info);
-            // // let openid = await this.model("wx_user").where({ uid: islogin }).getField('openid');
-            // // console.log("openid----------" + openid);
-            // // if (think.isEmpty(openid)) {
-            // //     return this.success({ status: -1, name: "请先关注微信公众号，谢谢参与" });
-            // // }
-            // let mmap = {
-            //     openid: openid[0],
-            //     docid: data.docid,
-            //     status: 1,
-            //     create_time: new Date().valueOf()
-            // }
-            // console.log(mmap);
-            // await this.model("doc_wxuser").add(mmap);
-            // await this.model("wx_user").where({ openid: openid[0] }).update({ phone: data.phone });
-
-            // let document = this.model('document');
-            // let info = await document.detail(data.docid);
-            // info.addnums++;
-            // console.log("info.nums" + info.addnums);
-            // //报名人数+1
-            // let doc = await document.updates(info);
-            // console.log("info.nums doc -----"+doc);
+            console.log("tuoke copy------"+JSON.stringify(res));
+            
             return this.success({ status: 0, name: "拓客模板拷贝成功!" });
         }
         return this.success({ status: -1, name: "用户报名失败!" });
@@ -763,7 +871,8 @@ export default class extends Base {
         //     await this.session("userList",userList);
         // }
         let webuser = await this.session("webuser");
-        let dpname = await this.model('member_group').where({ groupid: webuser.groupid }).field('name').find();
+        let gid=await this.model('member').where({ id: info.uid }).field('groupid').find();
+        let dpname = await this.model('member_group').where({ groupid: gid.groupid }).field('name').find();
         // console.log("webuser---------" + JSON.stringify(groupList));
         info.dpname = dpname.name;
 
@@ -819,7 +928,7 @@ export default class extends Base {
         // PC用户
         let oid = await this.model("wx_user").where({ uid: islogin }).find();
         if (!think.isEmpty(oid)) {
-            console.log("PC用户--------------" + oid);
+            console.log("PC用户--------------" + JSON.stringify(oid));
             openid = oid.openid;
             let map = {
                 openid: openid,
@@ -856,10 +965,13 @@ export default class extends Base {
         //     return this.display(`${this.http.controller}/myshop`);
         // }
         if (!think.isEmpty(info.template) && info.template != 0) {
+            console.log("info.template,--------------" + JSON.stringify(info.template));
             temp = info.template; //todo 已设置详情模板
-        } else if (!think.isEmpty(cate.template_m_detail)) {
-            temp = cate.template_m_detail; //分类已经设置模板
+        } else if (!think.isEmpty(cate.template_detail)) {
+            console.log("cate.template_detail,--------------" + JSON.stringify(cate.template_detail));
+            temp = cate.template_detail; //分类已经设置模板
         } else {
+            console.log("model,--------------" + JSON.stringify(model));
             temp = model;
         }
         console.log("tuokeAction========" + `${this.http.controller}/${temp}`);
@@ -893,7 +1005,7 @@ export default class extends Base {
         let info;
         if (think.isEmpty(id)) {
             //查找当前微信人员的所属店铺，上架，第一个
-            
+
             console.log("webuser----------" + JSON.stringify(webuser));
             let members = await this.model("member").where({ groupid: webuser.groupid }).field('id').select();
             let ms = [];
@@ -903,10 +1015,10 @@ export default class extends Base {
             console.log("ms----------" + JSON.stringify(ms));
             // let id = this.get("id");
             // console.log("dp id=========="+id);
-            
+
             let infos = await document.where({ uid: ["IN", ms], category_id: 140 }).select();
             // console.log("infos----------"+JSON.stringify(infos));
-            
+
             if (!think.isEmpty(infos)) {
                 info = infos[0];
             } else {
@@ -914,13 +1026,13 @@ export default class extends Base {
                 info = infos[0];
             }
             id = info.id;
-        }else{
+        } else {
             info = await document.detail(id);
         }
         // this.assign("docid", id);
         this.assign("userid", webuser.uid);
         this.assign("groupid", id);
-        
+
 
         // this.assign("wxhttp", this.setup.wx_url);
         let str = info.content;
@@ -961,7 +1073,7 @@ export default class extends Base {
         let table = await this.model("model").get_table_name(info.model_id);
         let p_info = await this.model(table).find(info.id);
         info = think.extend(info, p_info);
-        
+
         // 详情模版 TODO
         // 手机版模版
 
@@ -1032,7 +1144,7 @@ export default class extends Base {
         info.dpname = dpname.name;
         info.title = dpname.name;
         // console.log("info---------" + JSON.stringify(info));
-        let wxhttp=this.setup.wx_url+'/uc/weixin/mydp/id/'+id;
+        let wxhttp = this.setup.wx_url + '/uc/weixin/mydp/id/' + id;
         this.assign("wxhttp", wxhttp);
         console.log("info-------" + JSON.stringify(info));
         this.assign("info", info);
@@ -1216,7 +1328,7 @@ export default class extends Base {
         let dpname = await this.model('member_group').where({ groupid: webuser.groupid }).field('name').find();
         // console.log("dpname---------" + JSON.stringify(dpname));
         info.dpname = dpname.name;
-        console.log("info---------" + JSON.stringify(info));
+        // console.log("info---------" + JSON.stringify(info));
         this.assign("info", info);
         //console.log("description-------------" + info.description);
         this.assign("desc", info.description);

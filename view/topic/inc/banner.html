@@ -7,7 +7,7 @@
         <!-- Loading Screen -->
         <div data-u="loading" style="position:absolute;top:0px;left:0px;background:url('{{qiniu_dm}}/loading.gif') no-repeat 50% 50%;background-color:rgba(0, 0, 0, 0.7);"></div>
         <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:1140px;height:360px;overflow:hidden;">
-            {% topic data ="picturelist",limit="1",type="picture",cid=142,isstu=1,uid=userid%}
+            {% topic data ="picturelist",limit="1",type="picture",cid=142,isstu=1,uid=users%}
              
             {%if(picturelist[0])%}
             {%set plist=picturelist[0].pictureurls.split(',')%}

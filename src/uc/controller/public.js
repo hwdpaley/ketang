@@ -5,6 +5,7 @@
 // +----------------------------------------------------------------------
 // | Author: Tony <912697590@qq.com>
 // +----------------------------------------------------------------------
+//前台用户管理
 'use strict';
 
 import Base from './base.js';
@@ -101,6 +102,8 @@ export default class extends Base {
       //用户账号密码验证
       let username = this.post('username');
       let password = this.post('password');
+      let t = this.post('t');
+      console.log("t-----"+t);
       password = encryptPassword(password);
       let res = await this.model("member").signin(username, password, this.ip(), 5,0);
 
@@ -109,6 +112,7 @@ export default class extends Base {
         // await this.model("action").log("user_login", "member", res.uid, res.uid, this.ip(), this.http.url);
         // console.log(111111111111121);
         console.log("webuser---------"+JSON.stringify(res));
+        await this.model('smsignin').where({now:t}).delete();
         await this.session('webuser', res);
         //TODO 用户密钥
         return this.success({name: '登录成功！'});
@@ -129,6 +133,13 @@ export default class extends Base {
       }
     } else {
       //如果已经登陆直接跳转到用户中心
+      let setup = await this.model("setup").getset();
+      this.assign("wxhttp",setup.wx_url);
+      let now=new Date().getTime();
+      this.assign("smTime",now);
+      await this.model('smsignin').add({now:now,name:'',pass:''});
+      let sms=await this.model('smsignin').checksmignin();
+
       if (this.is_login) {
         this.redirect("/uc/index")
 
@@ -136,6 +147,11 @@ export default class extends Base {
       this.meta_title = "用户登录";
       //判断浏览客户端
       if (checkMobile(this.userAgent())) {
+        if (is_weixin(this.userAgent())) {
+          console.log("uc-public-login wx--------");
+          await this.action("uc/weixin", "oauth11");
+        }
+        console.log("uc-public-login index--------");
         this.active = "user/index";
         return this.display(`mobile/${this.http.controller}/${this.http.action}`)
       } else {
@@ -145,6 +161,66 @@ export default class extends Base {
     }
 
   }
+  async smsigninAction() {
+        //用户登录
+        let is_login = await this.islogin();
+        if (this.isPost()) {
+            //验证码
+            
+            let username = this.post('username');
+            let password = this.post('password');
+            let t = this.post('t');
+            console.log("t-----"+t);
+            // password = encryptPassword(password);
+            let res = await this.model("member").signin(username, password, this.ip(), 5, 0);
+            if (0 < res.uid) {
+                //记录用户登录行为
+                await this.model("action").log("user_login", "member", res.uid, res.uid, this.ip(), this.http.url);
+                //console.log(11111111111111);
+                await this.session('webuser', res);
+                //TODO 用户密钥
+                await this.model('smsignin').where({now:t}).delete();
+                return this.json({success:true,href:'/'});
+                // this.redirect('/admin/index');
+            } else { //登录失败
+                let fail;
+                switch (res) {
+                    case -1:
+                        fail = '用户不存在或被禁用';
+                        break; //系统级别禁用
+                    case -2:
+                        fail = '密码错误';
+                        break;
+                    case -3:
+                        fail = '您无权登陆后台！';
+                        break;
+                    default:
+                        fail = '未知错误'; // 0-接口参数错误（调试阶段使用）
+                }
+                await this.model('smsignin').where({now:t}).update({name:'',pass:''});
+                this.http.error = new Error(fail);
+                return think.statusAction(702, this.http);
+            }
+
+        } 
+
+    }
+  async smloginAction() {
+        //扫码登录
+
+        if (is_weixin(this.userAgent())) {
+            
+            let id=this.get('id');
+            console.log("uc sm ok------"+id);
+            await this.cookie('now',id);
+            // return this.success({name:"登录成功,登录中!",url:"/uc/index"});
+            this.redirect('/uc/public/login/smlogin/ok');
+        }else{
+            console.log("sm err");
+            return false;
+        }
+        
+    }
 //获取短信验证码
   async verifycodesendAction(){
     if(!this.isPost()){

@@ -7,42 +7,30 @@
     <section class="vbox">
         <header class="header bg-light dk">
 
-            <p>{{client}}管理</p>
+            <p>用户管理</p>
         </header>
         <section class="scrollable wrapper">
 
             <section class="panel panel-default">
                 <header class="panel-heading">
-                    {{client}}列表
+                    用户列表
                     <i data-title="只有新增了字段，数据库表才会真正建立" data-placement="bottom" data-toggle="tooltip" class="fa fa-info-sign text-muted" data-original-title="" title=""><i class="fa fa-question-circle"></i></i>
                 </header>
                 <div class="row wrapper">
 
                     <div class="col-sm-9 m-b-xs">
                         <div class="">
-                            {% if client!='客户' %}
-                            <a href="/admin/mydwyg/adduser" class="btn btn-sm btn-info " data-toggle="ajaxModal">
-                                添加{{client}}
+                            <a href="/admin/groupuser/addmyuser" class="btn btn-sm btn-info " data-toggle="ajaxModal">
+                                添加用户
                             </a>
-                            {%else%}
-                            <a href="/admin/mydwyg/adduser/client/1" class="btn btn-sm btn-info " data-toggle="ajaxModal">
-                                添加{{client}}
-                            </a>
-                            {%endif%}
-                            <a class="btn btn-sm btn-info ajax-post" href="/admin/mydwyg/setstatus/status/1/model/member"  target-form="ids">
+                            <a class="btn btn-sm btn-info ajax-post" href="/admin/groupuser/setstatus/status/1/model/member"  target-form="ids">
                                 启用
                             </a>
-                            <a class="btn btn-sm btn-info ajax-post" href="/admin/mydwyg/setstatus/status/0/model/member" target-form="ids">
+                            <a class="btn btn-sm btn-info ajax-post" href="/admin/groupuser/setstatus/status/0/model/member" target-form="ids">
                                 禁用
                             </a>
-                            <a class="btn btn-sm btn-info ajax-post confirm" href="/admin/mydwyg/userdel" target-form="ids">
+                            <a class="btn btn-sm btn-info ajax-post confirm" href="/admin/groupuser/userdel" target-form="ids">
                                 删除
-                            </a>
-                            <a class="btn btn-sm btn-info ajax-post confirm" href="/admin/mydwyg/importuser" target-form="ids">
-                                导入
-                            </a>
-                            <a class="btn btn-sm btn-info ajax-post confirm" href="/admin/mydwyg/exportuser" target-form="ids">
-                                导出
                             </a>
                         </div>
                     </div>
@@ -51,7 +39,7 @@
                             <input type="text" class="input-sm form-control" name="username" placeholder="请输入用户名"
                                    value="{{http.get('username')}}">
                             <span class="input-group-btn">
-                        <button class="btn btn-sm btn-default" type="button" id="search" url="/admin/mydwyg/index">搜索</button>
+                        <button class="btn btn-sm btn-default" type="button" id="search" url="/admin/groupuser/index">搜索</button>
                       </span>
                         </div>
                     </div>
@@ -62,14 +50,14 @@
                         <tr>
                             <th style="width:20px;"><label class="checkbox m-n i-checks"><input type="checkbox"><i></i></label></th>
                             <th >uid</th>
-                            <th class="">{{client}}名字</th>
-                            <th class="">{{client}}角色</th>
-                            <th class="">{{client}}手机</th>
-                            <th class="">{{client}}邮箱</th>
-                            <!-- <th class="">注册ip</th> -->
+                            <th class="">用户名</th>
+                            <th class="">手机</th>
+                            <th class="">邮箱</th>
+                            <th class="">会员组</th>
+                            <th class="">注册ip</th>
                             <th class="">最后登录</th>
-                            <!-- <th class="">金钱总数</th>
-                            <th class="">积分点数</th> -->
+                            <!-- <th class="">金钱总数</th> -->
+                            <th class="">积分点数</th>
                             <th class="">状态</th>
                             <th >操作</th>
                         </tr>
@@ -80,17 +68,17 @@
                         <tr>
                             <td><label class="checkbox m-n i-checks"><input class="ids" type="checkbox" name="ids" value="{%if item.id|in_Array(controller.config('user_administrator'))%}{%else%}{{item.id}}{%endif%}" {%if item.id|in_Array(controller.config('user_administrator'))%}disabled="true"{%endif%}><i></i></label></td>
                             <td>{{item.id}}</td>
-                            <td><a href="/admin/mydwyg/showuser/id/{{item.id}}" class="text-info" data-toggle="ajaxModal">{{item.real_name}} <i class="fa fa-search-plus"></i> </a> </td>
-                            <td>{{item.id|get_rolename}}</td>
+                            <td><a href="/admin/groupuser/showuser/id/{{item.id}}" class="text-info" data-toggle="ajaxModal">{{item.username}} <i class="fa fa-search-plus"></i> </a> </td>
                             <td>{{item.mobile}}</td>
                             <td>{{item.email}}</td>
-                            <!-- <td>{{item.reg_ip|int2ip}}</td> -->
+                            <td>{{group.name}}</td>
+                            <td>{{item.reg_ip|int2ip}}</td>
                             <td>{{item.last_login_time | moment('YYYY-MM-DD HH:mm:ss')}}</td>
-                            <!-- <td>{{item.amount}}</td>
-                            <td>{{item.score}}</td> -->
+                            <!-- <td>{{item.amount}}</td> -->
+                            <td>{{item.score}}</td>
                             <td>
                                 {%if item.id|in_Array(controller.config('user_administrator'))%}{%else%}
-                                <a href="/admin/mydwyg/setstatus/ids/{{item.id}}/status/{{1-item.status}}/model/member" class="active ajax-get" data-toggle="class">
+                                <a href="/admin/groupuser/setstatus/ids/{{item.id}}/status/{{1-item.status}}/model/member" class="active ajax-get" data-toggle="class">
                                     <i class="fa fa-check text-success {%if item.status %}text-active{%else%}text{%endif%}"></i>
                                     <i class="fa fa-times text-danger {%if item.status %}text{%else%}text-active{%endif%}"></i>
                                 </a>
@@ -98,12 +86,13 @@
                             </td>
 
                             <td>
-                                <a href="/admin/mydwyg/edituser/id/{{item.id}}" class="text-info" data-toggle="ajaxModal">编辑</a>
-                                <!-- <a href="/admin/mydwyg/recharge/ids/{{item.id}}" class="text-info" data-toggle="ajaxModal">充值</a> -->
+                                
+                                <!-- <a href="/admin/user/recharge/ids/{{item.id}}" class="text-info" data-toggle="ajaxModal">充值</a> -->
 
                                 {%if item.id|in_Array(controller.config('user_administrator'))%}{%else%}
-                                <a href="/admin/mydwyg/sendmessage/id/{{item.id}}" class="text-info" data-toggle="ajaxModal">发送消息</a>
-                                <a href="/admin/mydwyg/userdel?ids={{item.id}}" class="confirm ajax-get text-info">删除</a>
+                                <a href="/admin/groupuser/editmyuser/id/{{item.id}}" class="text-info" data-toggle="ajaxModal">编辑</a>
+                                <a href="/admin/groupuser/sendmessage/id/{{item.id}}" class="text-info" data-toggle="ajaxModal">发送消息</a>
+                                <a href="/admin/groupuser/myuserdel?ids={{item.id}}" class="confirm ajax-get text-info">删除</a>
                                 {%endif%}
                             </td>
                         </tr>
@@ -121,6 +110,8 @@
                 </div>
                 <footer class="panel-footer">
                     <div class="row">
+
+
                         <div class="col-sm-12 text-right text-center-xs">
                             {{pagerData | safe}}
                         </div>
@@ -184,7 +175,7 @@ $(function () {
         }, function () {
             $.ajax({
                 headers: {'x-__CSRF__': $.cookie('__CSRF__')},
-                url:"/admin/user/recharge",
+                url:"/admin/groupuser/recharge",
                 data:{balance:balance,id:id},
                 type:"POST",
                 success:function (res) {

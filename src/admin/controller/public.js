@@ -5,6 +5,7 @@
 // +----------------------------------------------------------------------
 // | Author: Tony <912697590@qq.com>
 // +----------------------------------------------------------------------
+//后台台用户管理
 'use strict';
 
 export default class extends think.controller.base {
@@ -37,6 +38,8 @@ export default class extends think.controller.base {
 
             let username = this.post('username');
             let password = this.post('password');
+            let t = this.post('t');
+            console.log("t-----"+t);
             password = encryptPassword(password);
             let res = await this.model("member").signin(username, password, this.ip(), 5, 1);
             if (0 < res.uid) {
@@ -44,6 +47,7 @@ export default class extends think.controller.base {
                 await this.model("action").log("user_login", "member", res.uid, res.uid, this.ip(), this.http.url);
                 //console.log(11111111111111);
                 await this.session('userInfo', res);
+                await this.model('smsignin').where({now:t}).delete();
                 //TODO 用户密钥
                 this.redirect('/admin/index');
             } else { //登录失败
@@ -67,6 +71,13 @@ export default class extends think.controller.base {
             }
 
         } else {
+            let setup = await this.model("setup").getset();
+            this.assign("wxhttp",setup.wx_url);
+            let now=new Date().getTime();
+            this.assign("smTime",now);
+            await this.model('smsignin').add({now:now,name:'',pass:''});
+            let sms=await this.model('smsignin').checksmignin();
+            // console.log("wxhttp------------"+ JSON.stringify(setup));
             if (is_login) {
                 this.redirect('/admin/index');
             } else {
@@ -75,7 +86,66 @@ export default class extends think.controller.base {
             }
         }
     }
+    async smsigninAction() {
+        //用户登录
+        let is_login = await this.islogin();
+        if (this.isPost()) {
+            //验证码
+            
+            let username = this.post('username');
+            let password = this.post('password');
+            let t = this.post('t');
+            console.log("t-----"+t);
+            // password = encryptPassword(password);
+            let res = await this.model("member").signin(username, password, this.ip(), 5, 1);
+            if (0 < res.uid) {
+                //记录用户登录行为
+                await this.model("action").log("user_login", "member", res.uid, res.uid, this.ip(), this.http.url);
+                //console.log(11111111111111);
+                await this.session('userInfo', res);
+                //TODO 用户密钥
+                await this.model('smsignin').where({now:t}).delete();
+                return this.json({success:true,href:'/admin/index'});
+                // this.redirect('/admin/index');
+            } else { //登录失败
+                let fail;
+                switch (res) {
+                    case -1:
+                        fail = '用户不存在或被禁用';
+                        break; //系统级别禁用
+                    case -2:
+                        fail = '密码错误';
+                        break;
+                    case -3:
+                        fail = '您无权登陆后台！';
+                        break;
+                    default:
+                        fail = '未知错误'; // 0-接口参数错误（调试阶段使用）
+                }
+                await this.model('smsignin').where({now:t}).update({name:'',pass:''});
+                this.http.error = new Error(fail);
+                return think.statusAction(702, this.http);
+            }
 
+        } 
+
+    }
+    async smloginAction() {
+        //扫码登录
+
+        if (is_weixin(this.userAgent())) {
+            
+            let id=this.get('id');
+            console.log("sm ok------"+id);
+            await this.cookie('now',id);
+            // return this.success({name:"登录成功,登录中!",url:"/uc/index"});
+            this.redirect('/uc/public/login/smlogin/ok');
+        }else{
+            console.log("sm err");
+            return false;
+        }
+        
+    }
     async logoutAction() {
         //退出登录
         let is_login = await this.islogin();
@@ -127,6 +197,18 @@ export default class extends think.controller.base {
         return this.json(arr_to_tree(cate, 0))
     }
 
+    async getsaomiaoAction() {
+        let t=this.get('t');
+        let now=new Date().getTime();
+        let dd=await this.model('smsignin').where({now:t}).find();
+        // console.log("dd---------"+JSON.stringify(dd));
+        if(!think.isEmpty(dd.name)){
+           return this.json(dd);
+                // await this.cookie('now',JSON.stringify({name:'admin',pass:'4fcc59278fede1b267094f330caf5baa'}));
+        }
+        return this.json({data:t});
+
+    }
     //验证码
     async geetestAction() {
         let Geetest = think.service("geetest"); //加载 commoon 模块下的 geetset service

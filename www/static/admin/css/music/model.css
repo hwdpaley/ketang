@@ -255,6 +255,15 @@ ul.content-list {
     top: 0;
     left: 10;
 }
+.shangjia {
+    width: 45px;
+    height: 46px;
+    background: url(/static/admin/img/shangjia.png) no-repeat;
+    background-size: 45px 46px;
+    position: absolute;
+    top: 0;
+    left: 10;
+}
 .vippp {
     width: 40px;
     height: 40px;

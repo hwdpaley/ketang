@@ -7,14 +7,16 @@
     <title>登录 | 美媒管理后台</title>
     <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-    <link rel="stylesheet" href="/static/admin/js/jPlayer/jplayer.flat.css" type="text/css" />
-    <link rel="stylesheet" href="/static/admin/css/bootstrap.css" type="text/css" />
+    <!-- <link rel="stylesheet" href="/static/admin/js/jPlayer/jplayer.flat.css" type="text/css" /> -->
+    <link rel="stylesheet" href="/static/admin/css/bootstrap.min.css" type="text/css" />
+    <link href="/static/assets/css/essentials1.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="/static/admin/css/animate.css" type="text/css" />
     <link rel="stylesheet" href="/static/admin/css/font-awesome.min.css" type="text/css" />
     <link rel="stylesheet" href="/static/admin/css/simple-line-icons.css" type="text/css" />
     <link rel="stylesheet" href="/static/admin/css/font.css" type="text/css" />
     <link rel="stylesheet" href="/static/admin/css/app.css" type="text/css" />
     <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
+
     <!--[if lt IE 9]>
     <script src="/static/admin/js/ie/html5shiv.js"></script>
     <script src="/static/admin/js/ie/respond.min.js"></script>
@@ -32,11 +34,12 @@
                 </header>
                 <form action="#" method="post">
                     <div class="form-group">
-                        <input type="username" name="username" placeholder="用户名" class="form-control rounded input-lg text-center no-border">
+                        <input type="username" name="username" id="username" placeholder="用户名" class="form-control rounded input-lg text-center no-border">
                     </div>
                     <div class="form-group">
-                        <input type="password" name="password" placeholder="密码" class="form-control rounded input-lg text-center no-border">
+                        <input type="password" name="password" id="password" placeholder="密码" class="form-control rounded input-lg text-center no-border">
                     </div>
+                    <input type="hidden" name="t" value="{{smTime}}">
                     {%if controller.setup.GEETEST_IS_ADMLOGIN ==1%}
                     <div class="form-group">
                         <div class="form-control rounded input-lg text-center no-border">
@@ -52,23 +55,33 @@
                     <input type="hidden" name="__CSRF__" value="{{csrf}}">
                     <button type="submit" class="btn btn-lg btn-warning lt b-white b-2x btn-block btn-rounded" id="validate-submit">
                         <i class="icon-arrow-right pull-right"></i><span class="m-r-n-lg">登录</span></button>
-                    <div class="text-center m-t m-b"><a href="#"><small>忘记密码?</small></a></div>
+                    <div class="text-center m-t m-b"><a href="#"><small>微信扫码登录</small></a></div>
                     <!--<div class="line line-dashed"></div>-->
                     <!--<p class="text-muted text-center"><small>Do not have an account?</small></p>-->
                     <!--<a href="signup.html" class="btn btn-lg btn-info btn-block rounded">Create an account</a>-->
                 </form>
             </section>
+            <div class="text-center">
+                <div style="
+        width: 120px;margin-left: 20%" id="wx_qr_modal_code">
+                </div>
+            </div>
         </div>
     </section>
     <!-- footer -->
     <footer id="footer">
+        
         <div class="text-center padder">
+            
             <p>
-                <small>美媒网站内容管理框架<br>&copy; 2017</small>
+                <small>美媒教育管理框架<br>&copy; 2017</small>
             </p>
         </div>
     </footer>
     <!-- / footer -->
+    <script type="text/javascript">
+        var plugin_path = '/static/assets/plugins/';
+    </script>
     <script src="/static/admin/js/jquery.min.js"></script>
     <script type="text/javascript" src="/static/admin/js/wechat/jquery.cookie.js"></script>
     <!-- Bootstrap -->
@@ -77,6 +90,9 @@
     <script src="/static/admin/js/app.js"></script>
     <script src="/static/admin/js/slimscroll/jquery.slimscroll.min.js"></script>
     <script src="/static/admin/js/app.plugin.js"></script>
+    <script type="text/javascript" src="/static/admin/js/wechat/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="/static/assets/js/scripts.js"></script>
+    
     {%if controller.setup.GEETEST_IS_ADMLOGIN ==1%} {%if http.config("http_")==1%}
     <!-- 引入封装了failback的接口--initGeetest -->
     <script src="http://static.geetest.com/static/tools/gt.js"></script>
@@ -84,8 +100,17 @@
     <!-- 若是https，使用以下接口 -->
     <script src="https://static.geetest.com/static/tools/gt.js"></script>
     {%endif%}
+    {%endif%}
     <script>
     $(function() {
+        $("#wx_qr_modal_code").qrcode({
+            width: 200,
+            height: 200,
+            text: '{{wxhttp}}/admin/public/smlogin/id/{{smTime}}'
+        });
+        setInterval(function() {
+            getSaomiao();
+        }, 2000);
         var handlerEmbed = function(captchaObj) {
 
             $("#validate-submit").click(function(e) {
@@ -112,12 +137,12 @@
 
         $.ajax({
             // 获取id，challenge，success（是否启用failback）
-            headers: {'x-__CSRF__': $.cookie('__CSRF__')},
+            headers: { 'x-__CSRF__': $.cookie('__CSRF__') },
             url: "/admin/public/geetest?t=" + (new Date()).getTime(), // 加随机数防止缓存
             type: "get",
             dataType: "json",
             success: function(data) {
-                
+
                 // 使用initGeetest接口
                 // 参数1：配置参数
                 // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它做appendTo之类的事件
@@ -125,14 +150,49 @@
                     gt: data.gt,
                     challenge: data.challenge,
                     product: "float", // 
-                    width:"100%",//产品形式，包括：float，embed，popup。注意只对PC版验证码有效
+                    width: "100%", //产品形式，包括：float，embed，popup。注意只对PC版验证码有效
                     offline: !data.success // 表示用户后台检测极验服务器是否宕机，一般不需要关注
                 }, handlerEmbed);
             }
         });
+        function getSaomiao(){
+            // console.log('ttttt');
+            $.ajax({
+                
+                headers: { 'x-__CSRF__': $.cookie('__CSRF__') },
+                url: "/admin/public/getsaomiao?t={{smTime}}"  , // 加随机数防止缓存
+                type: "get",
+                dataType: "json",
+                success: function(data) {
+                    // console.log(JSON.stringify(data));
+                    if(data.name){
+                        $("#username").val(data.name);
+                        $("#password").val(data.pass);
+                        $.ajax({
+                            // 获取id，challenge，success（是否启用failback）
+                            headers: { 'x-__CSRF__': $.cookie('__CSRF__') },
+                            url: "/admin/public/smsignin"  , // 加随机数防止缓存
+                            type: "post",
+                            data:{username:data.name,password:data.pass,t:{{smTime}}},
+                            dataType: "json",
+                            success: function(data) {
+                                console.log(JSON.stringify(data));
+                                if(data.success){
+                                    window.location.href=data.href;
+                                }
+                                if(data.errmsg){
+                                    _toastr(data.errmsg, "top-right", "error", false);
+                                    // alert(data.errmsg);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
     })
     </script>
-    {%endif%}
+    
 </body>
 
 </html>

@@ -273,11 +273,15 @@ global.topic = function(){
                 where = think.extend(where,{'update_time':['between',`${time_start(new Date())},${time_end(new Date())}`]});
                 // type="update_time"
             }else if(args.type == "picture"){
-                let puid=args.uid;
-                if(puid==0){
-                    puid=1;
-                }
-                where = think.extend({},where,{'uid':puid});
+                let users=args.uid;
+                // let gid = await think.model('member',think.config("db")).where({id:puid}).field('groupid').find();
+                // let us=await think.model('member',think.config("db")).where({groupid:gid.groupid}).field('groupid').select();
+                // let users=[];
+                // for(let u of us){
+                //     users.push(u.id);
+                // }
+                console.log("picture users ----"+JSON.stringify(users));
+                where = think.extend({},where,{'uid':["IN",users]});
             }else if(args.type == "online"){
                 
                 where = think.extend({},where,{'online':1});
@@ -330,12 +334,270 @@ global.topic = function(){
             }
             topic = topicarr;
         }
+        // if(args.type == "picture"){
+        //     console.log("where ----"+JSON.stringify(where));
+        //     console.log("picture ----"+JSON.stringify(topic));
+        // }
          // console.log(topic)
         context.ctx[data] = topic;
         return callback(null, '');
     }
 }
+global.uptopic = function(){
+    this.tags = ['uptopic'];
+    this.parse = function (parser, nodes, lexer) {
+        let tok = parser.nextToken();
+        let args = parser.parseSignature(null, true);
+        parser.advanceAfterBlockEnd(tok.value);
+        return new nodes.CallExtensionAsync(this, 'run', args);
+    };
+    this.run = async function (context, args, callback) {
+        // console.log(args);
+        let where = {'status':1,'pid':0};
+        //'uid':['IN',[1,461]]
+        let data = think.isEmpty(args.data) ? "data" : args.data;
+        let limit = think.isEmpty(args.limit) ? "10" : args.limit;
+        //获取当前分类的所有子栏目
+        if(args.issub!=2){
+            if(!think.isEmpty(args.cid)){
+                let cids = `${args.cid}`;
+                let cidarr = []
+                for (let v of cids.split(",")){
+                    let subcate = await think.model('category',think.config("db")).get_sub_category(v);
+                    cidarr = cidarr.concat(subcate)
+                    cidarr.push(Number(v))
+                }
 
+                args.cid=unique(cidarr).sort();
+            }
+        }
+        //admin 要根据用户的组groupID来获取用户，然后根据用户来获取内容数据
+        let uid = think.isEmpty(args.uid) ? false :{'uid':['IN',[1,args.uid]]};
+        if(uid){
+            where = think.extend({},where,uid);
+        }else{
+            where = think.extend({},where,{'uid':1});
+        }
+        //subcate.push(cate.id);
+        let cid = think.isEmpty(args.cid) ? false :{'category_id':['IN',args.cid]};
+        if(cid){
+            where = think.extend({},where,cid);
+        }
+        //分组
+        if( !think.isEmpty(args.group)){
+            where = think.extend(where,{'group_id':['IN',args.group]});
+        }
+        let type='update_time DESC';
+        if(!think.isEmpty(args.type)){
+            if(args.type=="hot"){
+                type="view DESC"
+            }else if(args.type == "level"){
+                type="level DESC"
+            }else if(args.type == "today"){
+                console.log("test ----"+time_start(new Date())+","+time_end(new Date()));
+                where = think.extend(where,{'update_time':['between',`${time_start(new Date())},${time_end(new Date())}`]});
+                // type="update_time"
+            }else if(args.type == "picture"){
+                let puid=args.uid;
+                if(puid==0){
+                    puid=1;
+                }
+                where = think.extend({},where,{'uid':puid});
+            }else if(args.type == "online"){
+                
+                where = think.extend({},where,{'online':1});
+            }
+        }
+        //推荐
+        if(!think.isEmpty(args.position)){
+            where = think.extend(where,{position:args.position})
+        }
+        //是否缩略图
+        if(!think.isEmpty(args.ispic)){
+            if(args.ispic ==1){
+                where = think.extend(where,{cover_id:['>',0]});
+            }else if(args.ispic == 2){
+                where = think.extend(where,{cover_id:0});
+            }
+        }
+
+        console.log("uptopic---------------"+JSON.stringify(where));
+        let topic
+        if(args.tid &&!think.isEmpty(args.tval)){
+            
+            for(let v in JSON.parse(args.tval)){
+                where["t."+v]=JSON.parse(args.tval)[v]
+            }
+            // console.log(where);
+            topic = await think.model('document', think.config("db")).join({
+                table: "type_optionvalue"+args.tid,
+                join: "left", // 有 left,right,inner 3 个值
+                as: "t",
+                on: ["id", "tid"]
+
+            }).where(where).limit(limit).order(type).select();
+        }else {
+            topic = await think.model('document', think.config("db")).where(where).limit(limit).order(type).select();
+        }
+        //副表数据
+        if(args.isstu == 1){
+            let topicarr = [];
+            let stuwhere ={};
+
+            for(let v of topic){
+                let table =await think.model("model",think.config("db")).get_table_name(v.model_id);
+                let details = await think.model(table,think.config("db")).find(v.id);
+                topicarr.push(think.extend({},v,details));
+            }
+            if(!think.isEmpty(args.stuwhere)){
+                stuwhere = JSON.parse(args.stuwhere);
+                topicarr =  think._.filter(topicarr, stuwhere)
+            }
+            topic = topicarr;
+        }
+         // console.log(topic)
+        context.ctx[data] = topic;
+        return callback(null, '');
+    }
+}
+global.mytopic = function(){
+    this.tags = ['mytopic'];
+    this.parse = function (parser, nodes, lexer) {
+        let tok = parser.nextToken();
+        let args = parser.parseSignature(null, true);
+        parser.advanceAfterBlockEnd(tok.value);
+        return new nodes.CallExtensionAsync(this, 'run', args);
+    };
+    this.run = async function (context, args, callback) {
+        // console.log(args);
+        let where = {'status':1,'pid':0};
+        //'uid':['IN',[1,461]]
+        let data = think.isEmpty(args.data) ? "data" : args.data;
+        let limit = think.isEmpty(args.limit) ? "10" : args.limit;
+        //获取当前分类的所有子栏目
+        if(args.issub!=2){
+            if(!think.isEmpty(args.cid)){
+                let cids = `${args.cid}`;
+                let cidarr = []
+                for (let v of cids.split(",")){
+                    let subcate = await think.model('category',think.config("db")).get_sub_category(v);
+                    cidarr = cidarr.concat(subcate)
+                    cidarr.push(Number(v))
+                }
+
+                args.cid=unique(cidarr).sort();
+            }
+        }
+        //admin 要根据用户的组groupID来获取用户，然后根据用户来获取内容数据
+        let uid=false;
+        if(!think.isEmpty(args.uid) ){
+            // uid=await think.model('member',think.config("db")).get_dpuser(args.uid);
+            uid=["IN",args.uid];
+            console.log("uid--------"+JSON.stringify(uid));
+            where = think.extend({},where,{'uid':uid});
+            console.log("where--------"+JSON.stringify(where));
+        }
+        // let uid = think.isEmpty(args.uid) ? false :{'uid':['IN',[1,args.uid]]};
+        if(!uid){
+            where = think.extend({},where,{'uid':1});
+        }
+        //subcate.push(cate.id);
+        let cid = think.isEmpty(args.cid) ? false :{'category_id':['IN',args.cid]};
+        if(cid){
+            where = think.extend({},where,cid);
+        }
+        //分组
+        if( !think.isEmpty(args.group)){
+            where = think.extend(where,{'group_id':['IN',args.group]});
+        }
+        let type='update_time DESC';
+        if(!think.isEmpty(args.type)){
+            if(args.type=="hot"){
+                type="view DESC"
+            }else if(args.type == "level"){
+                type="level DESC"
+            }else if(args.type == "today"){
+                console.log("test ----"+time_start(new Date())+","+time_end(new Date()));
+                where = think.extend(where,{'update_time':['between',`${time_start(new Date())},${time_end(new Date())}`]});
+                // type="update_time"
+            }
+            // else if(args.type == "picture"){
+            //     let puid=args.uid;
+            //     if(puid==0){
+            //         puid=1;
+            //     }
+            //     where = think.extend({},where,{'uid':puid});
+            // }
+            // else if(args.type == "online"){
+                
+            //     where = think.extend({},where,{'online':1});
+            // }
+        }
+
+        //推荐
+        if(!think.isEmpty(args.position)){
+            where = think.extend(where,{position:args.position})
+        }
+        //是否缩略图
+        if(!think.isEmpty(args.ispic)){
+            if(args.ispic ==1){
+                where = think.extend(where,{cover_id:['>',0]});
+            }else if(args.ispic == 2){
+                where = think.extend(where,{cover_id:0});
+            }
+        }
+
+        console.log("mytopic---------------"+JSON.stringify(where));
+        let topic;
+        if(args.tid &&!think.isEmpty(args.tval)){
+            
+            for(let v in JSON.parse(args.tval)){
+                where["t."+v]=JSON.parse(args.tval)[v]
+            }
+            // console.log(where);
+            topic = await think.model('document', think.config("db")).join({
+                table: "type_optionvalue"+args.tid,
+                join: "left", // 有 left,right,inner 3 个值
+                as: "t",
+                on: ["id", "tid"]
+
+            }).where(where).limit(limit).order(type).select();
+        }else {
+            topic = await think.model('document', think.config("db")).where(where).limit(limit).order(type).select();
+        }
+        //副表数据
+        if(args.isstu == 1){
+            let topicarr = [];
+            let stuwhere ={};
+
+            for(let v of topic){
+                let table =await think.model("model",think.config("db")).get_table_name(v.model_id);
+                let details = await think.model(table,think.config("db")).find(v.id);
+                topicarr.push(think.extend({},v,details));
+            }
+            if(!think.isEmpty(args.stuwhere)){
+                stuwhere = JSON.parse(args.stuwhere);
+                topicarr =  think._.filter(topicarr, stuwhere)
+            }
+            topic = topicarr;
+        }
+        if(!think.isEmpty(args.type)){
+            if(args.type=="online"){
+                console.log("mytopic---------------"+JSON.stringify(args.type));
+                let topicarr = [];
+                for(let v of topic){
+                    if(v.online==1){
+                        topicarr.push(v);
+                    }
+                }
+                topic = topicarr;
+            }
+        }
+         // console.log(topic)
+        context.ctx[data] = topic;
+        return callback(null, '');
+    }
+}
 /**
  *获取话题标签
  * {% keywords data ="kws"%}

@@ -304,6 +304,7 @@ export default class extends Base {
     /* 模板赋值并渲染模板 */
     this.assign('category', cate);
     this.assign('list', data.data);
+    console.log("list-------" + JSON.stringify(data.data));
     this.assign('count',data.count);
     console.log("category------------"+JSON.stringify(cate));
     let temp = cate.template_lists ? `${cate.template_lists}` : "";

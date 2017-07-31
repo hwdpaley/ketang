@@ -198,7 +198,7 @@ export default class extends Base {
         }
         // console.log("list---------,"+JSON.stringify(list) );
         list = await this.parseDocumentList(list, model_id);
-        // console.log("list---------,"+JSON.stringify(list) );
+        console.log("list---------,"+JSON.stringify(list) );
         //获取面包屑信息
         let nav = await this.model('category').get_parent_category(cate_id);
         this.assign('breadcrumb', nav);

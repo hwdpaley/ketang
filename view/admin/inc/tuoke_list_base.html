@@ -11,11 +11,16 @@
 	<title>{{controller.meta_title}} | {{controller.setup.WEB_SITE_TITLE}}</title>
 	<meta name="keywords" content="{{controller.keywords}}" />
 	<meta name="description" content="{{controller.description}}" />
-	<meta name="Author" content="Tony [www.gzxinbibo.com]" />
+	<meta name="Author" content="Tony [ketang.gzxinbibo.com]" />
 	{%if controller.setup.QQ_VALIDATION%}
 	<!--qq互联网站验证-->
 	{{controller.setup.QQ_VALIDATION|safe}}
 	<!--qq互联网站验证结束-->
+	{%endif%}
+	{%if controller.setup.SINA_VALIDATION%}
+	<!--新浪微博网站验证-->
+	{{controller.setup.SINA_VALIDATION|safe}}
+	<!--新浪微博网站验证结束-->
 	{%endif%}
 	<link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
 	<!-- mobile settings -->
@@ -35,10 +40,13 @@
 	<!-- THEME CSS -->
 	<link href="/static/assets/css/essentials.css" rel="stylesheet" type="text/css" />
 	<link href="/static/assets/css/layout.css" rel="stylesheet" type="text/css" />
+	<link href="/static/assets/css/layout-shop.css" rel="stylesheet" type="text/css" />
 
 	<!-- PAGE LEVEL SCRIPTS -->
 	<link href="/static/assets/css/header-1.css" rel="stylesheet" type="text/css" />
-	<link href="/static/admin/css/music/model.css" rel="stylesheet" type="text/css" /> 
+	<link href="/static/admin/css/music/model.css" rel="stylesheet" type="text/css" />
+
+
 	{% block style %}{% endblock %}
 	{%if controller.setup.WEB_TONGJI%}
 	<!--统计代码-->
@@ -69,7 +77,7 @@
 		data-background="assets/images/boxed_background/1.jpg"
 	-->
 
-<body class="smoothscroll enable-animation">
+<body class="smoothscroll enable-animation ">
 
 	<!-- SLIDE TOP -->
 	
@@ -79,19 +87,16 @@
 	<!-- wrapper -->
 	<div id="wrapper" >
 
-		<!-- Top Bar -->
-		
-		<!-- /Top Bar -->
+
 
 		<!--HEADER-->
-		{% include "./header.html" %}
+		
 		<!--/HEADER-->
 		<!-- REVOLUTION SLIDER -->
-		{% block content %}{% endblock %}
+		{% block content %}
+		{% endblock %}
 		<!-- FOOTER -->
-		{#
-		{% include "./footer.html" %}
-		#}
+		
 		<!-- /FOOTER -->
 
 	</div>
@@ -120,7 +125,9 @@
 			<!-- SIDE NAV -->
 			<ul class="list-group">
 
-                 {% channel data='channel', num='4'%} {% for val in channel%}
+                 {% channel data='channel', num='4'%} 
+                 {% for val in channel%}
+                 		
 						<li class="list-group-item {% if val.children %}list-toggle{% endif %} {% if http.url == val.url %}active{% endif %} ">
 
 							<a {% if val.children%}data-toggle="collapse" data-parent="#sidebar-nav" href="#collapse-{{val.id}}" class="collapsed"{% else %} href="{{val.url}}" {% endif %}>
@@ -151,7 +158,6 @@
 			<!-- /SIDE NAV -->
 
 			<!-- social icons -->
-			{#
 			<div class="text-center margin-bottom-30">
 
 				<a href="#" class="social-icon social-icon-sm social-facebook" data-toggle="tooltip" data-placement="top" title="Facebook">
@@ -175,7 +181,6 @@
 				</a>
 
 			</div>
-			#}
 			<!-- /social icons -->
 
 		</div>
@@ -198,12 +203,13 @@
 #}
 
 	<!-- JAVASCRIPT FILES -->
-	<script type="text/javascript">
-		var plugin_path = '/static/assets/plugins/';
-	</script>
+
 	<script type="text/javascript" src="/static/assets/plugins/jquery/jquery-2.1.4.min.js"></script>
-<script type="text/javascript" src="/static/admin/js/wechat/jquery.cookie.js"></script>
+	<script type="text/javascript" src="/static/admin/js/wechat/jquery.cookie.js"></script>
 	<script type="text/javascript" src="/static/assets/js/scripts.js"></script>
+	<script type="text/javascript" src="/static/admin/js/wechat/jquery.qrcode.min.js"></script>
+	<script type="text/javascript" src="/static/admin/js/wechat/enroll.js"></script>
+
 {#
 	<!-- STYLESWITCHER - REMOVE -->
 	<script async type="text/javascript" src="/static/assets/plugins/styleswitcher/styleswitcher.js"></script>
@@ -212,9 +218,21 @@
 	<script type="text/javascript" src="/static/assets/plugins/slider.revolution/js/jquery.themepunch.tools.min.js"></script>
 	<script type="text/javascript" src="/static/assets/plugins/slider.revolution/js/jquery.themepunch.revolution.min.js"></script>
 	<script type="text/javascript" src="/static/assets/js/view/demo.revolution_slider.js"></script>
+	<script src="/static/admin/js/banner/jssor.slider-24.1.5.min.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		var plugin_path = '/static/assets/plugins/';
+		$(function () {
+			if($("#topMain.nav-pills>li.active>a")){
+				var w = $("#topMain.nav-pills>li.active>a").width();
+				$("#topMain.nav-pills>li.active>.aline").width(w);
+				console.log("aline");
+			}
+
+		})
+	</script>
 	{% block script %}{% endblock %}
     <!--[if lte IE 9]>
-<script src="/static/assets/plugins/jquery-fly/requestAnimationFrame.js"></script>
+    <script src="/static/assets/plugins/jquery-fly/requestAnimationFrame.js"></script>
 <![endif]-->
 </body>
 

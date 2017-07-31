@@ -27,11 +27,23 @@ export default class extends Base {
             this.description = this.setup.WEB_SITE_DESCRIPTION ? this.setup.WEB_SITE_DESCRIPTION : ""; //seo描述
 
             this.active = ['/', '/index', '/index.html'];
+            let users=[];
+            let uid;
             if (this.is_login) {
                 this.assign('userid', this.is_login);
+                uid=this.is_login;
             } else {
                 this.assign('userid', 1);
+                uid=1;
             }
+            let gid = await this.model('member').where({id:uid}).field('groupid').find();
+            let us=await think.model('member',think.config("db")).where({groupid:gid.groupid}).select();
+            
+            for(let u of us){
+                users.push(u.id);
+            }
+            this.assign('users', users);
+            console.log("users-------" + JSON.stringify(users));
             //debugger;
             //判断浏览客户端
             this.assign("qiniu_dm", `https://${this.setup.QINIU_DOMAIN_NAME}`);

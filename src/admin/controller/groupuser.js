@@ -11,7 +11,7 @@ import Base from './base.js';
 export default class extends Base {
     init(http) {
         super.init(http);
-        this.tactive = "user";
+        this.tactive = "groupuser";
 
     }
     /**
@@ -111,33 +111,30 @@ export default class extends Base {
      * @returns {*}
      */
    async indexAction() {
-        let id=this.get('id');
-        let list;
-        if(!think.isEmpty(id)){
-            list = await this.model("member_group").where({issystem:id}).order("sort ASC").select();
-        }else{
-            list = await this.model("member_group").order("sort ASC").select();
-        } 
+        // let id=this.get('id');
+        let userInfo=await this.session('userInfo');
+        let list= await this.model("member_group").get_dpuser(userInfo.groupid);
+        
         for(let v of list){
-            v.count=await this.model('member').where({groupid:v.groupid,status:1}).count('id');
+            v.count=await this.model('member').where({groupid:v.groupid,status:[">",-1]}).count('id');
+            v.dpcounts=await this.model('member_group').get_dpcount(v.groupid);
+
         }
         this.assign("list",list);
         this.meta_title = "会员组管理";
         return this.display();
     }
-    async indexidAction() {
-        let id=this.get('id');
-        let list;
-        if(!think.isEmpty(id)){
-            list = await this.model("member_group").where({issystem:id}).order("sort ASC").select();
-        }else{
-            list = await this.model("member_group").order("sort ASC").select();
-        } 
-        for(let v of list){
-            v.count=await this.model('member').where({groupid:v.groupid,status:1}).count('id');
-        }
+    async myuserAction() {
+        // let id=this.get('id');
+        let userInfo=await this.session('userInfo');
+        // let list= await this.model('member').where({groupid:userInfo.groupid,status:[">",-1]}).order("id ASC").select();
+        let list=await this.model('member').get_dpuser(userInfo.groupid);
+        // for(let v of list){
+        //     v.count=await this.model('member').where({groupid:v.groupid,status:1}).count('id');
+        // }
         this.assign("list",list);
-        this.meta_title = "会员组管理";
+        this.active="admin/groupuser/myuser";
+        this.meta_title = "会员用户管理";
         return this.display();
     }
     /**
@@ -145,22 +142,214 @@ export default class extends Base {
      */
     async adduserAction(){
         if(this.isPost()){
+            let userInfo=await this.session('userInfo');
             let data = this.post();
+            data.pid=userInfo.groupid;
+            console.log("data-------"+JSON.stringify(data));
             let add = await this.model("member_group").add(data);
             if (add) {
                 await think.cache("all_member_group",null);
-                return this.success({ name: "添加成功！",url:"/admin/auth/index"});
+                return this.success({ name: "添加成功！",url:"/admin/groupuser/index"});
 
             } else {
                 return this.fail("添加失败！");
             }
         }else {
             this.meta_title="添加会员组";
-            this.active="admin/auth/index";
+
+            this.active="admin/groupuser/index";
             return this.display();
         }
 
     }
+    /**
+         * adduser
+         * 添加用户
+         * @returns {Promise|*}
+         */
+    async addmyuserAction() {
+        if (this.isPost()) {
+            let data = this.post();
+            if (data.password != data.repassword) {
+                return this.fail("两次填入的密码不一致");
+            }
+            if (data.mobile.length != 11) {
+                return this.fail("手机号码长度不正确");
+            }
+            data.password = encryptPassword(data.password);
+            data.reg_time = new Date().getTime();
+            data.vip=0;
+            if (data.vip == 1) {
+                data.overduedate = new Date(data.overduedate).getTime();
+            } else {
+                data.overduedate = think.isEmpty(data.overduedate) ? 0 : data.overduedate;
+            }
+            //  console.log(data);
+            // return this.fail("ddd")
+            data.status = 1;
+            console.log("user data -----"+JSON.stringify(data));
+            let res = await this.model("member").add(data);
+            if (res) {
+                //添加角色
+                if (data.is_admin == 1) {
+                    await this.model("auth_user_role").add({ user_id: res, role_id: data.role_id });
+                }
+                return this.success({ name: "添加成功！" });
+            } else {
+                return this.fail("添加失败!")
+            }
+        } else {
+            //会员组
+            let id=await this.get('id');
+            if(think.isEmpty(id)){
+                let userInfo=await this.session('userInfo');
+                id=userInfo.groupid;
+            }
+            
+            let usergroup = await this.model("member_group").where({groupid:id,pid:id,_logic: "OR"}).select();
+            this.assign("usergroup", usergroup);
+            //获取管理组
+            let role = this.model("auth_role").where({ status: 1,sort:["<",100] }).select();
+            this.assign("role", role);
+            this.meta_title = "添加店铺用户";
+            return this.display();
+        }
+
+    }
+    /**
+     * 显示用户信息
+     * @returns {PreventPromise}
+     */
+    async showuserAction() {
+            let id = this.get("id");
+            let user = await this.model("member").find(id);
+            //非超级管理员只能修改自己的用户信息
+            // if(!this.is_admin){
+            //     if(this.user.uid!=id){
+            //         this.http.error = new Error('您无权操作！');
+            //         return think.statusAction(702, this.http);
+            //     }
+            //
+            // }
+            this.assign("user", user);
+            console.log(user);
+            //所属管理组
+            if (user.is_admin == 1) {
+                let roleid = await this.model("auth_user_role").where({ user_id: user.id }).getField("role_id", true);
+                this.assign("roleid", roleid)
+            }
+            //会员组
+            let usergroup = await this.model("member_group").select();
+            this.assign("usergroup", usergroup);
+            //获取管理组
+            let role = this.model("auth_role").where({ status: 1 }).select();
+            this.assign("role", role);
+            this.meta_title = "个人信息";
+            return this.display();
+        }
+        /**
+         * 编辑头像
+         * @returns {PreventPromise}
+         */
+    async editmyuserAction() {
+        if (this.isPost()) {
+            let data = this.post();
+            //删除头像
+            if (data.delavatar == 1) {
+                let uploadPath = think.RESOURCE_PATH + '/upload/avatar/' + data.id;
+                let path = think.isFile(uploadPath + "/avatar.png");
+                if (path) {
+                    think.rmdir(uploadPath, false)
+                }
+            }
+            if (data.mobile.length != 11) {
+                return this.fail("手机号码长度不正确");
+            }
+            if (think.isEmpty(data.password) && think.isEmpty(data.repassword)) {
+                delete data.password;
+            } else {
+                if (data.password != data.repassword) {
+                    return this.fail("两次填入的密码不一致");
+                }
+                data.password = encryptPassword(data.password);
+            }
+            if (data.vip == 1) {
+                data.overduedate = new Date(data.overduedate).getTime();
+            } else {
+                data.overduedate = 0;
+            }
+            //添加角色
+            console.log("data-------"+JSON.stringify(data));
+            if (data.is_admin == 1) {
+                let addrole = await this.model("auth_user_role").where({ user_id: data.id }).thenAdd({ user_id: data.id, role_id: data.role_id });
+                console.log("addrole-------"+JSON.stringify(addrole));
+                if (addrole.type == "exist") {
+                    console.log("auth_user_role update-------");
+                    await this.model("auth_user_role").update({ id: addrole.id, role_id: data.role_id });
+                }
+            }
+            let res = await this.model("member").update(data);
+
+            if (res) {
+                return this.success({ name: "编辑成功！" });
+            } else {
+                return this.fail("编辑失败!")
+            }
+        } else {
+            let id = this.get("id");
+            let user = await this.model("member").find(id);
+            //不能修改超级管理员的信息
+            if (!this.is_admin) {
+                if (in_array(id, this.config("user_administrator"))) {
+                    this.http.error = new Error('您无权操作！');
+                    return think.statusAction(702, this.http);
+                }
+
+            }
+            this.assign("user", user);
+            console.log("user------------"+JSON.stringify(user));
+            //所属管理组
+            if (user.is_admin == 1) {
+                let roleid = await this.model("auth_user_role").where({ user_id: user.id }).getField("role_id", true);
+                this.assign("roleid", roleid)
+            }
+            //会员组
+            let userInfo=await this.session('userInfo');
+            let usergroup = await this.model("member_group").where({groupid:userInfo.groupid,pid:userInfo.groupid,_logic: "OR"}).select();
+            // let usergroup = await this.model("member_group").select();
+            this.assign("usergroup", usergroup);
+            //获取管理组
+            let role = this.model("auth_role").where({ status: 1,sort:["<",100] }).select();
+            this.assign("role", role);
+            this.meta_title = "编辑用户";
+            return this.display();
+        }
+    }
+    /**
+         * userdel
+         * 用户删除
+         * @returns {Promise|*}
+         */
+    async userdelAction() {
+            let id = this.param("ids");
+            //console.log(id);
+            let res;
+            // 判断是否是管理员，如果是不能删除;
+            if (await this.isadmin(id)) {
+                return this.fail("不能删除管理员!")
+            } else {
+                //res = await this.db.where({id: id}).delete();
+                //逻辑删除
+                res = await this.model("member").where({ id: ["IN", id] }).update({ status: -1 });
+                if (res) {
+                    return this.success({ name: "删除成功！" })
+                } else {
+                    return this.fail("删除失败！")
+                }
+            }
+
+
+        }
     /**
      * 编辑会员组
      */
@@ -173,12 +362,14 @@ export default class extends Base {
             data.allowsendmessage= data.allowsendmessage||0;
             data.allowattachment= data.allowattachment||0;
             data.allowsearch= data.allowsearch||0;
+            data.point=data.point||10;
+            data.starnum=data.starnum||0;
             console.log(data);
             let update = await this.model("member_group").where({groupid:data.groupid}).update(data);
 
             if (update) {
                 await think.cache("all_member_group",null);
-                return this.success({ name: "编辑成功！",url:"/admin/auth/index"});
+                return this.success({ name: "编辑成功！",url:"/admin/groupuser/index"});
             } else {
                 return this.fail("编辑失败！");
             }
@@ -187,7 +378,7 @@ export default class extends Base {
             let info = await this.model("member_group").where({groupid:this.get("id")}).find();
             this.assign("info",info);
             this.meta_title="编辑会员组";
-            this.active="admin/auth/index";
+            this.active="admin/groupuser/index";
             return this.display();
         }
 
@@ -236,15 +427,15 @@ export default class extends Base {
      * @returns {*}
      */
    async adminAction() {
-        let list = await this.model('auth_role').order("id ASC").select();
+        let list = await this.model('auth_role').where({sort:["<",100]}).order("id ASC").select();
         this.assign({
             "datatables": true,
             "tactive": "/admin/user",
             "selfjs": "auth",
             "list":list
         })
-        this.active = "admin/auth/index";
-        this.meta_title = "权限管理";
+        this.active = "admin/groupuser/index";
+        this.meta_title = "会员组管理";
         return this.display();
     }
     /**
@@ -340,8 +531,8 @@ export default class extends Base {
                 }
             })
         //console.log(node_list);
-        this.active="admin/auth/index";
-        this.meta_title="权限管理"
+        this.active="admin/groupuser/index";
+        this.meta_title="会员组管理"
         this.assign({
             "tactive": "/admin/user",
             "selfjs": "auth",
@@ -419,7 +610,7 @@ export default class extends Base {
                 "tactive": "/admin/user",
                 "tree":tree
             })
-            this.active = "admin/auth/index";
+            this.active = "admin/groupuser/index";
             this.meta_title = "栏目权限";
             return this.display();
         }
@@ -443,7 +634,7 @@ export default class extends Base {
 
         this.assign("userlist",userdata);
         this.meta_title = "成员管理";
-        this.active = "admin/auth/index";
+        this.active = "admin/groupuser/index";
         return this.display();
     }
     async testAction() {

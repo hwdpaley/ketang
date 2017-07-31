@@ -6,7 +6,7 @@
 }
 </style>
 <div id="customer_page">
-    <div class="header_banner" style="background-image: url({{info.fmurl}});">
+    <div class="header_banner" style="background-image: url({{info.fmurl}});width: 100%;height: 300px;">
     </div>
     <div class="content">
         <h3 class="header_title">{{info.title}}</h3>
@@ -65,7 +65,7 @@
 <div class="fix_back"></div>
 <div class="sign_up_fix">
     <div class="sign_up_box">
-        <!-- <a class="enter">进入店铺</a> -->
+        <a href="{{wxhttp}}/uc/weixin/mydp" class="enter">进入店铺</a>
         <input type="button" class="sign_up" id="enroll_button" value="立即报名">
     </div>
 </div>
@@ -102,14 +102,8 @@
 </div>
 <input type="hidden" id="pay_type" value="{{pay_type}}"> {% endblock %} {% block script %}
 <script>
-uParse('#contentcmswing', {
+    uParse('#contentcmswing', {
         rootPath: '/static/admin/js/udeitor/'
-    })
-    // var signPackage = !{JSON.stringify("{{signPackage}}")};
-    // console.log(signPackage);
-    // var signPackage = "{{signPackage}}";
-console.log('{{signPackage.nonceStr}}');
-console.log('{{signPackage.signature}}');
-console.log('{{signPackage.timestamp}}');
+    });
 </script>
 {% endblock %}

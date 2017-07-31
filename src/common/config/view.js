@@ -436,6 +436,8 @@ export default {
                  * 获取数据标签
                  */
                 env.addExtension('topic', new topic(), true);
+                env.addExtension('uptopic', new uptopic(), true);
+                env.addExtension('mytopic', new mytopic(), true);
                 /**
                  * 获取分类分组
                  */

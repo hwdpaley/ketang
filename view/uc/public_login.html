@@ -80,6 +80,7 @@
                                 <a href="#" class="pull-right">忘记密码?</a>
                             </div>
                         </div>
+                        
                         <!--是否开启验证码-->
                         {%if controller.setup.GEETEST_IS_LOGIN ==1%}
                         <div class="form-group">
@@ -103,6 +104,7 @@
                     </form>
                 </div>
                 <div class="col-sm-5">
+                    {#
                     <h4>还没有账号?</h4>
                     <p>你可以在<a href="/uc/public/register" class="text-info">这里</a>创建一个帐户 </p>
                     <!-- <p>或者</p> -->
@@ -119,6 +121,17 @@
                         <i class="fa fa-weibo"></i> 使用新浪微博账号登录
                     </a>
                     {%endif%}
+                    #}
+                    <h4>&nbsp;</h4>
+                    <div class="text-center">
+                        <div style="
+                width: 180px;margin-left: 20%" id="wx_qr_modal_code">
+                        </div>
+                        <h4>&nbsp;</h4>
+                        <div style="margin-right: 20%;">
+                         <p>微信扫码登录</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -140,7 +153,52 @@
 {% endblock %}
 {% block script %}
 <!-- PAGE LEVEL SCRIPTS -->
+        <script type="text/javascript" src="/static/admin/js/wechat/jquery.qrcode.min.js"></script>
 		<script type="text/javascript">
+
+            $("#wx_qr_modal_code").qrcode({
+                width: 200,
+                height: 200,
+                text: '{{wxhttp}}/uc/public/smlogin/id/{{smTime}}'
+            });
+            setInterval(function() {
+                getSaomiao();
+            }, 2000);
+            function getSaomiao(){
+            // console.log('ttttt');
+                $.ajax({
+                    
+                    headers: { 'x-__CSRF__': $.cookie('__CSRF__') },
+                    url: "/admin/public/getsaomiao?t={{smTime}}"  , // 加随机数防止缓存
+                    type: "get",
+                    dataType: "json",
+                    success: function(data) {
+                        // console.log(JSON.stringify(data));
+                        if(data.name){
+                            $("#username").val(data.name);
+                            $("#password").val(data.pass);
+                            $.ajax({
+                                // 获取id，challenge，success（是否启用failback）
+                                headers: { 'x-__CSRF__': $.cookie('__CSRF__') },
+                                url: "/uc/public/smsignin"  , // 加随机数防止缓存
+                                type: "post",
+                                data:{username:data.name,password:data.pass,t:{{smTime}}},
+                                dataType: "json",
+                                success: function(data) {
+                                    console.log(JSON.stringify(data));
+                                    if(data.success){
+                                        window.location.href=data.href;
+                                    }
+                                    if(data.errmsg){
+                                        _toastr(data.errmsg, "top-right", "error", false);
+                                        // alert(data.errmsg);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                });
+            }
 			{% if controller.setup.USER_ALLOW_SMSREGISTER == 1 %}
        $("#verifycodesend").click(function () {
 		   var that = this;
@@ -228,7 +286,7 @@ $(function() {
                     geetest_seccode: validate.geetest_seccode,
                     username: $("input[name='username']").val(),
                     password: $("input[name='password']").val(),
-
+                    t:{{smTime}}
                 },
                 success: function(data) {
                     console.log(JSON.stringify(data));

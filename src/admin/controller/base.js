@@ -37,6 +37,8 @@ export default class extends think.controller.base {
         this.adminmenu = await this.model('menu').getallmenu(this.user.uid, this.is_admin);
         //console.log(this.adminmenu);
         this.assign("setup", this.setup);
+
+        this.assign("wxhttp", this.setup.wx_url);
         //菜单当前状态
 
         /**
@@ -47,7 +49,7 @@ export default class extends think.controller.base {
 
         //console.log(is_admin);
         let url = `${this.http.module}/${this.http.controller}/${this.http.action}`;
-        //console.log(url);
+        // console.log("url---------------"+url);
         // if (!this.is_admin) {
         //     let Auth = think.adapter("auth", "rbac");
         //     let auth = new Auth(this.user.uid);
@@ -63,6 +65,7 @@ export default class extends think.controller.base {
         //this.active = this.http.url.slice(1),
         // console.log(this.active);
         this.active = this.http.module + "/" + this.http.controller + "/" + this.http.action;
+        // console.log("this.active---------------"+this.active);
         //think.log(this.active);
         //后台提示
         //审核提示
@@ -126,6 +129,7 @@ export default class extends think.controller.base {
         }
         msg = think.extend({ 'success': '操作成功！', 'error': '操作失败！', 'url': '', 'ajax': this.isAjax() }, msg);
         // model="document_tuoke";
+        console.log("editRow------"+JSON.stringify(where)+","+JSON.stringify(data)+","+model);
         let res = await this.model(model).where(where).update(data);
         if (res) {
             switch (model) {
@@ -259,7 +263,7 @@ export default class extends think.controller.base {
                 await this.onlineDown(model, map, { 'success': '下架成功', 'error': '启用失败' });
                 break;
             case 11: //拓课上架
-                console.log("上架------");
+                console.log("上架------"+ JSON.stringify(map) + "," + JSON.stringify(model));
                 await this.onlineUp(model, map, { 'success': '上架成功', 'error': '启用失败' });
                 break;
             default:
@@ -463,5 +467,44 @@ export default class extends think.controller.base {
             }
         }
 
+    }
+    //获取分类信息
+    async category(id, field) {
+            id = id || 0;
+            field = field || "";
+            if (think.isEmpty(id)) {
+                //this.fail('没有指定数据分类！');
+                this.http.error = new Error('没有指定数据分类！');
+                return think.statusAction(702, this.http);
+            }
+            console.log("category-----------" + id + "," + field);
+            let cate = await this.model("category").info(id, field);
+            //console.log(cate);
+            if (cate && 1 == cate.status) {
+
+                switch (cate.display) {
+                    case 0:
+                        //this.fail('该分类禁止显示')
+                        this.http.error = new Error('该分类禁止显示！');
+                        return think.statusAction(702, this.http);
+                        break;
+                        //TODO:更多分类显示状态判断
+                    default:
+
+                        return cate;
+                }
+
+            } else {
+
+                //this.fail("分类不存在或者被禁用！");
+                this.http.error = new Error('分类不存在或者被禁用！');
+                return think.statusAction(702, this.http);
+            }
+        }
+    setCorsHeader() {
+        this.header("Access-Control-Allow-Origin", this.header("origin") || "*");
+        this.header("Access-Control-Allow-Headers", "x-requested-with");
+        this.header("Access-Control-Request-Method", "GET,POST,PUT,DELETE");
+        this.header("Access-Control-Allow-Credentials", "true");
     }
 }
