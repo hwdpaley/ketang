@@ -258,6 +258,7 @@ export default class extends Base {
     async getDocumentList(cate_id, model_id, position, field, group_id, sortval, sortid) {
         //console.log(2222222);
         /* 查询条件初始化 */
+        let user = await this.session('userInfo');
         cate_id = cate_id || 0, field = field || true;
         let map = {};
         let status;
@@ -283,11 +284,17 @@ export default class extends Base {
 
         // 构建列表数据
         let Document = this.model('document');
-
+        let parent=0;
         if (cate_id) {
             //获取当前分类的所有子栏目
-            let subcate = await this.model('category').get_sub_category(cate_id);
+            
             // console.log(subcate);
+            
+            if(cate_id==134&&user.groupid!=5){
+                cate_id=137;
+                parent=1;
+            }
+            let subcate = await this.model('category').get_sub_category(cate_id);
             subcate.push(cate_id);
             map.category_id = ['IN', subcate];
         }
@@ -373,19 +380,23 @@ export default class extends Base {
             //  console.log(type);
             // console.log(map);
         }
-        let user = await this.session('userInfo');
-        let members =await this.model("member").where({ groupid: user.groupid }).select();
-        // console.log("members---------"+JSON.stringify(members));
-        let grs=[];
-        for (let val of members) {
-            grs.push(val.id);
+        let members=[];
+        console.log("cate_id,user.groupid---------"+cate_id+","+user.groupid);
+        if(parent==1){
+            members=await this.model("member_group").get_users(user.uid);
+        }else{
+            let grs =await this.model("member").where({ groupid: user.groupid }).select();
+            for (let val of grs) {
+                members.push(val.id);
+            }
         }
-        console.log("grs---------"+JSON.stringify(grs));
+        console.log("members---------"+JSON.stringify(members));
+        
         // map.groupid=["IN",grs];
         // this.is_login = await this.islogin();
 
         // console.log("user--------------"+JSON.stringify(this.is_login));
-        map.uid=["IN",grs];
+        map.uid=["IN",members];
         console.log("map--------------"+JSON.stringify(map));
         let list;
         if (!think.isEmpty(sortval)) {

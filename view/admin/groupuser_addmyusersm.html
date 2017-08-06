@@ -1,0 +1,38 @@
+<div class="modal-dialog ">
+    <form method="post" class="form-horizontal" action="/admin/groupuser/addmyuser" data-validate="parsley">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">{{controller.meta_title}}</h4>
+        </div>
+        <div class="modal-body">
+            <!-- <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <h4 class="modal-title">请扫码下面的二维码</h4>
+                            </div> -->
+                            <div class="modal-body  text-center">
+                                <div style="
+    width: 200px;
+    margin-left: 30%;" id="wx_qr_modal_code"></div>
+                            </div>
+        </div>        
+        <div class="modal-footer">
+            <a href="javascript:;" class="btn btn-default" data-dismiss="modal">关闭</a>
+            <!-- <button class="btn btn-primary btn-s-md ajax-post" type="submit" target-form="form-horizontal">确定</button> -->
+        </div>
+    </div><!-- /.modal-content -->
+    </form>
+</div><!-- /.modal-dialog -->
+<script type="text/javascript" src="/static/admin/js/wechat/jquery.qrcode.min.js"></script>
+
+    
+<script type="text/javascript">
+$(function() {
+    $("#wx_qr_modal_code").qrcode({
+        width: 120,
+        height: 120,
+        text: '{{wxhttp}}/admin/groupuser/addusersm/groupid/{{groupid}}'
+    });
+
+});
+</script>

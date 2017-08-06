@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en" class="app">
+<head>
+    <meta charset="utf-8" />
+    <meta name="renderer" content="webkit" />
+    <title>{{controller.meta_title}} </title>
+    <meta name="description" content="app, web app, responsive, admin dashboard, admin, flat, flat ui, ui kit, off screen nav" />
+    <meta name="viewport" content="width=320, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" href="/static/admin/css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="/static/admin/css/animate.css" type="text/css" />
+    <link rel="stylesheet" href="/static/admin/css/font-awesome.min.css" type="text/css" />
+    <link rel="stylesheet" href="/static/admin/css/simple-line-icons.css" type="text/css" />
+    <link rel="stylesheet" href="/static/admin/css/font.css" type="text/css" />
+    <link rel="stylesheet" href="/static/admin/js/toastr-master/toastr.min.css" type="text/css"/>
+    <link rel="stylesheet" href="/static/admin/js/sweetalert-master/dist/sweetalert.css" type="text/css"/>
+    <link rel="stylesheet" href="/static/admin/css/app.css" type="text/css" />
+    <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" />
+    <link rel="stylesheet" href="/static/yqx/css/iconfonts.min.css">
+    <link rel="stylesheet" href="/static/yqx/css/yqx.min.css">
+    <!--[if lt IE 9]>
+    <script src="/static/admin/js/ie/html5shiv.js"></script>
+    <script src="/static/admin/js/ie/respond.min.js"></script>
+    <script src="/static/admin/js/ie/excanvas.js"></script>
+    <![endif]-->
+    {% block style %}{% endblock %}
+</head>
+<body style="padding: 0">
+<section class="vbox">
+    {% include "./header.html" %}
+    <section>
+        <section class="hbox stretch">
+            <!-- .aside -->
+            {% include "./aside.html" %}
+            <!-- /.aside -->
+            <section id="content">
+                <div id="loading" class="loading" style="display: none">
+                    <div class="loadbox">
+                        <div class="loadlogo"></div>
+                        <div class="loadbg"></div>
+                    </div>
+                    <div class="loading-tip">美媒课堂</div>
+                </div>
+                {% block content %}{% endblock %}
+                <a href="#" class="hide nav-off-screen-block" data-toggle="class:nav-off-screen,open" data-target="#nav,html"></a>
+            </section>
+        </section>
+    </section>
+</section>
+<script src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/admin/js/wechat/jquery.cookie.js"></script>
+<!-- Bootstrap -->
+<script src="/static/admin/js/bootstrap.js"></script>
+<script src="/static/admin/js/slimscroll/jquery.slimscroll.min.js"></script>
+<script src="/static/admin/js/toastr-master/toastr.min.js"></script>
+<script src="/static/admin/js/sweetalert-master/dist/sweetalert.min.js"></script>
+<!-- App -->
+<script src="/static/admin/js/app.js" type="text/javascript"></script>
+<script src="/static/admin/js/app.plugin.js" type="text/javascript"></script>
+
+<script>
+    toastr.options = {
+        "positionClass": "toast-top-full-width",
+        "timeOut": "1500",
+
+    }
+</script>
+
+<script src="/static/admin/js/common.js" type="text/javascript"></script>
+<script >
+    var HOST = window.eqxHOST = {
+        DOMAIN: "ketang",
+        FILE: "//ketang.gzxinbibo.com/static/yqx/img/",
+        BIND_USER_FILE: "//ketang.gzxinbibo.com/static/yqx/img/",
+        FREE_USER_FILE: "//ketang.gzxinbibo.com/static/yqx/img/",
+        VIP_USER_FILE: "//ketang.gzxinbibo.com/static/yqx/img/"
+    };
+    window.eqxVersion = "4793d39",
+        function() {
+            function e() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobi/i.test(navigator.userAgent) || window.innerWidth < 500
+            }
+
+            function i() {
+                var e = 1,
+                    i = document.documentElement.clientWidth || 320,
+                    n = document.documentElement.clientHeight || 486;
+                e = i / n >= 320 / 486 ? n / 486 : i / 320;
+                var o = "width=320, initial-scale=" + e + ", maximum-scale=" + e + ", user-scalable=no";
+                document.getElementById("viewport").setAttribute("content", o)
+            }
+            var n = document.getElementById("loading"),
+                o = window.scene;
+            if (o) {
+                var t = HOST.FILE;
+                if (location.href.indexOf(HOST.DOMAIN) !== -1 || window.viewData || (t = HOST.BIND_USER_FILE), "/" != t.slice(-1) && (t += "/"), o.loadingLogo) {
+                    var d = t + o.loadingLogo;
+                    n.innerHTML = '<div class="loading-logo"><img src="' + d + '" class="logo-image"></div>'
+                }
+                if (o.cover) {
+                    var a = document.createElement("img");
+                    a.id = "shareImage", a.style.display = "none", a.src = t + o.cover, document.body.appendChild(a)
+                }
+            }
+            e() && (i(), n.style.display = "block");
+            for (var r = document.getElementsByClassName("yqx-script"), c = r.length, l = c - 1; l >= 0; l--) r[l].parentNode.removeChild(r[l])
+        }();
+    </script>
+    <script src="/static/yqx/js/jquery.min.js"></script>
+    <script src="/static/admin/js/wechat/bootstrap.min.js"></script>
+    <script src="/static/admin/js/wechat/jquery.qrcode.min.js"></script>
+    <script src="/static/yqx/js/yqx.min.js"></script>
+    <script src="/static/yqx/js/depth.js" async></script>
+    <!-- <script>
+    $(function() {
+        function e() {
+            var e = window.scene;
+            if (e) {
+                var t = "//da.eqxiu.com/c.gif?",
+                    n = window.screen,
+                    i = n.availWidth + "x" + n.availHeight,
+                    o = window.navigator,
+                    r = {
+                        lag: o.userLanguage || o.language
+                    };
+                r.event_description = e.description, r.event_id = e.id, r.scene_type = e.type, r.creator_id = e.userId, r.creator_type = e.userType;
+                var a = "action_name=" + encodeURIComponent(document.title) + "&idsite=2&url=" + encodeURIComponent(document.location) + "&urlref=" + encodeURIComponent(document.referrer) + "&res=" + i + "&data=" + encodeURIComponent(JSON.stringify(r));
+                a += "&cookie=" + (o.cookieEnabled ? 1 : 0), a += "&ct=" + (new Date).getTime(), t += a;
+                var c = document.createElement("img");
+                c.setAttribute("src", t), c.setAttribute("height", "0"), c.setAttribute("width", "0"), document.body.appendChild(c)
+            }
+        }
+        e()
+    })
+    </script> -->
+{% block script %}{% endblock %}
+</body>
+</html>

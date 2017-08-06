@@ -118,7 +118,8 @@ export default class extends Base {
         for(let v of list){
             v.count=await this.model('member').where({groupid:v.groupid,status:[">",-1]}).count('id');
             v.dpcounts=await this.model('member_group').get_dpcount(v.groupid);
-
+            let pid=await this.model('member_group').where({groupid:v.groupid}).getField('pid',true);
+            v.upname=await this.model('member_group').where({groupid:pid}).getField('name',true);
         }
         this.assign("list",list);
         this.meta_title = "会员组管理";
@@ -163,11 +164,90 @@ export default class extends Base {
 
     }
     /**
+     * 扫码添加会员组
+     */
+    async addusersmAction(){
+        if(this.isPost()){
+            let userInfo=await this.session('userInfo');
+            let data = this.post();
+            data.pid=userInfo.groupid;
+            console.log("data-------"+JSON.stringify(data));
+            let add = await this.model("member_group").add(data);
+            if (add) {
+                await think.cache("all_member_group",null);
+                return this.success({ name: "添加成功！",url:"/admin/groupuser/index"});
+
+            } else {
+                return this.fail("添加失败！");
+            }
+        }else {
+            this.meta_title="添加会员组";
+
+            this.active="admin/groupuser/index";
+            return this.display();
+        }
+
+    }
+    /**
          * adduser
          * 添加用户
          * @returns {Promise|*}
          */
     async addmyuserAction() {
+        if (this.isPost()) {
+            let data = this.post();
+            if (data.password != data.repassword) {
+                return this.fail("两次填入的密码不一致");
+            }
+            if (data.mobile.length != 11) {
+                return this.fail("手机号码长度不正确");
+            }
+            data.password = encryptPassword(data.password);
+            data.reg_time = new Date().getTime();
+            data.vip=0;
+            if (data.vip == 1) {
+                data.overduedate = new Date(data.overduedate).getTime();
+            } else {
+                data.overduedate = think.isEmpty(data.overduedate) ? 0 : data.overduedate;
+            }
+            //  console.log(data);
+            // return this.fail("ddd")
+            data.status = 1;
+            console.log("user data -----"+JSON.stringify(data));
+            let res = await this.model("member").add(data);
+            if (res) {
+                //添加角色
+                if (data.is_admin == 1) {
+                    await this.model("auth_user_role").add({ user_id: res, role_id: data.role_id });
+                }
+                return this.success({ name: "添加成功！" });
+            } else {
+                return this.fail("添加失败!")
+            }
+        } else {
+            //会员组
+            let id=await this.get('id');
+            if(think.isEmpty(id)){
+                let userInfo=await this.session('userInfo');
+                id=userInfo.groupid;
+            }
+            
+            let usergroup = await this.model("member_group").where({groupid:id,pid:id,_logic: "OR"}).select();
+            this.assign("usergroup", usergroup);
+            //获取管理组
+            let role = this.model("auth_role").where({ status: 1,sort:["<",100] }).select();
+            this.assign("role", role);
+            this.meta_title = "添加店铺用户";
+            return this.display();
+        }
+
+    }
+    /**
+         * adduser
+         * 扫码添加用户
+         * @returns {Promise|*}
+         */
+    async addmyusersmAction() {
         if (this.isPost()) {
             let data = this.post();
             if (data.password != data.repassword) {

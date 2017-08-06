@@ -267,8 +267,7 @@ export default class extends Base {
         //     id = query[0];
         // }
 
-        let cate = await this.category(id);
-        cate = think.extend({}, cate);
+        
         this.is_login = await this.islogin();
         let roleid = 8; //游客
         //访问控制
@@ -276,15 +275,16 @@ export default class extends Base {
         if (this.is_login) {
             this.assign('userid', this.is_login);
             let groupid = await this.model("member").where({ id: this.is_login }).getField('groupid', true);
-            if(groupid==0){
-                users=await await this.model("member").where({ pid: pid }).select();
-            }else{
-                roleid = await this.model("member_group").where({ groupid: groupid }).getField('pid', true);
+            roleid = await this.model("member_group").where({ groupid: groupid }).getField('pid', true);
+            if(roleid==0){
+                users=await await this.model("member").where({ groupid: groupid }).select();
+            }else {
                 console.log("groupid online-------"+roleid);
                 users=await this.model('member').where({ groupid: roleid }).select();
-                // users=await this.model('member').get_dpuser(roleid);
             }
-            
+            if(roleid!=5){
+                id=137;//mytuoke
+            }
             let us=[];
             for(let v of users){
                 us.push(v.id);
@@ -296,6 +296,9 @@ export default class extends Base {
             this.assign('userid', roleid);
             this.assign('groupid', roleid);
         }
+
+        let cate = await this.category(id);
+        cate = think.extend({}, cate);
 
         let priv = await this.model("category_priv").priv(cate.id, roleid, 'visit');
         if (!priv) {
@@ -611,7 +614,7 @@ export default class extends Base {
         } else {
             //console.log(temp);
             console.log("list------333323w3-------" + temp);
-            return this.display(temp);
+            return this.display("tuoke");
         }
     }
     async mytuokeAction() {

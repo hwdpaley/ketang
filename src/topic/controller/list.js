@@ -13,8 +13,8 @@ import pagination from 'think-pagination';
 export default class extends Base {
   //列表页[核心]
   async indexAction() {
-      console.log(GetDateStr(5)+" "+"00:00:00");
-      console.log(new Date(GetDateStr(0)+" "+"23:59:59").getTime());
+      // console.log(GetDateStr(5)+" "+"00:00:00");
+      // console.log(new Date(GetDateStr(0)+" "+"23:59:59").getTime());
       console.log("this.http.url------------"+this.http.url);
       //跨域
     let method = this.http.method.toLowerCase();
@@ -33,13 +33,73 @@ export default class extends Base {
 
     let cate = await this.category(id);
     cate = think.extend({}, cate);
+    console.log("cate.id-------"+JSON.stringify(cate.id));
     let roleid=8;//游客
     //访问控制
+    let users=[];
     if(this.is_login){
       this.assign('userid', this.is_login);
       roleid = await this.model("member").where({id:this.is_login}).getField('groupid', true);
+      let us=await this.model("member").where({groupid:roleid}).field('id').select();
+      for(let u of us){
+        users.push(u.id);
+      }
+      console.log("users 11111-------"+JSON.stringify(users));
+      if(id=='systuoke'){
+        id=134;
+        if(roleid!=5){
+          users=await this.model("member_group").get_users(this.is_login);
+          
+        }
+      }else if(id=='mytuoke'){
+        if(roleid!=5){
+          id=137;
+        }else{
+          id=134;
+        }
+      }else if(id=='dydemo'){
+        if(roleid!=5){
+          let userss=await this.model("member_group").get_users(this.is_login);
+          for(let u of us){
+            userss.push(u.id);
+          }
+          users=userss;
+          id=156;
+        }else{
+          id=156;
+        }
+      }
+
+
+      
+      
+      
+      // if(roleid!=5&&cate.id==134){
+      //     let pid=await this.model("member_group").where({groupid:roleid}).getField('pid', true);
+      //     if(pid==5){
+      //       users=await this.model("member_group").get_users(this.is_login);
+      //       id=134;//mytuoke
+      //     }else{
+      //       users=await this.model("member_group").get_users(this.is_login);
+      //       id=137;//mytuoke
+      //     }
+          
+      // }
+      // else if(roleid!=5&&cate.id==137){
+      //     // let groupid=await this.model("member").where({id:this.is_login}).getField('groupid',true);
+      //     users=await this.model("member").where({groupid:roleid}).select();
+      //     id=cate.id;
+      // }else{
+      //     id=cate.id;
+      // }
+      console.log("users index-------"+JSON.stringify(users));
+      this.assign('groupid', users);
+      this.assign('mygroupid', roleid);
+
     }else{
-      this.assign('userid', 0);
+      //未登录
+      this.redirect('uc/public/login');
+      // this.assign('userid', 0);
     }
     let priv = await this.model("category_priv").priv(cate.id,roleid,'visit');
     if(!priv){
@@ -65,9 +125,11 @@ export default class extends Base {
     this.assign('model', models.split(","));
     //console.log(cate);
     //获取当前分类的所有子栏目
-    let subcate = await this.model('category').get_sub_category(cate.id);
+
+    let subcate =[];// await this.model('category').get_sub_category(cate.id);
     // console.log(subcate);
-    subcate.push(cate.id);
+    subcate.push(id);
+
     //获取模型列表数据个数
     // console.log("cate-------"+JSON.stringify(cate));
     let num;
@@ -92,11 +154,12 @@ export default class extends Base {
       'status': 1,
       'category_id': ['IN', subcate]
     };
-    if(this.is_login){
-      map.uid=['IN',[1,this.is_login]];
-    }else{
-      map.uid=['IN',1];
-    }
+    map.uid = ['IN', users];
+    // if(this.is_login){
+    //   map.uid=['IN',[1,this.is_login]];
+    // }else{
+    //   map.uid=['IN',1];
+    // }
     //排序
     let o = {};
     o.level = 'DESC';
@@ -242,6 +305,7 @@ export default class extends Base {
       // console.log(map);
 
     }
+    console.log("mygroupid--------"+JSON.stringify(roleid));
     console.log("controller--------"+this.http.url);
     console.log("map--------"+JSON.stringify(map));
     //return false;
@@ -298,15 +362,19 @@ export default class extends Base {
     //获取面包屑信息
     let breadcrumb = await this.model('category').get_parent_category(cate.id,true);
     this.assign('breadcrumb', breadcrumb);
-    console.log("breadcrumb-------"+JSON.stringify(breadcrumb) )
+    // console.log("breadcrumb-------"+JSON.stringify(breadcrumb) )
 
-
+    for(let d of data.data){
+      d.groupid=await this.model('member').where({id:d.uid}).getField('groupid',true);
+      // d.groupid=gid;
+      console.log("d.groupid--------"+JSON.stringify(d.groupid));
+    }
     /* 模板赋值并渲染模板 */
     this.assign('category', cate);
     this.assign('list', data.data);
     console.log("list-------" + JSON.stringify(data.data));
     this.assign('count',data.count);
-    console.log("category------------"+JSON.stringify(cate));
+    // console.log("category------------"+JSON.stringify(cate));
     let temp = cate.template_lists ? `${cate.template_lists}` : "";
     // console.log(cate);
     //console.log(111)

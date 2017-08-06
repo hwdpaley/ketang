@@ -1,0 +1,122 @@
+
+{% extends "./inc/yqx_base.html" %}
+{% block content %}
+
+
+   <div id="loading" class="loading" style="display: none">
+        <div class="loadbox">
+            <div class="loadlogo"></div>
+            <div class="loadbg"></div>
+        </div>
+        <div class="loading-tip">美媒课堂</div>
+    </div>
+    <!-- inject:vconsole -->
+    <!-- endinject -->
+    <div id="wapShareSet" class="wapShare" style="display:none"></div>
+
+    <script class="eqx-script">
+    var __isServerRendered = true;
+    var scene = {
+        infoid:463,
+        id: 92922840,
+        code: "lmeOWxwg",
+        name: "99元女神卡123456",
+        description: "美容模版",
+        pageMode: 0,
+        cover: "o_1bmblkj1qm9o4491tgjk1op6v9.png?imageMogr2/auto-orient/crop/!639x640a1a11",
+        bgAudio: {
+            "url": "f06c66628205716a4a1c620e62764f3b.mp3",
+            "name": "春天的钥匙.mp3",
+            "id": 405755
+        },
+        property: {
+            "slideNumber": true,
+            "autoFlip": false,
+            "wxCount": 0,
+            "shareDes": "{}",
+            "wxClickFarmerCount": 0,
+            "triggerLoop": true,
+            "forbidHandFlip": false,
+            "autoFlipTime": 3.0
+        },
+        createTime: 1501478998000,
+        publishTime: 1501483180000,
+        bizType: 0,
+        type: 101,
+        userId: "4a2d8af9538dbc3501538e01588b00a7",
+        userType: "1",
+        memberType: "",
+        expiryTime: null,
+        isTemplate: 0,
+        dsAppId: "",
+        loadingLogo: ""
+    };
+    </script>
+    <!-- eqx-mobile -->
+    <!-- eqx-end -->
+    <script class="eqx-script">
+    var HOST = window.eqxHOST = {
+        DOMAIN: "eqxiu",
+        FILE: "//ketang.gzxinbibo.com/static/yqx/img/",
+        BIND_USER_FILE: "//ketang.gzxinbibo.com/static/yqx/img/",
+        FREE_USER_FILE: "//ketang.gzxinbibo.com/static/yqx/img/",
+        VIP_USER_FILE: "//ketang.gzxinbibo.com/static/yqx/img/"
+    };
+    window.eqxVersion = "4793d39",
+        function() {
+            function e() {
+                return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobi/i.test(navigator.userAgent) || window.innerWidth < 500
+            }
+
+            function i() {
+                var e = 1,
+                    i = document.documentElement.clientWidth || 320,
+                    n = document.documentElement.clientHeight || 486;
+                e = i / n >= 320 / 486 ? n / 486 : i / 320;
+                var o = "width=320, initial-scale=" + e + ", maximum-scale=" + e + ", user-scalable=no";
+                document.getElementById("viewport").setAttribute("content", o)
+            }
+            var n = document.getElementById("loading"),
+                o = window.scene;
+            if (o) {
+                var t = HOST.FILE;
+                if (location.href.indexOf(HOST.DOMAIN) !== -1 || window.viewData || (t = HOST.BIND_USER_FILE), "/" != t.slice(-1) && (t += "/"), o.loadingLogo) {
+                    var d = t + o.loadingLogo;
+                    n.innerHTML = '<div class="loading-logo"><img src="' + d + '" class="logo-image"></div>'
+                }
+                if (o.cover) {
+                    var a = document.createElement("img");
+                    a.id = "shareImage", a.style.display = "none", a.src = t + o.cover, document.body.appendChild(a)
+                }
+            }
+            e() && (i(), n.style.display = "block");
+            for (var r = document.getElementsByClassName("eqx-script"), c = r.length, l = c - 1; l >= 0; l--) r[l].parentNode.removeChild(r[l])
+        }()
+    </script>
+    <script src="/static/yqx/js/jquery.min.js"></script>
+    <script src="/static/yqx/js/yqx.min.js"></script>
+    <script src="/static/yqx/js/depth.js" async></script>
+    <!-- <script>
+    $(function() {
+        function e() {
+            var e = window.scene;
+            if (e) {
+                var t = "//da.eqxiu.com/c.gif?",
+                    n = window.screen,
+                    i = n.availWidth + "x" + n.availHeight,
+                    o = window.navigator,
+                    r = {
+                        lag: o.userLanguage || o.language
+                    };
+                r.event_description = e.description, r.event_id = e.id, r.scene_type = e.type, r.creator_id = e.userId, r.creator_type = e.userType;
+                var a = "action_name=" + encodeURIComponent(document.title) + "&idsite=2&url=" + encodeURIComponent(document.location) + "&urlref=" + encodeURIComponent(document.referrer) + "&res=" + i + "&data=" + encodeURIComponent(JSON.stringify(r));
+                a += "&cookie=" + (o.cookieEnabled ? 1 : 0), a += "&ct=" + (new Date).getTime(), t += a;
+                var c = document.createElement("img");
+                c.setAttribute("src", t), c.setAttribute("height", "0"), c.setAttribute("width", "0"), document.body.appendChild(c)
+            }
+        }
+        // e()
+    })
+    </script> -->
+{% endblock %}
+

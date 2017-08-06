@@ -1,0 +1,587 @@
+<html >
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <!-- <link rel="stylesheet" href="/static/admin/css/wechat/bootstrap.min.css"> -->
+    <link href="/static/kanjia/css/style2.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="css/default.css">
+    <link rel="stylesheet" type="text/css" href="css/jquery.classycountdown.css" />
+
+    
+    <script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src="/static/admin/js/wechat/bootstrap.min.js"></script> -->
+    <script src="/static/admin/js/udeitor/ueditor.parse.min.js"></script>
+
+    <script src="/static/kanjia/js/jquery.knob.js"></script>
+    <script src="/static/kanjia/js/jquery.throttle.js"></script>
+    <script src="/static/kanjia/js/jquery.classycountdown.js"></script>
+    <script type="text/javascript">
+    function createXMLHttps() {
+        var ret = null;
+        try {
+            ret = new ActiveXObject('Msxml2.XMLHTTP')
+        } catch (e) {
+            try {
+                ret = new ActiveXObject('Microsoft.XMLHTTP')
+            } catch (ee) {
+                ret = null
+            }
+        }
+        if (!ret && typeof XMLHttpRequest != 'undefined') ret = new XMLHttpRequest();
+        return ret;
+    }
+
+    var AllUserNum = 0,
+        AllUserId = "",
+        OnLineTimer, WayList = "";
+
+    function AjaxGet(URL, Cid, Types, shi) {
+        document.getElementById(Cid).innerHTML = '<img src="https://img.alicdn.com/imgextra/i3/53559669/TB2XWNpbC0jpuFjy0FlXXc0bpXa_!!53559669.gif" />';
+
+        var xmlhttp = createXMLHttps();
+        xmlhttp.open("GET", URL, true);
+        xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xmlhttp.onreadystatechange = function() {
+            //alert(xmlhttp.status);
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 404) {
+                alert('服务器繁忙,请重试...');
+                return
+            }
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 400) {
+                alert('服务器无法完成请求！');
+                return
+            }
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 202) {
+                alert('服务器无法处理！');
+                return
+            }
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 500) {
+                return;
+            }
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 12029) {
+                return;
+            }
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+                var ajaxHtml = xmlhttp.responseText;
+                //alert(ajaxHtml);
+                document.getElementById(Cid).innerHTML = ajaxHtml;
+
+            }
+        }
+        xmlhttp.send(null);
+        return;
+    }
+
+    //window.setTimeout("AjaxGet('desk.asp','rmain',0)",1500);
+    //window.setTimeout("AjaxGet('tishi.asp','chuang',1)",5000);
+
+
+    function killErrors() {
+        return true;
+    }
+    // window.onerror = killErrors;
+    </script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript">
+    var ua = navigator.userAgent.toLowerCase();
+    var isWeixin = ua.indexOf('micromessenger') != -1;
+    var isAndroid = ua.indexOf('android') != -1;
+    var isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
+    </script>
+</head>
+
+<body>
+    <div style="display:none">
+        <iframe name="BackFrame2" width="0" height="0" src=""></iframe>
+    </div>
+    <div id="chuang" style="display:none;"></div>
+    <div id="chuang2" style="display:none;"><img src="http://k5.byzow.com/k5/i1/46231496473256/2017060319422026491.jpg"></div>
+    <script>
+    function slcook(id, zhi) {
+        localStorage[id] = zhi;
+    }
+
+    function acook(id) {
+        var a1 = localStorage[id];
+        //alert(a1);
+        if (a1) {
+
+            AjaxGet('cookid.asp?uid=46231496473256&jid=' + id + '&zhi=' + a1 + '', 'chuang', 0)
+        }
+    }
+    </script>
+    <script>
+    // acook('nc46231496473256');
+    </script>
+    <script>
+    // acook('z46231496473256u0');
+    </script>
+    <script>
+    // acook('name');
+    </script>
+    <title>{{info.title}}</title>
+    <script type="text/javascript">
+    //var intDiff = parseInt(2520618);//倒计时总秒数量
+    function timer2(txt) {
+        intDiff = txt;
+    }
+
+    function timer(intDiff) {
+        window.setInterval(function() {
+            var day = 0,
+                hour = 0,
+                minute = 0,
+                second = 0; //时间默认值     
+            if (intDiff > 0) {
+                day = Math.floor(intDiff / (60 * 60 * 24));
+                hour = Math.floor(intDiff / (60 * 60)) - (day * 24);
+                minute = Math.floor(intDiff / 60) - (day * 24 * 60) - (hour * 60);
+                second = Math.floor(intDiff) - (day * 24 * 60 * 60) - (hour * 60 * 60) - (minute * 60);
+            }
+            if (minute <= 9) minute = '0' + minute;
+            if (second <= 9) second = '0' + second;
+            $('#day_show').html(day);
+            $('#hour_show').html('<s id="h"></s>' + hour);
+            $('#minute_show').html('<s></s>' + minute);
+            $('#second_show').html('<s></s>' + second);
+            intDiff--;
+        }, 1000);
+    }
+
+    $(function() {
+        //timer(intDiff);
+    });
+    </script>
+    <style>
+    .top_box {
+        height: auto;
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+        text-align: center;
+    }
+    
+    .top_box img {
+        height: auto;
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+        text-align: center;
+    }
+    
+    .clearfix:after {
+        content: "";
+        display: block;
+        height: 0;
+        overflow: hidden;
+        clear: both;
+        visibility: hidden;
+    }
+    
+    body {
+        background: url(https://img.alicdn.com/imgextra/i3/53559669/TB2WetYdJ4opuFjSZFLXXX8mXXa_!!53559669.gif);
+    }
+    
+    .info_div {
+        float: left;
+        padding: 4px 0 10px 0;
+        margin: 0px 0 5px 0;
+        color: #653F1B;
+        width: 100%;
+        height: 318px;
+        border-bottom: 1px solid #7BC5EA;
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-face-color: #61BEEC;
+        scrollbar-highlight-color: #7BC5EA;
+        scrollbar-shadow-color: #7BC5EA;
+        scrollbar-3dlight-color: #7BC5EA;
+        scrollbar-arrow-color: #7BC5EA;
+        scrollbar-track-color: #7BC5EA;
+        scrollbar-darkshadow-color: #7BC5EA;
+    }
+    </style>
+    <div class="index_bg"></div>
+    <div id="mzj" class="pop" style="background: rgba(0, 0, 0, 0.7);display:none;">
+        <div class="box">
+            <h1></h1>
+            <div class="inputqy">
+                <div class="jptext"><span id="ncz" class="ncz">很遗憾，已被砍到最低价了！</span></div>
+            </div>
+            <div class="but_con">
+                <button class="button_yes" onclick="document.getElementById('mzj').style.display='none';">知道啦</button>
+            </div>
+        </div>
+    </div>
+    <div id="zjl" class="popwin" style="display:none;">
+        <div class="box"><b class="closeb" onclick="document.getElementById('zjl').style.display='none';"></b>
+            <div class="inputqy">
+                <div class="jpimg">&nbsp;
+                </div>
+                <div class="jptext">
+                    <h1 id="hd1"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="zjl3" class="popwin" style="display:none;">
+        <div class="box"><b class="closeb" onclick="document.getElementById('zjl3').style.display='none';"></b>
+            <div class="inputqy">
+                <div class="jptext">
+                    <h1 id="hd13"></h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="banner top_box clearfix">
+        <img src="{{info.fmurl}}"/>
+        <h3 class="header_title">{{info.title}}</h3>
+        <p class="simplify_introduction">{{info.description}}</p>
+        <p>
+    </div>
+    <div class="contianer">
+        <div class="text" id="zong">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <span>访问：<font color="#F0FF00">224985</font></span>&nbsp;&nbsp;&nbsp;&nbsp;<span>报名：<font color="#F0FF00">2001</font></span>&nbsp;&nbsp;&nbsp;&nbsp;<span>砍价：<font color="#F0FF00">31542</font></span>
+            <h1>亲爱的：</h1> 已有<span>5</span>位亲友，帮助<span></span>砍价了，共砍掉金额<span></span>元，当前价格为<span>418</span>元，你也来帮他再砍一刀吧！
+            <h2>底价：<b>￥168</b>&nbsp;&nbsp;&nbsp;&nbsp;现价：<b><span class="yes">￥418</span></b></h2>
+        </div>
+        <div class="button" id="niu">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <ul>
+                <li>
+                    <button value="mzj" id="kjc" onclick="window.location.href='/k5/bm.asp?uid=46231496473256&amp;id=0'">请先报名</button>
+                </li>
+                <li>
+                    <button onclick="window.location.href='/k5/bm.asp?uid=46231496473256&amp;id=0'">我要参加</button>
+                </li>
+            </ul>
+        </div>
+        <div id="bang">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <table border="2" cellpadding="0" cellspacing="0" class="table">
+                <tbody>
+                    <tr class="th">
+                        <th colspan="2" class="leftborder">亲友团</th>
+                        <th width="107">砍掉金额</th>
+                        <th width="111" class="rightborder">砍后金额</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <table border="2" cellpadding="0" cellspacing="0" class="table">
+                                <tbody>
+                                    <tr class="th">
+                                        <th colspan="2" class="leftborder" height="0"></th>
+                                        <th width="107"></th>
+                                        <th width="111" class="rightborder"></th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="details" >
+            <div class="title" >活动玩法</div>
+            <div id="contentbieber">
+                    {%set p = 1%} {%for val in info.playmethod%}
+                    <div class="tab-pane fade {% if p ==1 %} in active{%endif%}" id="page{{p}}">
+                        {{val|safe}}
+                    </div>
+                    {% set p = p+1%} {%endfor%}
+            </div>
+        </div>
+        <div class="details" >
+            <div class="title" >商品详情</div>
+            <div id="contentbieber">
+                    {%set p = 1%} {%for val in info.content%}
+                    <div class="tab-pane fade {% if p ==1 %} in active{%endif%}" id="page{{p}}">
+                        {{val|safe}}
+                    </div>
+                    {% set p = p+1%} {%endfor%}
+            </div>
+        </div>
+        <div id="bang2">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <table border="2" cellpadding="0" cellspacing="0" class="table">
+                <tbody>
+                    <tr class="th">
+                        <th width="50">排行</th>
+                        <th colspan="2" class="leftborder">姓名</th>
+                        <th width="111" class="rightborder">砍后金额</th>
+                    </tr>
+                    <tr>
+                        <td width="50">1</td>
+                        <td class="tx"><img src="http://wx.qlogo.cn/mmopen/8TcU21Oibib6C8wn9T7Ipv2ViapKAKQuTjIQW1R5g6X2ZpIDwGLrIiaM2J0GGegQPgGd0hBTD9QD1Te02eHaGxGefzdNnehRVaMa/0"></td>
+                        <td class="name"> 👠👠👠</td>
+                        <td class="yes">￥168</td>
+                    </tr>
+                    
+                    <!-- <tr>
+                        <td>1/101</td>
+                        <td><a href="javascript:;" onclick="AjaxGet('/k5/bang2qb.asp?uid=46231496473256&amp;id=0','bang2',0)" class="right_btn">显示全部</a></td>
+                        <td><a href="javascript:;" onclick="AjaxGet('/k5/bang2.asp?uid=46231496473256&amp;id=0&amp;page=0&amp;section=0','bang2',0)" class="right_btn">上一页</a></td>
+                        <td><a href="javascript:;" onclick="AjaxGet('/k5/bang2.asp?uid=46231496473256&amp;id=0&amp;page=2&amp;section=2','bang2',0)" class="right_btn">下一页</a></td>
+                    </tr> -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- <footer><a href="http://www.byzow.com/wapu_6_1s.php" target="_blank">百助微应用→我要发布活动</a></footer> -->
+   </div> 
+    <style>
+    #audio_btns {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 200;
+        width: 50px;
+        height: 50px;
+        background-repeat: no-repeat
+    }
+    
+    .rotate {
+        width: 50px;
+        height: 50px;
+        background-size: 100% 100%;
+        background-image: url(https://img.alicdn.com/imgextra/i2/53559669/TB2x8KMeV5N.eBjSZFmXXboSXXa_!!53559669.png);
+        -webkit-animation: rotating 1.2s linear infinite;
+        -moz-animation: rotating 1.2s linear infinite;
+        -o-animation: rotating 1.2s linear infinite;
+        animation: rotating 1.2s linear infinite
+    }
+    
+    @-webkit-keyframes rotating {
+        from {
+            -webkit-transform: rotate(0deg)
+        }
+        to {
+            -webkit-transform: rotate(360deg)
+        }
+    }
+    
+    @keyframes rotating {
+        from {
+            transform: rotate(0deg)
+        }
+        to {
+            transform: rotate(360deg)
+        }
+    }
+    
+    @-moz-keyframes rotating {
+        from {
+            -moz-transform: rotate(0deg)
+        }
+        to {
+            -moz-transform: rotate(360deg)
+        }
+    }
+    
+    .off {
+        background-image: url(https://img.alicdn.com/imgextra/i2/53559669/TB2x8KMeV5N.eBjSZFmXXboSXXa_!!53559669.png);
+        background-size: 100% 100%
+    }
+    
+    .products div .p1 {
+        padding-bottom: 5px;
+    }
+    
+    .products div .p1,
+    .products div .p1 a {
+        font-size: 20px;
+        color: #565353;
+        font-weight: bold;
+        line-height: 40px;
+    }
+    
+    .over {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background: url() center no-repeat;
+        background-size: 100%;
+    }
+    </style>
+    <div id="audio_btns">
+        <div id="childrotate" class="rotate"></div>
+        <audio loop="" src="{{info.music}}" id="medias" autoplay="" preload=""></audio>
+    </div>
+    <script type="text/javascript">
+    $(function() {
+        var audio = document.getElementById('medias');
+        if (isIos) {
+            document.addEventListener("WeixinJSBridgeReady", function() {
+                document.getElementById('medias').play();
+
+            }, false);
+        }
+        console.log('audio-----------'+JSON.stringify(audio));
+        $("#audio_btns").click(function() {
+            if (audio !== null) {
+                console.log('audio click');
+                //检测播放是否已暂停.audio.paused 在播放器播放时返回false.//地址resource/n3/68/64/3355761778.mp3
+                if (audio.paused) {
+                    $("#audio_btns").removeClass('off').children('#childrotate').addClass('rotate');
+                    audio.play(); //audio.play();//这个就是播放  
+                } else {
+                    $("#audio_btns").addClass('off').children('#childrotate').removeClass('rotate');
+                    audio.pause(); //这个就是暂停
+                }
+            }
+        });
+        if (audio.paused) {
+            $("#audio_btns").removeClass('off').children('#childrotate').addClass('rotate');
+            audio.play(); //audio.play();//这个就是播放  
+        }
+    });
+    </script>
+    <script>
+    // window.setTimeout("AjaxGet('shijian.asp?id=0&uid=46231496473256','shijian',0)", 200);
+    // window.setTimeout("AjaxGet('niu.asp?id=0&uid=46231496473256','niu',0)", 100);
+    // window.setTimeout("AjaxGet('zong.asp?id=0&uid=46231496473256','zong',0)", 300);
+    // window.setTimeout("AjaxGet('bang.asp?uid=46231496473256&id=0','bang',0)", 600);
+
+    // window.setTimeout("AjaxGet('bang2.asp?uid=46231496473256&id=0','bang2',0)", 400);
+    </script>
+    <script>
+    uParse('#contentbieber', {
+        rootPath: '/static/admin/js/udeitor/'
+    });
+    // uParse('#contentbieber2', {
+    //     rootPath: '/static/admin/js/udeitor/'
+    // });
+    // uParse('#contentbieber2', {
+    //     rootPath: '/static/admin/js/udeitor/'
+    // });
+    //alert(location.href.split('#')[0]);
+
+    // var signPackage = !{JSON.stringify(signPackage)};
+    // console.log(JSON.stringify(signPackage));
+
+
+    wx.config({
+        debug: false,
+        appId: '{{signPackage.appId}}',
+        timestamp: '{{signPackage.timestamp}}',
+        nonceStr: '{{signPackage.nonceStr}}',
+        signature: '{{signPackage.signature}}',
+        jsApiList: [
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ',
+            'onMenuShareWeibo',
+            'onMenuShareQZone'
+        ]
+    });
+    wx.ready(function() {
+        console.log('wx.ready');
+        var shareData = {
+            title: '{{info.title}}', // 分享标题
+            link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: '{{info.fmurl}}', // 分享图标
+            desc: '{{desc|block(30)}}',
+            trigger: function(res) {
+
+            },
+            success: function(res) {
+
+            },
+            cancel: function(res) {
+
+            },
+            fail: function(res) {
+                alert(JSON.stringify(res));
+            }
+        };
+        wx.onMenuShareAppMessage(shareData);
+        wx.onMenuShareTimeline(shareData);
+        wx.onMenuShareQQ(shareData);
+        wx.onMenuShareWeibo(shareData);
+        // 在这里调用 API
+    });
+    wx.error(function(res) {
+        alert(res.errMsg);
+    });
+</script>
+    <script type="text/javascript">
+    function toupiao() {
+
+        $('#kjb').html('砍价中请稍等...');
+        AjaxGet('/k5/plugin1.asp?uid=46231496473256&id=0', 'chuang', 0)
+
+        return;
+    }
+
+    var ykj = 0;
+
+    function kanjia(jia) {
+
+        // if(window.ykj==1){
+        // reflas();
+        //}
+
+        //$.post('kj.php?wxid=e3781a0e191c6db5f0de05a353676c4d&tid=1903&openid=oyV8_tw6ov3SNZmyEre8Vvk6Jq90&mbid=383455', submitData,
+        //function(data) {
+        //  if (data.success == true) {
+        document.getElementById('zjl').style.display = '';
+        $('.jpimg').html(jia);
+        $('#hd1').html('恭喜您，砍价成功！');
+        $('#kjb').val("已砍");
+        $('#kjb').attr("disabled", false);
+        // window.ykj=1;
+        // setTimeout("reflas()",1500);
+        //  }
+        //},
+        //"json")
+
+    }
+
+    function reflas() {
+
+        window.location.href = window.location.href;
+    }
+
+    function tipMsg2(txt) {
+        document.getElementById('zjl').style.display = '';
+        //alert(txt);
+        $('#hd1').html(txt);
+    }
+
+    function tipMsg3(txt) {
+        document.getElementById('zjl3').style.display = '';
+        //alert(txt);
+        $('#hd13').html(txt);
+    }
+
+    function guanzhu() {
+        tipMsg2('请从公众号进入活动！');
+        window.self.location.href = 'guanzhu.asp?uid=46231496473256&id=0';
+        return;
+    }
+
+    function guanzhu2() {
+        tipMsg2('请从公众号进入活动！');
+        window.self.location.href = 'guanzhu2.asp?uid=46231496473256&id=0';
+        return;
+    }
+
+    function tzhuan(url) {
+
+        window.self.location.href = url + '?uid=46231496473256&id=0';
+        return;
+    }
+    </script>
+</body>
+
+</html>

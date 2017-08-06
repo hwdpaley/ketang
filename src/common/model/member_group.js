@@ -43,6 +43,24 @@ export default class extends think.model.base {
        //     return name;
        // }
     }
+    async get_users(uid) {
+      let users;
+      let groupid = await this.model("member").where({ id: uid }).getField('groupid', true);
+      let roleid = await this.model("member_group").where({ groupid: groupid }).getField('pid', true);
+      if(roleid==0){
+          users=await await this.model("member").where({ groupid: groupid }).select();
+      }else {
+          // console.log("groupid online-------"+roleid);
+          users=await this.model('member').where({ groupid: roleid }).select();
+      }
+      let us=[];
+      for(let v of users){
+          us.push(v.id);
+      }
+      console.log("users index-------"+JSON.stringify(us));
+        // let result = await think.model('mysql', think.config("db")).query(`SELECT * FROM bb_member_group where FIND_IN_SET(groupid, getChildLst(`+groupid+`));`);
+      return us;
+    }
     async get_dpuser(groupid) {
         let result = await think.model('mysql', think.config("db")).query(`SELECT * FROM bb_member_group where FIND_IN_SET(groupid, getChildLst(`+groupid+`));`);
         return result;

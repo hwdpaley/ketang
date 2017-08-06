@@ -1,0 +1,551 @@
+<html >
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+
+    <title>{{info.title}}</title>
+    <link href="/static/kanjia/css/style2.css" rel="stylesheet" type="text/css">
+    <!-- <link rel="stylesheet" type="text/css" href="/static/kanjia/css/default.css"> -->
+    <link rel="stylesheet" type="text/css" href="/static/kanjia/css/jquery.classycountdown.css" />
+
+    <link rel="stylesheet" href="/static/admin/css/wechat/bootstrap.min.css">
+    
+
+    <script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/admin/js/wechat/bootstrap.min.js"></script>
+    <script src="/static/admin/js/udeitor/ueditor.parse.min.js"></script>
+    <script src="/static/kanjia/js/kanjia.js"></script>
+    <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+
+    <script src="/static/kanjia/js/jquery.knob.js"></script>
+    <script src="/static/kanjia/js/jquery.throttle.js"></script>
+    <script src="/static/kanjia/js/jquery.classycountdown.js"></script>
+    <script type="text/javascript" src="/static/admin/js/wechat/jquery.qrcode.min.js"></script>
+    <script src="/static/kanjia/js/html2canvas.min.js" ></script>
+    
+    
+    <!-- <script type="text/javascript">
+        var ua = navigator.userAgent.toLowerCase();
+        var isWeixin = ua.indexOf('micromessenger') != -1;
+        var isAndroid = ua.indexOf('android') != -1;
+        var isIos = (ua.indexOf('iphone') != -1) || (ua.indexOf('ipad') != -1);
+    </script> -->
+    <style>
+    .top_box {
+        height: auto;
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+        text-align: center;
+    }
+    
+    .top_box img {
+        height: auto;
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+        text-align: center;
+    }
+    
+    .clearfix:after {
+        content: "";
+        display: block;
+        height: 0;
+        overflow: hidden;
+        clear: both;
+        visibility: hidden;
+    }
+    
+    body {
+        /*background-color: #333333;*/
+        background: url(https://img.alicdn.com/imgextra/i3/53559669/TB2WetYdJ4opuFjSZFLXXX8mXXa_!!53559669.gif);
+    }
+    
+    .info_div {
+        float: left;
+        padding: 4px 0 10px 0;
+        margin: 0px 0 5px 0;
+        color: #653F1B;
+        width: 100%;
+        height: 318px;
+        border-bottom: 1px solid #7BC5EA;
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-face-color: #61BEEC;
+        scrollbar-highlight-color: #7BC5EA;
+        scrollbar-shadow-color: #7BC5EA;
+        scrollbar-3dlight-color: #7BC5EA;
+        scrollbar-arrow-color: #7BC5EA;
+        scrollbar-track-color: #7BC5EA;
+        scrollbar-darkshadow-color: #7BC5EA;
+    }
+    .ClassyCountdownDemo { margin:0 auto 30px auto; max-width:800px; width:calc(100%); padding:5px; display:block }
+    .tx img {
+        width: 100px;
+        height: 100px;
+        border-radius: 100%;
+        box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.1);
+        margin: 10px;
+        border-width: 5px;
+        border-color: green;
+        border-style:solid;
+        margin-left: 145px;
+        margin-top: -10px;
+    }
+    .tx p1{position: absolute;z-index: 10;margin-left: 180px;}
+
+    .smalltx{height: 150px;position: relative;z-index: 0}
+    .smalltx p{position: absolute;left: 45px;z-index: 10;margin-top: 45px;}
+    .smalltx p1{position: absolute;left: 25px;z-index: 10;margin-top: 110px;}
+    .smalltx img {
+        position: absolute;
+        top: 0;left: 0;
+        width: 80px;
+        height: 80px;
+        border-radius: 100%;
+        box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.1);
+        margin: 20px;
+        margin-top: 20px;
+    }
+    
+    #audio_btns {
+        position: absolute;
+        left: 10px;
+        top: 10px;
+        z-index: 200;
+        width: 50px;
+        height: 50px;
+        background-repeat: no-repeat
+    }
+    #ewm_btns {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 200;
+        width: 50px;
+        height: 50px;
+        background-repeat: no-repeat;
+        background-image: url(/static/kanjia/img/erweima.png);
+    }
+    .rotate {
+        width: 50px;
+        height: 50px;
+        background-size: 100% 100%;
+        background-image: url(https://img.alicdn.com/imgextra/i2/53559669/TB2x8KMeV5N.eBjSZFmXXboSXXa_!!53559669.png);
+        -webkit-animation: rotating 1.2s linear infinite;
+        -moz-animation: rotating 1.2s linear infinite;
+        -o-animation: rotating 1.2s linear infinite;
+        animation: rotating 1.2s linear infinite
+    }
+    
+    @-webkit-keyframes rotating {
+        from {
+            -webkit-transform: rotate(0deg)
+        }
+        to {
+            -webkit-transform: rotate(360deg)
+        }
+    }
+    
+    @keyframes rotating {
+        from {
+            transform: rotate(0deg)
+        }
+        to {
+            transform: rotate(360deg)
+        }
+    }
+    
+    @-moz-keyframes rotating {
+        from {
+            -moz-transform: rotate(0deg)
+        }
+        to {
+            -moz-transform: rotate(360deg)
+        }
+    }
+    
+    .off {
+        background-image: url(https://img.alicdn.com/imgextra/i2/53559669/TB2x8KMeV5N.eBjSZFmXXboSXXa_!!53559669.png);
+        background-size: 100% 100%
+    }
+    
+    .products div .p1 {
+        padding-bottom: 5px;
+    }
+    
+    .products div .p1,
+    .products div .p1 a {
+        font-size: 20px;
+        color: #565353;
+        font-weight: bold;
+        line-height: 40px;
+    }
+    
+    .over {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        background: url() center no-repeat;
+        background-size: 100%;
+    }
+
+    .qrtext{
+            position: relative;z-index: 0
+    }
+    .qrtext p{
+        position: absolute;
+        margin-left: 130px;
+        z-index: 10;
+        font-size: 20px;
+        margin-top: -250px;
+    }
+    .qrtext p1{
+        position: absolute;
+        margin-left: -90px;
+        z-index: 20;
+        font-size: 20px;
+        margin-top: -300px;
+    }
+    .qrtext img {
+        position: absolute;
+        top: 0;left: 0;
+        width: 100%;
+        /*height: 500px;*/
+        
+        box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.1);
+        /*margin: 20px;*/
+        margin-top: 20px;
+    }
+    .qr {
+        position: absolute;
+        z-index: 30;
+        box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.1);
+        margin-left: 30%;
+        margin-top: -200px;
+    }
+    </style>
+</head>
+
+<body>
+    
+    <div class="banner top_box clearfix">
+        <img src="{{info.fmurl}}"/>
+        <div id="countdown18" class="ClassyCountdownDemo">
+        </div>
+        <!-- <h2 class="header_title">{{info.title}}</h2> -->
+        <p class="simplify_introduction">{{info.description}}</p>
+        <p>
+    </div>
+    
+    
+    <div class="contianer">
+        <div style="height: 150px;">
+                    <div class="smalltx" style="float:left;">
+                        <img src="/static/kanjia/img/yuan.png">
+                        <p>{{kjlist0.nowprice}}</p>
+                        <p1 style="width: 90px">当前价格</p1>
+                    </div>
+                
+                    <div class="tx" style="float:left;">
+                        <img src="{{info.wxurl}}">
+                        <p style="margin-left: 170px;margin-top: 5px;font-size: 20px;">{{info.nickname}}</p>
+                    </div>
+                
+                    <div class="smalltx" style="margin-left: 70%">
+                        <img src="/static/kanjia/img/yuan.png">
+                        <p style="margin-left: 10px;">{{kjlist.length}}</p>
+                        <p1>支持人数</p1>
+                    </div>
+        </div>
+        <div class="text" id="zong" >
+            <h2 style="color: black">底价：<b>￥{{info.cplprice}}</b>&nbsp;&nbsp;&nbsp;&nbsp;原价：<b><span class="yes">￥{{info.cpoprice}}</span></b></h2>
+        </div>
+        
+        
+        <div  id="contentbieber">
+            <div class="details" >
+                <div class="title " >活动玩法</div>
+                
+                        {%set p = 1%} {%for val in info.playmethod%}
+                        <div class="tab-pane fade {% if p ==1 %} in active{%endif%} text" id="pagea{{p}}">
+                            {{val|safe}}
+                        </div>
+                        {% set p = p+1%} {%endfor%}
+                
+            </div>
+            <div class="button" id="niu">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <ul>
+                {%if info.ismy==0%}
+                <li style="width: 98%;">
+                    <button value="mzj" id="myplay" onclick="myplay({{info.id}},{{info.wxuid}})">我也要玩</button>
+
+                </li>
+                <li >
+
+                    <button style="margin-left: -20px;" onclick="takanjia({{info.id}},{{info.uid}},{{info.kjlow}},{{info.kjhig}},{{info.cplprice}},{{kjlist0.nowprice}},'/uc/kanjia/takanjia');">给Ta砍价</button>
+                </li>
+                {%else%}
+                <li style="width: 98%;margin-left: 10px;">
+                    <button style="margin-left: -20px;" id="myself" onclick="takanjia({{info.id}},{{info.uid}},{{info.kjlow}},{{info.kjhig}},{{info.cplprice}},{{kjlist0.nowprice}},'/uc/kanjia/mykanjia');">给自己砍价</button>
+                </li>
+                <li >
+                    <button style="margin-left: -20px;" id="helpBtn">好友帮砍</button>
+                </li>
+                {%endif%}
+            </ul>
+            </div>
+            <div class="details" >
+                <div class="title" >商品详情</div>
+                
+                        {%set p = 1%} {%for val in info.content%}
+                        <div class="tab-pane fade {% if p ==1 %} in active{%endif%} text" id="page{{p}}">
+                            {{val|safe}}
+                        </div>
+                        {% set p = p+1%} {%endfor%}
+                
+            </div>
+        </div>
+        <div class="text"  style="margin-bottom: 30px;margin-top: 20px;">
+            <!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
+            <span><font color="#000000">访问：</font><font color="#FF2200">224985</font></span>&nbsp;&nbsp;&nbsp;&nbsp;<span><font color="#000000">报名：</font><font color="#FF2200">2001</font></span>&nbsp;&nbsp;&nbsp;&nbsp;<span><font color="#000000">砍价：</font><font color="#FF2200">31542</font></span>
+            <!-- <h1>亲爱的：唐平平</h1> 已有<span>{{info.nums}}</span>位亲友，帮助<span>他</span>砍价了，共砍掉金额<span>{{info.cut}}</span>元，当前价格为<span>{{info.nowprice}}</span>元，你也来帮他再砍一刀吧！ -->
+           
+        </div>
+        {%if kjlist.length>0%}
+        <div id="bang2">
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            <table border="2" cellpadding="0" cellspacing="0" class="table">
+                <tbody>
+                    <tr class="th">
+                        <th  style="text-align: center;width:100">排行</th>
+                        <th style="text-align: center" colspan="2" class="leftborder">姓名</th>
+                        <th style="text-align: center;width:110" class="rightborder">砍后金额</th>
+                    </tr>
+                    {%set n = 1%}{%for val in kjlist%}
+                    <tr>
+                        <td style="vertical-align: middle;">{{n}}</td>
+                        <td class="tx"><img src="{{val.headimgurl}}"></td>
+                        <td style="vertical-align: middle;" class="name">{{val.nickname}}</td>
+                        <td style="vertical-align: middle;margin-left: 20px;" class="yes" >￥{{val.memory}}</td>
+                    </tr>
+                    {%set n =n+ 1%}{%endfor%}
+                    
+                </tbody>
+            </table>
+        </div>
+        {%endif%}
+    </div>
+    
+    <div id="audio_btns">
+        <div id="childrotate" class="rotate"></div>
+        <audio loop="" src="{{info.music}}" id="medias"  preload=""></audio>
+    </div>
+    <div id="ewm_btns" >
+    </div>
+    <div id="myCanvas"  style="width: 414px; height: 545; ">
+                    <div id="qr_code" class="text-center ">
+                        <img class="img-thumbnail" width="100%" src="/static/kanjia/img/kanjiaewm2.png">
+                        
+                    </div>
+                    <div class="qr"  id="wx_qr_modal_code">
+                        
+                    </div>
+                    
+                    <div class="qrtext" style="text-align: center;">
+                            <p1>{{info.nickname}}正在参加活动</p1>
+                            <p>快来帮我砍一刀</p>
+                            <p style="margin-top: -40px;margin-left: 110px;">长按识别二维码参与</p>
+                    </div>
+                    
+    </div>
+                
+    <div class="modal fade" id="wx_qr_modal" >
+        <div class="modal-dialog" style="background-color: transparent;">
+            <div class="modal-content" style="background-color: transparent;">
+                <!-- <div class="modal-header" ">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                
+                </div> -->
+                <div style="text-align: center;background-color: #04be02;">
+                        <p>1.长按保存图片</p>
+                        <p>2.图片发圈通知朋友来砍价</p>
+                </div>
+                <div >
+                    <img  width="100%" id="down_button">
+                </div>
+                <div class="modal-footer" style="text-align: center;">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <div class="modal fade" id="enroll_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                    <h3 class="text-center text-primary" id="modal_title">轻松两步，完成报名</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="col-sm-12 center-block" id="modal_body">
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" id="user_name" placeholder="请输入你的姓名">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" id="user_phone" placeholder="请输入你的手机号">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success btn-lg btn-block" onclick="myplayjoin('{{info.id}}','{{info.wxuid}}')" id="enroll_btn">立即报名</button>
+                        </div>
+                    </div>
+                    <!-- <div id="qr_code_two" class="hidden text-center">
+                        <img class="img-thumbnail" width="100%" src="{{info.twourl}}">
+                        <h2>请支付{{info.cpprice}}元</h2>
+                    </div> -->
+                    <div id="free_show" class="hidden text-center" style="height: 100px;line-height: 100px;background-color: #eeeeee">
+                        <span style="font-size: 16px;color: #999999;">恭喜您已报名成功，稍后店家将会联系您。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $(function() {
+        
+
+        $("#wx_qr_modal_code").qrcode({
+            width: 150,
+            height: 150,
+            text: '{{wxhttp}}/uc/kanjia/kanjia/id/{{info.id}}/wxuid/{{info.uid}}' 
+        });
+        
+        console.log('myCanvas ok');
+        html2canvas($("#myCanvas"), {
+            onrendered: function(canvas) {
+                $('#down_button').attr('src', canvas.toDataURL("image/png"));
+                // $('#down_button').attr('download', 'myjobdeer.jpg');
+                //$('#down_button').css('display','inline-block');
+                // var html_canvas = canvas.toDataURL();
+                // $.post('', {
+                //     order_id: 1,
+                //     type_id: 2,
+                //     html_canvas: html_canvas
+                // }, function(json) {
+                //     // console.log('myCanvas ok');
+                // }, 'json');
+            }
+        });
+        setTimeout(function(){
+            $("#myCanvas").css('display','none');
+        },1000);
+        var audio = document.getElementById('medias');
+        // if (isIos) 
+        // {
+        document.addEventListener("WeixinJSBridgeReady", function() {
+            document.getElementById('medias').play();
+
+        }, false);
+        // }
+        console.log('audio-----------'+JSON.stringify(audio));
+        $("#audio_btns").click(function() {
+            if (audio !== null) {
+                console.log('audio click');
+                //检测播放是否已暂停.audio.paused 在播放器播放时返回false.//地址resource/n3/68/64/3355761778.mp3
+                if (audio.paused) {
+                    $("#audio_btns").removeClass('off').children('#childrotate').addClass('rotate');
+                    audio.play(); //audio.play();//这个就是播放  
+                } else {
+                    $("#audio_btns").addClass('off').children('#childrotate').removeClass('rotate');
+                    audio.pause(); //这个就是暂停
+                }
+            }
+        });
+        if (audio.paused) {
+            $("#audio_btns").removeClass('off').children('#childrotate').addClass('rotate');
+            audio.play(); //audio.play();//这个就是播放  
+        }
+    });
+    </script>
+    <script>
+    uParse('#contentbieber', {
+        rootPath: '/static/admin/js/udeitor/'
+    });
+    $('#countdown18').ClassyCountdown({
+        theme: "flat-colors-black",
+        end: {{info.time}}
+    });
+    // uParse('#contentbieber', {
+    //     rootPath: '/static/admin/js/udeitor/'
+    // });
+    // uParse('#contentbieber2', {
+    //     rootPath: '/static/admin/js/udeitor/'
+    // });
+    // uParse('#contentbieber2', {
+    //     rootPath: '/static/admin/js/udeitor/'
+    // });
+    //alert(location.href.split('#')[0]);
+
+    // var signPackage = !{JSON.stringify(signPackage)};
+    // console.log(JSON.stringify(signPackage));
+
+
+    wx.config({
+        debug: false,
+        appId: '{{signPackage.appId}}',
+        timestamp: '{{signPackage.timestamp}}',
+        nonceStr: '{{signPackage.nonceStr}}',
+        signature: '{{signPackage.signature}}',
+        jsApiList: [
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+            'onMenuShareQQ',
+            'onMenuShareWeibo',
+            'onMenuShareQZone'
+        ]
+    });
+    wx.ready(function() {
+        console.log('wx.ready');
+        var shareData = {
+            title: '{{info.title}}', // 分享标题
+            link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: '{{info.fmurl}}', // 分享图标
+            desc: '{{info.description|block(30)}}',
+            trigger: function(res) {
+
+            },
+            success: function(res) {
+
+            },
+            cancel: function(res) {
+
+            },
+            fail: function(res) {
+                alert(JSON.stringify(res));
+            }
+        };
+        wx.onMenuShareAppMessage(shareData);
+        wx.onMenuShareTimeline(shareData);
+        wx.onMenuShareQQ(shareData);
+        wx.onMenuShareWeibo(shareData);
+        // 在这里调用 API
+    });
+    wx.error(function(res) {
+        alert(res.errMsg);
+    });
+</script>
+    
+</body>
+
+</html>

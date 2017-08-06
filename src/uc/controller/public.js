@@ -141,7 +141,7 @@ export default class extends Base {
       let sms=await this.model('smsignin').checksmignin();
 
       if (this.is_login) {
-        this.redirect("/uc/index")
+        this.redirect("/")
 
       }
       this.meta_title = "用户登录";

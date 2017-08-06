@@ -32,14 +32,14 @@ export default class extends Base {
             map.username = ["like", "%" + this.get("username") + "%"]
         }
         let user = await this.session('userInfo');
-        let groups =await this.model("member_group").where({ pid: user.groupid }).select();
-        // console.log("groups---------"+JSON.stringify(groups));
-        let grs=[user.groupid];
-        for (let val of groups) {
-            grs.push(val.groupid);
-        }
-        console.log("groups---------"+JSON.stringify(grs));
-        map.groupid=["IN",grs];
+        // let groups =await this.model("member_group").where({ pid: user.groupid }).select();
+        // // console.log("groups---------"+JSON.stringify(groups));
+        // let grs=[user.groupid];
+        // for (let val of groups) {
+        //     grs.push(val.groupid);
+        // }
+        // console.log("groups---------"+JSON.stringify(grs));
+        // map.groupid=["IN",grs];
         // if(user.uid!=1){
         //     map.groupid=user.groupid;
         // }

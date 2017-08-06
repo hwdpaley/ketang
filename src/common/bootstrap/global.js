@@ -1252,6 +1252,7 @@ global.get_file=async (file_id,field,key=false)=>{
         let name = await think.cache("setup");
         file.savename = `http://${name.QINIU_DOMAIN_NAME}/${file.savename}?download/${file.savename}`
     }
+    // console.log("file---------"+JSON.stringify(file));
     return think.isEmpty(field) ? file : file[field];
 }
 /**

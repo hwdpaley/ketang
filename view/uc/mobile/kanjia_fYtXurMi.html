@@ -1,0 +1,49 @@
+{% extends "./inc/yqx_base.html" %}
+{% block content %}
+    
+    <!-- inject:vconsole -->
+    <!-- endinject o_1bdtb7dhi1gkj13hp14cg1scvg7bs.png-->
+    <script class="yqx-script">
+    var __isServerRendered = true;
+    var scene = {
+        infoid:{{info.id}},
+        id: {{info.id}},
+        code: "{{info.code}}",
+        name: "{{info.title}}",
+        jsdata:"{{info.jsdata}}",
+        qrurl:"{{wxhttp}}/uc/kanjia/yqx/id/{{info.id}}",
+        description: "{{info.description}}",
+        pageMode: 0,
+        cover: "{{info.cover_id}}?imageMogr2/auto-orient/crop/!315x315a0a30",
+        bgAudio: {
+            "url": "{{info.music}}",
+            // "name": "未命名 12.mp3",
+            // "id": 4463185823
+        },
+        property: {
+            "slideNumber": false,
+            "autoFlip": false,
+            "wxCount": 0,
+            "shareDes": "{}",
+            "ad": 1,
+            "forbidHandFlip": false,
+            "wxClickFarmerCount": 0,
+            "triggerLoop": true,
+            "autoFlipTime": 3.0
+        },
+        createTime: {{info.create_time}},
+        publishTime: {{info.update_time}},
+        bizType: 0,
+        type: 103,
+        userId: "{{info.wxuid}}",
+        userType: "2",
+        memberType: "",
+        expiryTime: null,
+        isTemplate: 0,
+        dsAppId: "",
+        loadingLogo: ""
+    };
+    </script>
+    
+    <!-- <div id="wapShareSet" class="wapShare" style="display:none"></div> -->
+{% endblock %}

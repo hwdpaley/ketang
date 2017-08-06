@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>html2canvas网页截图</title>
+    <link rel="stylesheet" href="/static/admin/css/wechat/weui.min.css">
+    <link rel="stylesheet" href="/static/admin/css/wechat/jquery-weui.css">
+    <link rel="stylesheet" href="/static/admin/css/wechat/base.css">
+    <link rel="stylesheet" href="/static/admin/css/wechat/style.css">
+    <link rel="stylesheet" href="/static/admin/css/wechat/all.css">
+    <link rel="stylesheet" href="/static/admin/css/wechat/web_base.css">
+    <link rel="stylesheet" href="/static/admin/css/wechat/manager.css">
+
+    <script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
+    <!-- <script type="text/javascript" src="/static/assets/js/scripts.js"></script> -->
+    <script type="text/javascript" src="/static/admin/js/wechat/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="/static/admin/js/wechat/enroll.js"></script>
+    <script src="/static/kanjia/js/html2canvas.min.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript">
+    /*html2canvas()中,第一个参数是要截图的Dom对象，第二个参数时渲染完成后回调的canvas对象。*/
+    $(function() {
+        $("#wx_qr_modal_code").qrcode({
+            width: 150,
+            height: 150,
+            text: 'http://ketang.gzxinbibo.com/uc/kanjia/kanjia/id/468/wxuid/12' 
+        });
+        html2canvas($("#myCanvas"), {
+            onrendered: function(canvas) {
+                $('#down_button').attr('href', canvas.toDataURL("image/jpg"));
+                $('#down_button').attr('download', 'myjobdeer.jpg');
+                //$('#down_button').css('display','inline-block');
+                var html_canvas = canvas.toDataURL();
+                $.post('', {
+                    order_id: 1,
+                    type_id: 2,
+                    html_canvas: html_canvas
+                }, function(json) {}, 'json');
+            }
+        });
+        
+    });
+    </script>
+    <style type="text/css">
+        /*.abc{
+            background-image: url(http://ketang.gzxinbibo.com/static/kanjia/img/kanjiaewm2.png);
+        }*/
+        .qrtext{
+            position: relative;z-index: 0
+        }
+        .qrtext p{
+            position: absolute;
+            margin-left: 130px;
+            z-index: 10;
+            font-size: 20px;
+            margin-top: -250px;
+        }
+        .qrtext p1{
+            position: absolute;
+            margin-left: -90px;
+            z-index: 20;
+            font-size: 20px;
+            margin-top: -300px;
+        }
+        .qrtext img {
+            position: absolute;
+            top: 0;left: 0;
+            width: 100%;
+            /*height: 500px;*/
+            
+            box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.1);
+            /*margin: 20px;*/
+            margin-top: 20px;
+        }
+        .qr {
+            position: absolute;
+            z-index: 30;
+            box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.1);
+            margin-left: 13%;
+            margin-top: -200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="modal fade" id="wx_qr_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <div style="text-align: center;">
+                        <p>1.长按保存图片</p>
+                        <p>2.图片发圈通知朋友来砍价</p>
+                </div>
+                <div id="myCanvas"  style="width: 414px; height: 545; ">
+                    <div id="qr_code" class="text-center ">
+                        <img class="img-thumbnail" width="100%" src="http://ketang.gzxinbibo.com/static/kanjia/img/kanjiaewm2.png">
+                        
+                    </div>
+                    <div class="qr"  id="wx_qr_modal_code">
+                        
+                    </div>
+                    
+                    <div class="qrtext" style="text-align: center;">
+                            <p1>Tony正在参加活动</p1>
+                            <p>快来帮我砍一刀</p>
+                            <p style="margin-top: -40px;
+    margin-left: 110px;">长按识别二维码参与</p>
+                    </div>
+                    
+            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    
+    <!-- <div id="myCanvas"  style="width: 414px; height: 545; ">
+        <div id="qr_code" class="text-center">
+            <img class="img-thumbnail" width="100%" src="http://ketang.gzxinbibo.com/static/kanjia/img/kanjiaewm2.png">
+            
+        </div>
+        <p>请支付元</p>
+    </div> -->
+    
+    <hr>
+    <br/>
+    <a id="down_button">下载</a>
+</body>
+
+</html>

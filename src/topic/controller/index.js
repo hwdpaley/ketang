@@ -46,7 +46,7 @@ export default class extends Base {
             console.log("users-------" + JSON.stringify(users));
             //debugger;
             //判断浏览客户端
-            this.assign("qiniu_dm", `https://${this.setup.QINIU_DOMAIN_NAME}`);
+            this.assign("qiniu_dm", `//${this.setup.QINIU_DOMAIN_NAME}`);
             if (checkMobile(this.userAgent())) {
                 //跨域
                 let method = this.http.method.toLowerCase();
@@ -139,14 +139,14 @@ console.log("map-------" + JSON.stringify(map));
         }
         console.log("type-------,cate.mold-----" + type + "," + cate.mold);
         switch (type) {
-            case 0:
+            case 0://不可发布，做封面
                 if (cate.mold == 1) {
                     await this.action("mod/index", "index");
                 } else {
                     await this.action("cover", "index");
                 }
                 break;
-            case 1:
+            case 1://可发布
             case 2:
                 if (cate.mold == 1) {
                     // await this.action('question/list', 'index', 'mod')

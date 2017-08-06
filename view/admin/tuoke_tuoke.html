@@ -149,17 +149,19 @@
                     {% if val.cover_id>0 %}
                     <li class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-top:20px;">
                         <figure class="blog-item-small-image margin-bottom-0">
-                            <div class="" style="margin-left: 50px;">
+                            <div class="" style="margin-left: 10px;">
                                 <!-- <a class="shop-item-image" href="{{val.name|get_url(val.id)}}" >
                                     <img class="img-responsive" src="{{val.cover_id|get_pic('m=1,w=200,h=120')}}" alt="shop first image" />
                                 </a> -->
                                 <a href="javascript:ShowProduct('{{val.id}}');" title="{{val.title}}">
-                                    <img class="img-responsive " src="{{val.cover_id|get_pic('m=5,w=300,h=180')}}" alt="">
+                                    <img class="img-responsive " src="{{val.cover_id|get_pic('m=5,w=300,h=170')}}" alt="">
                                 </a>
+                                {#
                                 {%if val.online==1%}
                                 <div class="shangjia">
                                 </div>
                                 {%endif%}
+                                #}
                                 <!-- <div class="shop-option-over">
                                     <a class="btn btn-default add-wishlist" href="#" data-item-id="10" data-toggle="tooltip" title="Add To Wishlist"><i class="fa fa-heart nopadding"></i></a>
                                     <a class="btn btn-default add-compare" href="#" data-item-id="10" data-toggle="tooltip" title="Add To Compare"><i class="fa fa-bar-chart-o nopadding" data-toggle="tooltip"></i></a>
@@ -171,24 +173,13 @@
                             </div>
                             <div style="margin-left:20px;text-align: center;">
                                 <button onclick="ShowProduct('{{val.id}}');" class="btn btn-primary btn-left" style="margin-left: 30px;">预&nbsp;&nbsp;览</button>
-                                {%if userid==val.uid%}
-                                <a href='/uc/publish/edit/id/{{val.id}}'>
-                                    <button class="btn btn-info ">编辑</button>
-                                </a>
-                                <button onclick="tuokeDelete('{{val.id}}');" class="btn btn-danger ">删除</button>
-                                {%if val.online!=1%}
-                                <button onclick="tuokeupdown('{{val.id}}','11');" class="btn btn-primary ">上架</button>
-                                {%else%}
-                                <button onclick="tuokeupdown('{{val.id}}','10');" class="btn btn-info ">下架</button>
-                                {%endif%}
-                                <button onclick="WxListCode('{{val.id}}');" class="btn btn-success btn-right">二维码</button>
-                                {%else%}
+                                
                                 <button onclick="tuokeCopy('{{val.id}}');" class="btn btn-success btn-right" style="margin-left:5px; 
 ">拷&nbsp;&nbsp;贝</button>
                                 <button onclick="WxListCode('{{val.id}}');" class="btn btn-success btn-right" style="margin-left:5px; 
 ">二维码</button>
                             </div>
-                            {%endif%}
+                            
                         </figure>
                     </li>
                     {% endif %} 

@@ -120,6 +120,9 @@ export default class extends Base {
         } 
         for(let v of list){
             v.count=await this.model('member').where({groupid:v.groupid,status:1}).count('id');
+            v.dpcounts=await this.model('member_group').get_dpcount(v.groupid);
+            let pid=await this.model('member_group').where({groupid:v.groupid}).getField('pid',true);
+            v.upname=await this.model('member_group').where({groupid:pid}).getField('name',true);
         }
         this.assign("list",list);
         this.meta_title = "会员组管理";

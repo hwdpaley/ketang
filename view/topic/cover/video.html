@@ -73,7 +73,8 @@
                     -->
                     <div class="fullwidthbanner" data-height="500" data-shadow="3" data-navigationStyle="">
                         <ul class="hide">
-                            {% topic data = "slider",limit= "5",cid=category.id,position='2',issub="1",ispic="1",uid=userid%} {% for v in slider%}
+                            {% topic data = "slider",limit= "5",cid=category.id,position='2',issub="1",ispic="1",uid=userid%} 
+                            {% for v in slider%}
                             <!-- SLIDE  -->
                             <li data-transition="fade" data-slotamount="7" data-masterspeed="300" data-saveperformance="off">
                                 <img src="/static/assets/images/1x1.png" data-lazyload="{{v.cover_id|get_pic('m=1,w=848,h=500')}}" alt="" data-bgfit="cover" data-bgposition="center center" data-bgrepeat="no-repeat" />
@@ -102,7 +103,7 @@
                 <!-- /REVOLUTION SLIDER -->
                 <ul class="nav nav-tabs nav-button-tabs">
                     <!-- side navigation -->
-                    <li class="active"><a href="#taball" data-toggle="tab">全部</a></li>
+                    <!-- <li class="active"><a href="#taball" data-toggle="tab">全部</a></li> -->
                     {%column data="cates",cid=category.id%} {%for val in cates%}
                     <li><a href="#tab{{val.id}}" data-toggle="tab">{{val.name}}</a></li>
                     {%endfor%}
@@ -111,7 +112,8 @@
                     <div class="tab-pane fade in active" id="taball">
                         <!-- POST ITEM -->
                         <div class="row">
-                            {% topic data = "list",limit= "9",cid=category.id,issub=1,uid=userid%} {% for val in list %}
+                            
+                            {% for val in list %}
                             <div class="col-md-4 col-sm-4 mix ">
                                 <!-- item -->
                                 <div class="item-box">
@@ -145,7 +147,7 @@
                                         </div>
                                         <!-- /overlay title -->
                                         #}
-                                        <img class="img-responsive" src="{{val.cover_id|get_pic('m=1,w=300,h=200')}}" width="600" height="399" alt="">
+                                        <img class="img-responsive" src="{{val.cover_id|get_pic('m=5,w=300,h=160')}}" width="600" height="399" alt="">
                                         
                                     </figure>
                                     <div class="text-center" style="margin-top:10px;">
@@ -194,7 +196,7 @@
                                         </div>
                                         #}
                                         <!-- /overlay title -->
-                                        <img class="img-responsive" src="{{val.cover_id|get_pic('m=1,w=300,h=200')}}" width="600" height="399" alt="">
+                                        <img class="img-responsive" src="{{val.cover_id|get_pic('m=5,w=300,h=160')}}" width="600" height="399" alt="">
                                     </figure>
                                     <div class="text-center" style="margin-top:10px;">
                                             <h3>{{val.title}}</h3>
@@ -208,9 +210,9 @@
                         <!-- PAGINATION -->
                         <div class="text-center">
                     <!-- Pagination Default -->
-                    {{pagination | safe}}
-                    <!-- /Pagination Default -->
-                </div>
+                            {{pagination | safe}}
+                            <!-- /Pagination Default -->
+                        </div>
                 {#
                         <div class="text-center">
                             <a href="{{v.url}}" class="btn btn-reveal btn-default">

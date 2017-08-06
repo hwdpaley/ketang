@@ -29,12 +29,52 @@ export default class extends Base {
     //console.log(cate);
     let roleid=8;//游客
     //访问控制
-    console.log("uid============="+this.is_login);
+    let users=[];
+    console.log("id cover============="+id);
     if(this.is_login){
+      // this.assign('userid', this.is_login);
+      // roleid = await this.model("member").where({id:this.is_login}).getField('groupid', true);
+      // let groupid = await this.model("member").where({ id: this.is_login }).getField('groupid', true);
+      // roleid = await this.model("member_group").where({ groupid: groupid }).getField('pid', true);
+      // if(roleid==0){
+      //     users=await await this.model("member").where({ groupid: groupid }).select();
+      // }else {
+      //     console.log("groupid online-------"+roleid);
+      //     users=await this.model('member').where({ groupid: roleid }).select();
+      // }
+      
+      // users=await this.model("member_group").get_users(this.is_login);
+      
+      // console.log("users index-------"+JSON.stringify(users));
+      // this.assign('groupid', users);
+      // if(roleid!=5){
+      //     id=137;//mytuoke
+      // }
+
       this.assign('userid', this.is_login);
       roleid = await this.model("member").where({id:this.is_login}).getField('groupid', true);
+      let us=await this.model("member").where({groupid:roleid}).field('id').select();
+      for(let u of us){
+        users.push(u.id);
+      }
+      console.log("users 11111-------"+JSON.stringify(users));
+      if(id=='shipinceshi'){
+        id=85;
+        if(roleid!=5){
+          users=await this.model("member_group").get_users(this.is_login);
+          
+        }
+      }else if(id=='mytuoke'){
+        if(roleid!=5){
+          id=137;
+        }else{
+          id=134;
+        }
+      }
     }else{
-      this.assign('userid', 0);
+      //未登录
+      this.redirect('uc/public/login');
+      // this.assign('userid', 0);
     }
     let priv = await this.model("category_priv").priv(cate.id,roleid,'visit');
     if(!priv){

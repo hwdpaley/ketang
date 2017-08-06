@@ -1,0 +1,52 @@
+
+{% extends "./inc/yqx_base.html" %}
+{% block content %}
+
+
+   
+    <!-- inject:vconsole -->
+    <!-- endinject -->
+    <div id="wapShareSet" class="wapShare" style="display:none"></div>
+
+    <script class="eqx-script">
+    var __isServerRendered = true;
+    var scene = {
+        infoid:{{info.id}},
+        id: 93010589,
+        code: "{{info.code}}",
+        name: "{{info.title}}",
+        description: "{{info.description}}",
+        pageMode: 0,
+        cover: "o_1bmblkj1qm9o4491tgjk1op6v9.png?imageMogr2/auto-orient/crop/!639x640a1a13",
+        bgAudio: {
+            "url": "bdceeaa651d64bd863b40f542d0beec0.mp3",
+            "name": "不可思议.mp3",
+            "id": 405757
+        },
+        property: {
+            "slideNumber": true,
+            "autoFlip": false,
+            "wxCount": 0,
+            "shareDes": "{}",
+            "wxClickFarmerCount": 0,
+            "forbidHandFlip": false,
+            "triggerLoop": true,
+            "autoFlipTime": 3.0
+        },
+        createTime: 1501564734000,
+        publishTime: 1501646236000,
+        bizType: 0,
+        type: 103,
+        userId: "4a2d8af9538dbc3501538e01588b00a7",
+        userType: "1",
+        memberType: "",
+        expiryTime: null,
+        isTemplate: 0,
+        dsAppId: "",
+        loadingLogo: ""
+    };
+    </script>
+    
+{% endblock %}
+
+

@@ -138,7 +138,7 @@
                             <li class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
                                 {#
                                 <a onclick="ShowProduct('{{val.id}}');" title="{{val.title}}">
-                                    <img class="img-responsive" src="{{val.cover_id|get_pic('m=1,w=200,h=120')}}" alt="">
+                                    <img class="img-responsive" src="{{val.cover_id|get_pic('m=1,w=300,h=160')}}" alt="">
                                 </a>
                                 {% if userid>0 %}
                                 <button onclick="ShowProduct('{{val.id}}');" class="btn btn-success btn-left" style="
@@ -161,7 +161,7 @@
                                     <div class="thumbnail">
                                         <!-- product image(s) -->
                                         <a class="shop-item-image" onclick="ShowProduct('{{val.id}}');">
-                                            <img class="img-responsive" src="{{val.cover_id|get_pic('m=1,w=200,h=120')}}" alt="shop first image" />
+                                            <img class="img-responsive" src="{{val.cover_id|get_pic('m=5,w=300,h=160')}}" alt="shop first image" />
                                         </a>
                                         <!-- /product image(s) -->
                                         <!-- hover buttons -->
@@ -203,7 +203,7 @@
                                 <!-- IMAGE -->
                                 <!-- <figure class="blog-item-small-image margin-bottom-0"> -->
                                 <a href="ShowProduct('{{val.id}}');">
-                                    <img class="img-responsive" src="{{val.cover_id|get_pic('m=1,w=200,h=120')}}" alt="">
+                                    <img class="img-responsive" src="{{val.cover_id|get_pic('m=5,w=300,h=160')}}" alt="">
                                 </a>
                                 <!-- </figure> -->
                                 {% if userid>0 %}

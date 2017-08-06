@@ -339,7 +339,9 @@ export default class extends Base {
             let document = this.model("document")
             let data = await document.details(id);
             //安全验证
-            if (data.uid != this.user.uid) {
+            let groupid=await this.model("member").where({id:data.uid}).getField('groupid', true); 
+            let ugroupid=await this.model("member").where({id:this.user.uid}).getField('groupid', true); 
+            if (groupid != ugroupid) {
                 this.http.error = new Error('只能编辑自己的稿件哦(*^_^*)!');
                 return think.statusAction(702, this.http);
             }
