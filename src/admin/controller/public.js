@@ -131,7 +131,7 @@ export default class extends think.controller.base {
 
     }
     async smloginAction() {
-        //扫码登录
+        //扫码过来登录
 
         if (is_weixin(this.userAgent())) {
             
@@ -139,10 +139,12 @@ export default class extends think.controller.base {
             console.log("sm ok------"+id);
             await this.cookie('now',id);
             // return this.success({name:"登录成功,登录中!",url:"/uc/index"});
+            // this.display('no');
             this.redirect('/uc/public/login/smlogin/ok');
         }else{
-            console.log("sm err");
-            return false;
+            this.display('no');
+            // console.log("sm err");
+            // return false;
         }
         
     }
@@ -198,6 +200,7 @@ export default class extends think.controller.base {
     }
 
     async getsaomiaoAction() {
+        //前段定时ajax获取微信扫码的数据
         let t=this.get('t');
         let now=new Date().getTime();
         let dd=await this.model('smsignin').where({now:t}).find();

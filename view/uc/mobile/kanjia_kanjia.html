@@ -283,25 +283,37 @@
             </div>
             <div class="button" id="niu">
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+            {%if info.istimeout==0%}
             <ul>
+
                 {%if info.ismy==0%}
-                <li style="width: 98%;">
-                    <button value="mzj" id="myplay" onclick="myplay({{info.id}},{{info.wxuid}})">我也要玩</button>
+                    
+                    <li style="width: 98%;">
+                        <button value="mzj" id="myplay" onclick="myplay({{info.id}},{{info.wxuid}})">我也要玩</button>
 
-                </li>
-                <li >
+                    </li>
+                        {%if info.isLowPrice!=1%}
+                            <li >
 
-                    <button style="margin-left: -20px;" onclick="takanjia({{info.id}},{{info.uid}},{{info.kjlow}},{{info.kjhig}},{{info.cplprice}},{{kjlist0.nowprice}},'/uc/kanjia/takanjia');">给Ta砍价</button>
-                </li>
+                                <button style="margin-left: -20px;" onclick="takanjia({{info.id}},{{info.uid}},{{info.kjlow}},{{info.kjhig}},{{info.cplprice}},{{kjlist0.nowprice}},'/uc/kanjia/takanjia');">给Ta砍价</button>
+                            </li>
+                        {%endif%}
                 {%else%}
-                <li style="width: 98%;margin-left: 10px;">
-                    <button style="margin-left: -20px;" id="myself" onclick="takanjia({{info.id}},{{info.uid}},{{info.kjlow}},{{info.kjhig}},{{info.cplprice}},{{kjlist0.nowprice}},'/uc/kanjia/mykanjia');">给自己砍价</button>
-                </li>
-                <li >
-                    <button style="margin-left: -20px;" id="helpBtn">好友帮砍</button>
-                </li>
+                    {%if info.isLowPrice!=1%}
+                        <li style="width: 98%;margin-left: 10px;">
+                            <button style="margin-left: -20px;" id="myself" onclick="takanjia({{info.id}},{{info.uid}},{{info.kjlow}},{{info.kjhig}},{{info.cplprice}},{{kjlist0.nowprice}},'/uc/kanjia/mykanjia');">给自己砍价</button>
+                        </li>
+                        <li >
+                            <button style="margin-left: -20px;" id="helpBtn">好友帮砍</button>
+                        </li>
+                    {%else%}
+                        <li >
+                            <button  id="zhifuBtn">恭喜您，已经成功砍到底价，请扫描支付</button>
+                        </li>
+                    {%endif%}
                 {%endif%}
             </ul>
+            {%endif%}
             </div>
             <div class="details" >
                 <div class="title" >商品详情</div>
@@ -382,9 +394,9 @@
                 <div >
                     <img  width="100%" id="down_button">
                 </div>
-                <div class="modal-footer" style="text-align: center;">
+                <!-- <div class="modal-footer" style="text-align: center;">
                     <button type="button" class="btn btn-success" data-dismiss="modal">关闭</button>
-                </div>
+                </div> -->
             </div>
             
         </div>
@@ -410,13 +422,63 @@
                             <button class="btn btn-success btn-lg btn-block" onclick="myplayjoin('{{info.id}}','{{info.wxuid}}')" id="enroll_btn">立即报名</button>
                         </div>
                     </div>
-                    <!-- <div id="qr_code_two" class="hidden text-center">
-                        <img class="img-thumbnail" width="100%" src="{{info.twourl}}">
-                        <h2>请支付{{info.cpprice}}元</h2>
-                    </div> -->
-                    <div id="free_show" class="hidden text-center" style="height: 100px;line-height: 100px;background-color: #eeeeee">
-                        <span style="font-size: 16px;color: #999999;">恭喜您已报名成功，稍后店家将会联系您。</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="phone_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                    <h3 class="text-center text-primary" >轻松两步，完成报名</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="col-sm-12 center-block" id="phonemodal_body">
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" id="user_nickname" placeholder="请输入你的姓名">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" id="user_nickphone" placeholder="请输入你的手机号">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success btn-lg btn-block" onclick="kanjiajoin('{{info.id}}','{{info.wxuid}}')" id="kanjiaenroll_btn">立即参与砍价</button>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="qrcodel_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <div class="modal-body">
+                    
+                    <div id="qr_code_two" class="text-center">
+                        <img class="img-thumbnail" width="100%" src="{{info.twourl}}">
+                        <h2>请支付{{info.cplprice}}元</h2>
+                    </div>
+                    <!-- <div id="free_show" class="hidden text-center" style="height: 100px;line-height: 100px;background-color: #eeeeee">
+                        <span style="font-size: 16px;color: #999999;">恭喜您已报名成功，稍后店家将会联系您。</span>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="kjtwourl_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                
+                <div class="modal-body">
+                    
+                    <div  class="text-center">
+                        <img class="img-thumbnail" width="100%" src="{{info.kjtwourl}}">
+                        <!-- <h2>请支付{{info.cplprice}}元</h2> -->
+                    </div>
+                    <!-- <div id="free_show" class="hidden text-center" style="height: 100px;line-height: 100px;background-color: #eeeeee">
+                        <span style="font-size: 16px;color: #999999;">恭喜您已报名成功，稍后店家将会联系您。</span>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -424,7 +486,9 @@
     <script type="text/javascript">
     $(function() {
         
-
+        if({{info.istimeout}}>0){
+            alert('砍价时间已经已到，谢谢参与');
+        }
         $("#wx_qr_modal_code").qrcode({
             width: 150,
             height: 150,

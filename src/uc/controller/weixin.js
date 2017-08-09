@@ -12,6 +12,8 @@ import Base from './base.js';
 import pingpp from 'pingpp';
 import http from 'http';
 import fs from 'fs';
+import request from 'request';
+import qs from 'qs';
 import API from 'wechat-api';
 import JSSDK from './jssdk.js';
 export default class extends Base {
@@ -32,45 +34,62 @@ export default class extends Base {
         //auto render template file index_index.html
         return this.display();
     }
+    
+    //用微信客户端获取getopenid.  http://ketang.gzxinbibo.com/uc/kanjia/kanjia/id/472/wxuid/9
+    async getopenidAction() {
+        //获取用户openid
+        let code = this.get("code");
+        
+        let token = await this.jssdk.getToken(code);
+        // console.log("getopenid token-------------" + JSON.stringify(token));
+        let userinfo=await this.jssdk.getUserInfo(token.access_token,token.openid);
+        //存储Openid
+        let openid = userinfo.openid;
+        await this.session('wx_openid', openid);
+
+        // console.log("getopenid  uinfo-------------" + JSON.stringify(uinfo));
+        // let userinfo = await getUser(this.api, openid);
+        console.log("getopenid  userinfo-------------" + JSON.stringify(userinfo));
+        userinfo.subscribe=1;
+        //如果没有关注先跳到关注页面，如果没获取到信息，则去微信号上同步一下
+        
+        //userinfo.subscribe_time = userinfo.subscribe_time * 1000;
+        userinfo.subscribe_time = new Date().getTime();
+        let wx_user = await this.model("wx_user").where({ openid: openid,subscribe:1 }).find();
+
+        // //存储Openid
+        // await this.session('wx_openid', openid);
+        if (think.isEmpty(wx_user)) {
+            wx_user = await this.model("wx_user").where({ openid: openid }).getField('id',true);
+            if(!think.isEmpty(wx_user)){
+                await this.model("wx_user").where({ openid: openid }).update(userinfo);
+                console.log("更新  wx_user-------------" + JSON.stringify(userinfo));
+            }else{
+                if(!think.isEmpty(userinfo.openid)){
+                    await this.model("wx_user").add(userinfo);
+                    console.log("添加  wx_user-------------" + JSON.stringify(userinfo));
+                }
+            }
+        } 
+        this.redirect(this.cookie("bieber_wx_url"));
+        
+    }
     async oauthAction() {
         //判断是否是微信浏览器
         //微信公众账号内自动登陆
         let openid = await this.session("wx_openid");
         //openid =null;// await this.session("wx_openid",null);
-        console.log("oauthAction--------" + openid);
+        console.log("openid oauthAction--------" + openid);
         if (is_weixin(this.userAgent()) && (think.isEmpty(openid) || typeof openid == 'undefined')) {
             // 先把url暂存起来
+            console.log("openid bieber_wx_url--------"+JSON.stringify(this.http.url) );
             this.cookie("bieber_wx_url", this.http.url);
             var oauthUrl = pingpp.wxPubOauth.createOauthUrlForCode(this.setup.wx_AppID, `${this.setup.wx_url}/uc/weixin/getopenid?showwxpaytitle=1`, true);
-            // console.log("oauthAction-----------" + oauthUrl)
+            console.log("oauthAction-----------" + oauthUrl);
             this.redirect(oauthUrl);
         }
-        let userinfo = await getUser(this.api, openid);
-        console.log("微信 userinfo oauthAction-------------" + JSON.stringify(userinfo));
-        //如果没有关注先跳到关注页面
-        if (userinfo.subscribe == 0) {
-
-            console.log("关注美媒课堂")
-            this.redirect('/uc/weixin/follow');
-            return false;
-        };
-
-        // else{
-        //     let wx_user = await this.model("wx_user").where({ openid: openid }).find();
-        //     if (think.isEmpty(wx_user)||think.isEmpty(wx_user.uid)) {
-        //         if (think.isEmpty(wx_user)){
-        //             let userinfo = await getUser(this.api, openid);
-        //             userinfo.username=userinfo.nickname;
-        //             userinfo.real_name=userinfo.nickname;
-        //             userinfo.email=userinfo.nickname+'@qq.com';
-        //             userinfo.password='7fe293a2a8994cca42668d5a37747d4f';
-        //             await this.model("wx_user").add(userinfo);
-        //         }
-        //         // this.redirect("/uc/weixin/signin");
-        //     }
-        // }
-
     }
+    
     async oauth11Action() {
         //判断是否是微信浏览器
         //微信公众账号内自动登陆
@@ -87,12 +106,12 @@ export default class extends Base {
         let userinfo = await getUser(this.api, openid);
         console.log("微信 userinfo oauthAction 11 -------------" + JSON.stringify(userinfo));
         //如果没有关注先跳到关注页面
-        if (userinfo.subscribe == 0) {
+        // if (userinfo.subscribe == 0) {
 
-            console.log("关注美媒课堂")
-            this.redirect('/uc/weixin/follow');
-            return false;
-        };
+        //     console.log("关注美媒课堂")
+        //     this.redirect('/uc/weixin/follow');
+        //     return false;
+        // };
         if (!think.isEmpty(userinfo.openid)) {
 
 
@@ -165,121 +184,107 @@ export default class extends Base {
                 }
             }
         }
-        // else{
-        //     let wx_user = await this.model("wx_user").where({ openid: openid }).find();
-        //     if (think.isEmpty(wx_user)||think.isEmpty(wx_user.uid)) {
-        //         if (think.isEmpty(wx_user)){
-        //             let userinfo = await getUser(this.api, openid);
-        //             userinfo.username=userinfo.nickname;
-        //             userinfo.real_name=userinfo.nickname;
-        //             userinfo.email=userinfo.nickname+'@qq.com';
-        //             userinfo.password='7fe293a2a8994cca42668d5a37747d4f';
-        //             await this.model("wx_user").add(userinfo);
-        //         }
-        //         // this.redirect("/uc/weixin/signin");
-        //     }
-        // }
 
     }
     //用微信客户端获取getopenid
-    async getopenidAction() {
-        //获取用户openid
-        let code = this.get("code");
-        // console.log(code);
-        //获取openid
-        let getopenid = () => {
-            let deferred = think.defer();
-            pingpp.wxPubOauth.getOpenid(this.setup.wx_AppID, this.setup.wx_AppSecret, code, function(err, openid) {
-                //console.log(openid);
-                deferred.resolve(openid);
-                // ...
-                // pass openid to extra['open_id'] and create a charge
-                // ...
-            });
-            return deferred.promise;
-        };
-        let openid = await getopenid();
-        //9think.log(think.isEmpty(openid));
-        let userinfo = await getUser(this.api, openid);
-        console.log("微信 userinfo 123456-------------" + JSON.stringify(userinfo));
-        //如果没有关注先跳到关注页面
-        // if (userinfo.subscribe == 0) {
+    // async getopenidAction() {
+    //     //获取用户openid
+    //     let code = this.get("code");
+    //     // console.log(code);
+    //     //获取openid
+    //     let getopenid = () => {
+    //         let deferred = think.defer();
+    //         pingpp.wxPubOauth.getOpenid(this.setup.wx_AppID, this.setup.wx_AppSecret, code, function(err, openid) {
+    //             //console.log(openid);
+    //             deferred.resolve(openid);
+    //             // ...
+    //             // pass openid to extra['open_id'] and create a charge
+    //             // ...
+    //         });
+    //         return deferred.promise;
+    //     };
+    //     let openid = await getopenid();
+    //     //9think.log(think.isEmpty(openid));
+    //     let userinfo = await getUser(this.api, openid);
+    //     console.log("微信 userinfo 123456-------------" + JSON.stringify(userinfo));
+    //     //如果没有关注先跳到关注页面
+    //     // if (userinfo.subscribe == 0) {
 
-        //    console.log(1111111111111)
-        //    this.redirect('/uc/weixin/follow');
-        //    return false;
-        // };
-        //userinfo.subscribe_time = userinfo.subscribe_time * 1000;
-        userinfo.subscribe_time = new Date().getTime();
-        let wx_user = await this.model("wx_user").where({ openid: openid }).find();
+    //     //    console.log(1111111111111)
+    //     //    this.redirect('/uc/weixin/follow');
+    //     //    return false;
+    //     // };
+    //     //userinfo.subscribe_time = userinfo.subscribe_time * 1000;
+    //     userinfo.subscribe_time = new Date().getTime();
+    //     let wx_user = await this.model("wx_user").where({ openid: openid }).find();
 
-        //存储Openid
-        await this.session('wx_openid', openid);
-        if (think.isEmpty(wx_user)) {
-            //后台没有微信数据？还没有关注过，先记录下来
-            let member = await this.model("member").where({ openid: openid }).find();
-            // console.log("member-----------" + JSON.stringify(member));
-            if (!think.isEmpty(member)) {
-                userinfo.uid = member.id;
-            } else {
-                userinfo.username = userinfo.nickname;
-                userinfo.real_name = userinfo.nickname;
-                userinfo.email = userinfo.nickname + '@qq.com';
-                userinfo.password = '7fe293a2a8994cca42668d5a37747d4f';
-                member = await this.model("member").add(userinfo);
-                userinfo.uid = member;
-                // console.log("member-----------" + JSON.stringify(member));
-            }
-            await this.model("wx_user").add(userinfo);
-            // this.redirect("/uc/weixin/signin");
-        } else {
+    //     //存储Openid
+    //     await this.session('wx_openid', openid);
+    //     if (think.isEmpty(wx_user)) {
+    //         //后台没有微信数据？还没有关注过，先记录下来
+    //         let member = await this.model("member").where({ openid: openid }).find();
+    //         // console.log("member-----------" + JSON.stringify(member));
+    //         if (!think.isEmpty(member)) {
+    //             userinfo.uid = member.id;
+    //         } else {
+    //             userinfo.username = userinfo.nickname;
+    //             userinfo.real_name = userinfo.nickname;
+    //             userinfo.email = userinfo.nickname + '@qq.com';
+    //             userinfo.password = '7fe293a2a8994cca42668d5a37747d4f';
+    //             member = await this.model("member").add(userinfo);
+    //             userinfo.uid = member;
+    //             // console.log("member-----------" + JSON.stringify(member));
+    //         }
+    //         await this.model("wx_user").add(userinfo);
+    //         // this.redirect("/uc/weixin/signin");
+    //     } else {
 
-            //检查微信号是否跟网站会员绑定
-            if (think.isEmpty(wx_user.uid)) {
-                // 没绑定跳转绑定页面
-                // this.redirect("/uc/weixin/signin");
-                let member = await this.model("member").where({ openid: openid }).find();
-                // console.log("member-----------" + JSON.stringify(member));
-                if (!think.isEmpty(member)) {
-                    userinfo.uid = member.id;
-                } else {
-                    userinfo.username = userinfo.nickname;
-                    userinfo.real_name = userinfo.nickname;
-                    userinfo.email = userinfo.nickname + '@qq.com';
-                    userinfo.password = '7fe293a2a8994cca42668d5a37747d4f';
-                    member = await this.model("member").add(userinfo);
-                    userinfo.uid = member;
-                    // console.log("member-----------" + JSON.stringify(member));
-                }
-                await this.model("wx_user").where({ openid: openid }).update(userinfo);
-            } else
+    //         //检查微信号是否跟网站会员绑定
+    //         if (think.isEmpty(wx_user.uid)) {
+    //             // 没绑定跳转绑定页面
+    //             // this.redirect("/uc/weixin/signin");
+    //             let member = await this.model("member").where({ openid: openid }).find();
+    //             // console.log("member-----------" + JSON.stringify(member));
+    //             if (!think.isEmpty(member)) {
+    //                 userinfo.uid = member.id;
+    //             } else {
+    //                 userinfo.username = userinfo.nickname;
+    //                 userinfo.real_name = userinfo.nickname;
+    //                 userinfo.email = userinfo.nickname + '@qq.com';
+    //                 userinfo.password = '7fe293a2a8994cca42668d5a37747d4f';
+    //                 member = await this.model("member").add(userinfo);
+    //                 userinfo.uid = member;
+    //                 // console.log("member-----------" + JSON.stringify(member));
+    //             }
+    //             await this.model("wx_user").where({ openid: openid }).update(userinfo);
+    //         } else
 
-            {
-                //更新微信头像
-                let filePath = think.RESOURCE_PATH + '/upload/avatar/' + wx_user.uid;
-                think.mkdir(filePath)
-                await this.spiderImage(userinfo.headimgurl, filePath + '/avatar.png')
-                //绑定直接登陆
-                let last_login_time = await this.model("member").where({ id: wx_user.uid }).getField("last_login_time", true);
-                userinfo = await this.model("member").where({ id: wx_user.uid }).find();
-                let isVip = await this.model("member").get_vip(wx_user.id);
-                let wx_userInfo = {
-                    'uid': wx_user.uid,
-                    'username': userinfo.username,
-                    'last_login_time': last_login_time,
-                    'real_name': userinfo.real_name,
-                    'isVip': isVip,
-                    'groupid': userinfo.groupid
-                };
-                await this.session('webuser', wx_userInfo);
+    //         {
+    //             //更新微信头像
+    //             let filePath = think.RESOURCE_PATH + '/upload/avatar/' + wx_user.uid;
+    //             think.mkdir(filePath)
+    //             await this.spiderImage(userinfo.headimgurl, filePath + '/avatar.png')
+    //             //绑定直接登陆
+    //             let last_login_time = await this.model("member").where({ id: wx_user.uid }).getField("last_login_time", true);
+    //             userinfo = await this.model("member").where({ id: wx_user.uid }).find();
+    //             let isVip = await this.model("member").get_vip(wx_user.id);
+    //             let wx_userInfo = {
+    //                 'uid': wx_user.uid,
+    //                 'username': userinfo.username,
+    //                 'last_login_time': last_login_time,
+    //                 'real_name': userinfo.real_name,
+    //                 'isVip': isVip,
+    //                 'groupid': userinfo.groupid
+    //             };
+    //             await this.session('webuser', wx_userInfo);
 
 
-                console.log("webuser-------------12345," + JSON.stringify(wx_userInfo));
-            }
+    //             console.log("webuser-------------12345," + JSON.stringify(wx_userInfo));
+    //         }
 
-        }
-        this.redirect(this.cookie("bieber_wx_url"));
-    }
+    //     }
+    //     this.redirect(this.cookie("bieber_wx_url"));
+    // }
 
     /**
      * 没有关注提示关注

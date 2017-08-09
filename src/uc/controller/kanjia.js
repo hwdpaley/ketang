@@ -12,8 +12,11 @@ import Base from './base.js';
 import pingpp from 'pingpp';
 import http from 'http';
 import fs from 'fs';
+import request from 'request';
+import qs from 'qs';
 import API from 'wechat-api';
 import JSSDK from './jssdk.js';
+import WechatPay from './wechatPay.js';
 export default class extends Base {
     async __before() {
         //网站配置
@@ -67,121 +70,49 @@ export default class extends Base {
             console.log("openid bieber_wx_url--------"+JSON.stringify(this.http.url) );
             this.cookie("bieber_wx_url", this.http.url);
             var oauthUrl = pingpp.wxPubOauth.createOauthUrlForCode(this.setup.wx_AppID, `${this.setup.wx_url}/uc/kanjia/getopenid?showwxpaytitle=1`, true);
-            // console.log("oauthAction-----------" + oauthUrl)
+            console.log("oauthAction-----------" + oauthUrl);
             this.redirect(oauthUrl);
         }
-        
-
     }
-    async oauth11Action() {
-        //判断是否是微信浏览器
-        //微信公众账号内自动登陆
-        let openid = await this.session("wx_openid");
-        //openid =null;// await this.session("wx_openid",null);
-        console.log("oauthAction 11 --------" + openid);
-        if (is_weixin(this.userAgent()) && (think.isEmpty(openid) || typeof openid == 'undefined')) {
-            // 先把url暂存起来
-            this.cookie("bieber_wx_url", this.http.url);
-            var oauthUrl = pingpp.wxPubOauth.createOauthUrlForCode(this.setup.wx_AppID, `${this.setup.wx_url}/uc/kanjia/getopenid?showwxpaytitle=1`, true);
-            // console.log("oauthAction-----------" + oauthUrl)
-            this.redirect(oauthUrl);
-        }
-        let userinfo = await getUser(this.api, openid);
-        console.log("微信 userinfo oauthAction 11 -------------" + JSON.stringify(userinfo));
-        //如果没有关注先跳到关注页面
-        if (userinfo.subscribe == 0) {
+   
+    //用微信客户端获取getopenid.  http://ketang.gzxinbibo.com/uc/kanjia/kanjia/id/472/wxuid/9
+    async getopenidAction() {
+        //获取用户openid
+        let code = this.get("code");
+        
+        let token = await this.jssdk.getToken(code);
+        // console.log("getopenid token-------------" + JSON.stringify(token));
+        let userinfo=await this.jssdk.getUserInfo(token.access_token,token.openid);
+        //存储Openid
+        
+        let openid = userinfo.openid;
+        await this.session('wx_openid', openid);
 
-            console.log("关注美媒课堂")
-            this.redirect('/uc/kanjia/follow');
-            return false;
-        };
-        if (!think.isEmpty(userinfo.openid)) {
+        // console.log("getopenid  uinfo-------------" + JSON.stringify(uinfo));
+        // let userinfo = await getUser(this.api, openid);
+        console.log("getopenid  userinfo-------------" + JSON.stringify(userinfo));
+        userinfo.subscribe=1;
+        
+        //userinfo.subscribe_time = userinfo.subscribe_time * 1000;
+        userinfo.subscribe_time = new Date().getTime();
+        let wx_user = await this.model("wx_user").where({ openid: openid,subscribe:1 }).find();
 
-
-            userinfo.subscribe_time = new Date().getTime();
-            let wx_user = await this.model("wx_user").where({ openid: openid }).find();
-            if (think.isEmpty(wx_user)) {
-                //后台没有微信数据？还没有关注过，先记录下来
-                let member = await this.model("member").where({ openid: openid }).find();
-                // console.log("member-----------" + JSON.stringify(member));
-                if (!think.isEmpty(member)) {
-                    userinfo.uid = member.id;
-                } else {
-                    userinfo.username = userinfo.nickname;
-                    userinfo.real_name = userinfo.nickname;
-                    userinfo.email = userinfo.nickname + '@qq.com';
-                    userinfo.password = '7fe293a2a8994cca42668d5a37747d4f';
-                    member = await this.model("member").add(userinfo);
-                    userinfo.uid = member;
-                    // console.log("member-----------" + JSON.stringify(member));
-                }
-                await this.model("wx_user").add(userinfo);
-                this.redirect("/uc/kanjia/signin");
-            } else {
-
-                //检查微信号是否跟网站会员绑定
-                if (think.isEmpty(wx_user.uid)) {
-                    // 没绑定跳转绑定页面
-                    // this.redirect("/uc/weixin/signin");
-                    let member = await this.model("member").where({ openid: userinfo.openid }).find();
-                    // console.log("member-----------" + JSON.stringify(member));
-                    if (!think.isEmpty(member)) {
-                        userinfo.uid = member.id;
-                    } else {
-                        userinfo.username = userinfo.nickname;
-                        userinfo.real_name = userinfo.nickname;
-                        userinfo.email = userinfo.nickname + '@qq.com';
-                        userinfo.password = '7fe293a2a8994cca42668d5a37747d4f';
-                        member = await this.model("member").add(userinfo);
-                        userinfo.uid = member;
-                        // console.log("member-----------" + JSON.stringify(member));
-                    }
-                    await this.model("wx_user").where({ openid: openid }).update(userinfo);
-                    this.redirect("/uc/kanjia/signin");
-                } else
-
-                {
-                    //更新微信头像
-                    let filePath = think.RESOURCE_PATH + '/upload/avatar/' + wx_user.uid;
-                    think.mkdir(filePath)
-                    await this.spiderImage(userinfo.headimgurl, filePath + '/avatar.png')
-                    //绑定直接登陆
-                    let last_login_time = await this.model("member").where({ id: wx_user.uid }).getField("last_login_time", true);
-                    userinfo = await this.model("member").where({ id: wx_user.uid }).find();
-                    let isVip = await this.model("member").get_vip(wx_user.id);
-                    let wx_userInfo = {
-                        'uid': wx_user.uid,
-                        'username': userinfo.username,
-                        'last_login_time': last_login_time,
-                        'real_name': userinfo.real_name,
-                        'isVip': isVip,
-                        'groupid': userinfo.groupid
-                    };
-                    let now = await this.cookie('now');
-                    await this.model('smsignin').where({ now: now }).update({ name: userinfo.mobile, pass: userinfo.password });
-                    console.log("webuser 11-------------ok," + JSON.stringify(wx_userInfo));
-                    await this.session('webuser', wx_userInfo);
-                    this.redirect('/uc/kanjia/follow');
-                    // this.redirect("/");
-                    return false;
+        // //存储Openid
+        // await this.session('wx_openid', openid);
+        if (think.isEmpty(wx_user)) {
+            wx_user = await this.model("wx_user").where({ openid: openid }).getField('id',true);
+            if(!think.isEmpty(wx_user)){
+                await this.model("wx_user").where({ openid: openid }).update(userinfo);
+                console.log("更新  wx_user-------------" + JSON.stringify(userinfo));
+            }else{
+                if(!think.isEmpty(userinfo.openid)){
+                    await this.model("wx_user").add(userinfo);
+                    console.log("添加  wx_user-------------" + JSON.stringify(userinfo));
                 }
             }
-        }
-        // else{
-        //     let wx_user = await this.model("wx_user").where({ openid: openid }).find();
-        //     if (think.isEmpty(wx_user)||think.isEmpty(wx_user.uid)) {
-        //         if (think.isEmpty(wx_user)){
-        //             let userinfo = await getUser(this.api, openid);
-        //             userinfo.username=userinfo.nickname;
-        //             userinfo.real_name=userinfo.nickname;
-        //             userinfo.email=userinfo.nickname+'@qq.com';
-        //             userinfo.password='7fe293a2a8994cca42668d5a37747d4f';
-        //             await this.model("wx_user").add(userinfo);
-        //         }
-        //         // this.redirect("/uc/kanjia/signin");
-        //     }
-        // }
-
+        } 
+        this.redirect(this.cookie("bieber_wx_url"));
+        
     }
     /**
      * 获取微信公众账号用户信息并保存到本地库
@@ -261,64 +192,6 @@ export default class extends Base {
         //     this.fail("error");
         // }
     }
-    //用微信客户端获取getopenid
-    async getopenidAction() {
-        //获取用户openid
-        let code = this.get("code");
-        // console.log(code);
-        //获取openid
-        let getopenid = () => {
-            let deferred = think.defer();
-            pingpp.wxPubOauth.getOpenid(this.setup.wx_AppID, this.setup.wx_AppSecret, code, function(err, openid) {
-                //console.log(openid);
-                deferred.resolve(openid);
-                // ...
-                // pass openid to extra['open_id'] and create a charge
-                // ...
-            });
-            return deferred.promise;
-        };
-        let openid = await getopenid();
-        console.log("getopenid openid-------------" + JSON.stringify(openid));
-        //9think.log(think.isEmpty(openid));
-        let userinfo = await getUser(this.api, openid);
-        console.log("getopenid  userinfo-------------" + JSON.stringify(userinfo));
-
-        //如果没有关注先跳到关注页面，如果没获取到信息，则去微信号上同步一下
-        if (userinfo.subscribe == 0) 
-        {
-            console.log("getusersAction-------------" + JSON.stringify(openid));
-            await this.getusersAction();
-            let wx_user = await this.model("wx_user").where({ openid: openid }).find();
-            if (think.isEmpty(wx_user)) {
-                this.redirect('/uc/kanjia/follow');
-                return false;
-            }
-            userinfo = wx_user;
-            console.log("getusers  userinfo-------------" + JSON.stringify(userinfo));
-           // console.log(1111111111111)
-           // this.redirect('/uc/kanjia/follow');
-           // return false;
-
-        };
-        //userinfo.subscribe_time = userinfo.subscribe_time * 1000;
-        userinfo.subscribe_time = new Date().getTime();
-        let wx_user = await this.model("wx_user").where({ openid: openid,subscribe:1 }).find();
-
-        //存储Openid
-        await this.session('wx_openid', openid);
-        if (think.isEmpty(wx_user)) {
-            wx_user = await this.model("wx_user").where({ openid: openid }).getField('id',true);
-            if(!think.isEmpty(wx_user)){
-                await this.model("wx_user").where({ openid: openid }).update(userinfo);
-            }else{
-                await this.model("wx_user").add(userinfo);
-            }
-        } 
-        this.redirect(this.cookie("bieber_wx_url"));
-        
-    }
-
     /**
      * 没有关注提示关注
      */
@@ -689,7 +562,12 @@ export default class extends Base {
             //已经发起砍价活动，
             msg='您已经发起了砍价!';
         }else{
-            return this.json({ status: 1});
+            //查看是否有电话号码
+            mywx=await this.model('wx_user').where({openid:openid}).find();
+            if(think.isEmpty(mywx.phone)||think.isEmpty(mywx.nickname)){
+                return this.json({ status: 1});
+            }
+            
         }
         console.log("msg----------"+JSON.stringify(msg));
         let url='/uc/kanjia/kanjia/id/'+data.docid+'/wxuid/'+data.wxuid;
@@ -731,6 +609,42 @@ export default class extends Base {
         let url='/uc/kanjia/kanjia/id/'+data.docid+'/wxuid/'+data.wxuid;
         return this.json({ status: 0, msg: msg,url:url });
     }
+    async taplayjoinAction() {
+
+        // data: {
+        //         "docid": did,
+        //         "wxuid": wxuid,
+                // "name": user_name.val(),
+                // "phone": user_phone.val(),
+        //     }
+        
+        let data = this.post();
+        console.log("post data---------"+JSON.stringify(data));
+        let openid = await this.session("wx_openid");
+        // 跟新用户数据
+        let da = {
+            nickname: data.name,
+            phone: data.phone,
+        };
+        let mywx=await this.model('wx_user').where({id:data.wxuid}).update(da);
+        // let map = {
+        //     openid: mywx.openid,
+        //     docid: data.docid,
+        //     pid:0
+        // };
+        // let mykj=await this.model('doc_wxuser').where(map).find();
+        // let msg='您发起了砍价!';
+        // if(!think.isEmpty(mykj)){
+        //     //已经发起砍价活动，
+        //     msg='您已经发起了砍价!';
+        // }else{
+        //     return this.json({ status: 1});
+        // }
+        let msg='您可以帮Ta砍价了!';
+        console.log("msg----------"+JSON.stringify(msg));
+        // let url='/uc/kanjia/kanjia/id/'+data.docid+'/wxuid/'+data.wxuid;
+        return this.json({ status: 0, msg: msg });
+    }
     //给他砍价
     async takanjiaAction() {
 
@@ -745,13 +659,15 @@ export default class extends Base {
         let data = this.post();
         console.log("post data---------"+JSON.stringify(data));
         let price =Math.floor(Math.random()*(data.hprice-data.lprice+1)+data.lprice*1.0);
+        let paymemory=price;
         let msg='帮Ta砍价成功!';
         data.nowprice=data.nowprice*1.0;
         data.djprice=data.djprice*1.0;
-        if(data.nowprice<=data.djprice){
-            msg='已经到底价了！';
-            return this.json({ status: 0, msg: msg });
-        }
+        // if(data.nowprice<=data.djprice){
+        //     msg='已经到底价了！';
+        //     //
+        //     return this.json({ status: 0, msg: msg });
+        // }
         let b=data.nowprice*1.0-price;
         let c=data.djprice*1.0;
         // console.log("b-c---------"+JSON.stringify(b)+","+c);
@@ -766,6 +682,14 @@ export default class extends Base {
         let openid = await this.session("wx_openid");
         
         let tawx=await this.model('wx_user').where({id:data.wxuid}).find();
+        let wywx=await this.model('wx_user').where({openid:openid}).find();
+        if(think.isEmpty(wywx.phone)){
+            msg='我未填写手机号';
+            console.log("msg---------"+JSON.stringify(msg));
+        
+        //     //
+            return this.json({ status: 2 });
+        }
         // let mywx=await this.model('wx_user').where({openid:openid}).find();
         let map = {
             openid: tawx.openid,
@@ -813,7 +737,8 @@ export default class extends Base {
                     create_time:new Date().getTime(),
                     docid:data.docid,
                     status:1,
-                    memory:price
+                    memory:price,
+                    paymemory:paymemory
                 };
                 let a=await this.model('doc_wxuser').add(da);
                 if(think.isEmpty(a)){
@@ -825,7 +750,7 @@ export default class extends Base {
 
         console.log("msg----------"+JSON.stringify(msg));
         // let url='/uc/kanjia/kanjia/id/'+data.docid+'/wxuid/'+data.wxuid;
-        return this.json({ status: 0, msg: msg,url:url ,price:price});
+        return this.json({ status: 0, msg: msg ,price:price});
     }
     //给自己砍价
     async mykanjiaAction() {
@@ -841,13 +766,14 @@ export default class extends Base {
         let data = this.post();
         console.log("post data---------"+JSON.stringify(data));
         let price =Math.floor(Math.random()*(data.hprice-data.lprice+1)+data.lprice*1.0);
+        let paymemory=price;
         let msg='帮自己砍价成功!';
         data.nowprice=data.nowprice*1.0;
         data.djprice=data.djprice*1.0;
-        if(data.nowprice<=data.djprice){
-            msg='已经到底价了！';
-            return this.json({ status: 0, msg: msg });
-        }
+        // if(data.nowprice<=data.djprice){
+        //     msg='已经到底价了！';
+        //     return this.json({ status: 0, msg: msg });
+        // }
         let b=data.nowprice*1.0-price;
         let c=data.djprice*1.0;
         // console.log("b-c---------"+JSON.stringify(b)+","+c);
@@ -887,7 +813,8 @@ export default class extends Base {
                 create_time:new Date().getTime(),
                 docid:data.docid,
                 status:1,
-                memory:price
+                memory:price,
+                paymemory:paymemory
             };
             let a=await this.model('doc_wxuser').add(da);
             if(think.isEmpty(a)){
@@ -926,7 +853,22 @@ export default class extends Base {
     async h1Action() {
         return this.display();
     }
-    
+    //uc/kanjia/start
+    async startAction() {
+        await this.oauthAction();
+        let uurl = this.setup.wx_url + this.http.url;
+        console.log("url-------------" + uurl);
+        let openid = await this.session("wx_openid");
+        let wxuser=await this.model('wx_user').where({openid:openid}).find();
+        if(!think.isEmpty(wxuser.url)){
+            let url=wxuser.url;
+            wxuser.url='';
+            await this.model('wx_user').where({openid:openid}).update(wxuser);
+            this.redirect(url);
+        }else{
+            this.redirect(this.setup.wx_url);
+        }
+    }
     //砍价 /uc/kanjia/play/id/{{info.id}}/wxuid/{{info.uid}}
     // http://ketang.gzxinbibo.com/uc/kanjia/kanjia/id/467/wxuid/12
     async kanjiaAction() {
@@ -937,7 +879,13 @@ export default class extends Base {
         console.log("id==========" + id);
         let docwxuid = this.get("wxuid");
         console.log("docwxuid==========" + docwxuid);
+        let openid = await this.session("wx_openid");
+        console.log("openid kanjia-------------," + openid);
         let docwxuser=await this.model('wx_user').where({id:docwxuid}).find();
+        if(think.isEmpty(docwxuser)){
+            docwxuser=await this.model('wx_user').where({openid:openid}).find();
+            docwxuid=docwxuser.id;
+        }
         if(think.isEmpty(docwxuid)||!Number(docwxuid)||think.isEmpty(docwxuser)){
             return this.display('no');
         }
@@ -963,8 +911,7 @@ export default class extends Base {
             return this.display('no');
         }
 
-        let openid = await this.session("wx_openid");
-        console.log("openid kanjia-------------," + openid);
+        
         if(think.isEmpty(openid)){
             return this.json({});
         }
@@ -1111,6 +1058,7 @@ export default class extends Base {
         // console.log("tuoke.  pic---------" + JSON.stringify(pic));
         // info.fmurl = 'http://' + this.setup.QINIU_DOMAIN_NAME + '/' + pic.path;
         info.twourl = await get_cover2(info.twourl, this.setup.QINIU_DOMAIN_NAME);
+        info.kjtwourl = await get_cover2(info.kjtwourl, this.setup.QINIU_DOMAIN_NAME);
        
         //当前用户所在会员组的名称
         // let webuser = await this.session("webuser");
@@ -1179,6 +1127,25 @@ export default class extends Base {
         if (!think.isEmpty(info.playmethod)) {
             info.playmethod = info.playmethod.split("_ueditor_page_break_tag_");
         }
+        // let price =Math.floor(Math.random()*(info.hprice-info.lprice+1)+info.lprice*1.0);
+        // let msg='帮Ta砍价成功!';
+        info.nowprice=kjlist0.nowprice*1.0;
+        info.cplprice=info.cplprice*1.0;
+        info.isLowPrice=0;
+        if(info.nowprice<=info.cplprice){
+            let msg='已经到底价了！';
+            info.isLowPrice=1;
+
+            //
+            // return this.json({ status: 2, msg: msg });
+        }
+        let now=new Date().getTime();
+        info.istimeout=0;
+        if((now-info.etime)>0){
+            info.istimeout=1;
+        }
+
+        console.log("isLowPrice-------------," + info.isLowPrice+","+info.nowprice+","+info.cplprice);
         console.log("kabjiaeAction 手机========" + `${this.http.controller}/${temp}`);
         return this.display(`mobile/${this.http.controller}/${temp}`);
 
@@ -1698,11 +1665,11 @@ export default class extends Base {
         if(think.isEmpty(openid)){
             return this.json({});
         }
-        let wxuid=await this.model('wx_user').where({openid:openid}).getField('id',true);
-        if(think.isEmpty(wxuid)){
+        let wxuid=await this.model('wx_user').where({openid:openid}).find();
+        if(think.isEmpty(wxuid.id)){
             return this.json({});
         }
-        console.log("wxuid-------------," + wxuid);
+        console.log("wxuid-------------," + JSON.stringify(wxuid));
         if (this.isPost()) {
             let id=this.get('id');
             let data=this.post();
@@ -1727,8 +1694,9 @@ export default class extends Base {
             }else{
                 info.cover_id = info.code+'.png';
             }
-            
-            info.wxuid=wxuid;
+            info.twourl = await get_cover2(info.twourl, this.setup.QINIU_DOMAIN_NAME);
+            info.wxuid=wxuid.id;
+            info.nickname=wxuid.nickname;
             console.log("info-------"+JSON.stringify(info));
             this.assign("info", info);
             return this.display(`mobile/${this.http.controller}/yqx`);
@@ -1815,5 +1783,13 @@ export default class extends Base {
         // this.active = ['/', '/yqx', '/lmeOWxwg.html'];
         // return this.display('test1');
     }
-    
+    async dytestAction() {
+        console.log("this.http.url------------" + this.http.url);
+        // this.tactive = "dydemo";
+        let openid = await this.session("wx_openid");
+        if(think.isEmpty(openid)){
+            return this.display('no');
+        }
+        return this.display();
+    }
 }

@@ -1,0 +1,470 @@
+{% extends "./inc/base.html" %} {% block style %}
+<!--<link rel="stylesheet" href="/static/admin/js/zTree/metroStyle/metroStyle.css" type="text/css">-->
+<!-- <link rel="stylesheet" href="/static/admin/js/zTree/zTreeStyle/zTreeStyle.css" type="text/css"> -->
+{#
+<link href="/static/assets/plugins/slider.revolution/css/extralayers.css" rel="stylesheet" type="text/css" />
+    <link href="/static/assets/plugins/slider.revolution/css/settings.css" rel="stylesheet" type="text/css" />
+
+    <!-- THEME CSS -->
+    <link href="/static/assets/css/essentials.css" rel="stylesheet" type="text/css" />
+    <link href="/static/assets/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="/static/assets/css/layout-shop.css" rel="stylesheet" type="text/css" />
+
+    <!-- PAGE LEVEL SCRIPTS -->
+    <link href="/static/assets/css/header-1.css" rel="stylesheet" type="text/css" />
+    
+#}
+<link href="/static/assets/plugins/slider.revolution/css/extralayers.css" rel="stylesheet" type="text/css" />
+    <link href="/static/assets/plugins/slider.revolution/css/settings.css" rel="stylesheet" type="text/css" />
+
+    <!-- THEME CSS -->
+    <link href="/static/assets/css/essentials.css" rel="stylesheet" type="text/css" />
+    <!-- <link href="/static/assets/css/layout.css" rel="stylesheet" type="text/css" /> -->
+    <link href="/static/assets/css/layout-shop.css" rel="stylesheet" type="text/css" />
+
+    <!-- PAGE LEVEL SCRIPTS -->
+    <link href="/static/assets/css/header-1.css" rel="stylesheet" type="text/css" />
+    <link href="/static/admin/css/music/model.css" rel="stylesheet" type="text/css" />
+<link href="/static/admin/css/music/model.css" rel="stylesheet" type="text/css" />
+<!-- <style>
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    vertical-align: middle;
+}
+</style> -->
+{% endblock%} {% block content %}
+<section class="vbox">
+    <section id="bjax-target">
+        <section class="hbox stretch">
+            <!-- side content -->
+            <!-- / side content -->
+            <section>
+                <section class="vbox">
+                    <section class="scrollable wrapper">
+                        <!-- .breadcrumb -->
+                        {#
+                        <ul class="breadcrumb">
+                            <li><a href="/admin/article/index"><i class="fa fa-home"></i> 网站内容</a></li>
+                            {% for nav in breadcrumb%} {% if cate_id == nav.id %}
+                            <li class="active">{{nav.title}} <span class="badge bg-info">{{_total}}</span> {% if allow == 0 %}<span class="label btn-warning">（该分类不允许发布内容）</span>{% endif %}</li>
+                            {%else%}
+                            <li><a href="/admin/article/index/cate_id/{{nav.id}}"><i class="fa fa-list-ul"></i> {{nav.title}}</a></li>
+                            {% endif %} {% endfor %} {%if article.id >0 %}
+                            <li> <i class="fa fa-list-ul"></i> {{article.title}} </li>{% endif %}
+                        </ul>
+                        #}
+                        <!-- / .breadcrumb -->
+                        {%if sort%}
+                        <section class="panel panel-default m-b-xs clearfix">
+                            <header class="panel-heading text-right bg-light clearfix">
+                                <ul class="nav nav-tabs pull-left">
+                                    {%for val in sort.types%}
+                                    <li class="{%if http.get('sortid')|length > 0%}{%if http.get('sortid')==val.enable%}active{%endif%}{%else%}{%if sort.defaultshow == val.enable%}active{%endif%}{%endif%}">
+                                        <a href="/admin/article/index/pid/{{pid}}/cate_id/{{cate_id}}/group_id/{{group_id}}/sortid/{{val.enable}}"> {{val.name}}</a>
+                                    </li>
+                                    {%endfor%}
+                                </ul>
+                                <ul class="nav nav-pills pull-right">
+                                    <li>
+                                        <a href="#" class="panel-toggle text-muted" id="sorttoggle"><i class="fa fa-caret-down text"></i><i class="fa fa-caret-up text-active"></i></a>
+                                    </li>
+                                </ul>
+                            </header>
+                        </section>
+                        {%endif%}
+                        <section class="panel panel-default">
+                            {#
+                            <header class="panel-heading">
+                                <!--<i data-title="" data-placement="bottom" data-toggle="tooltip" class="fa fa-info-sign text-muted" data-original-title="" title=""><i class="fa fa-question-circle"></i></i>-->
+                                {% if breadcrumb|length == 0%} [ {% if position %} <a href="/admin/article/index" class="text-info">全部</a>{%else%}<strong>全部</strong>{%endif%} {%for key ,val in controller.setup.DOCUMENT_POSITION %} {%if position != key %}<a href="/admin/article/index/position/{{key}}" class="text-info">{{val}}</a>{%else%}<strong>{{val}}</strong>{% endif %}&nbsp; {% endfor %}] {%endif%} {%if model|length > 1 %}[ 模型：{%if model_id ==null %}<strong>全部</strong>{%else%}
+                                <a href="/admin/article/index/pid/{{pid}}/cate_id/{{cate_id}}" class="text-info"> 全部 </a>{%endif%}&nbsp; {% for val in modellist%} {% if model_id != val.id %}<a href="/admin/article/index/model_id/{{val.id}}/pid/{{pid}}/cate_id/{{cate_id}}" class="text-info">{{val.title}}</a>{% else %}<strong>{{val.title}}</strong>{% endif %}&nbsp; {% endfor %} ]{% endif %} {% if groups %}[ 分组：{%if group_id ==0 %}<strong style="margin-right: 5px">全部</strong> {%else%} <a href="/admin/article/index/pid/{{pid}}/cate_id/{{cate_id}}" class="text-info" style="margin-right: 5px">全部</a> {%endif%} {%for key ,val in groups %} {% if group_id != key %}<a href="/admin/article/index/pid/{{pid}}/cate_id/{{cate_id}}/group_id/{{key}}/sortid/{{sortid}}" class="text-info">{{val}}</a>{% else %}<strong>{{val}}</strong>{% endif %}&nbsp; {% endfor %} ]{% endif %}
+                            </header>
+                            
+                            <div class="row wrapper">
+                                <div class="col-sm-9 m-b-xs">
+                                    <div class="">
+                                        <div class="btn-group">
+                                            <button {%if model|length> 1 %} data-toggle="dropdown" {% endif %} class="btn btn-info btn-sm document_add dropdown-toggle {% if allow == 0 %}disabled{% endif %}" {%if model|length == 1 %} url="/admin/article/add/model_id/{{modellist[0].id}}/pid/{{pid}}/cate_id/{{cate_id}}/group_id/{{group_id}}/sortid/{{sortid}}"{%endif%} >添加内容 {%if model|length > 1 %}<span class="caret"></span>{% endif %}</button>
+                                            {%if model|length > 1 %}
+                                            <ul class="dropdown-menu">
+                                                {% for val in modellist%}
+                                                <li> <a href="/admin/article/add/model_id/{{val.id}}/pid/{{pid}}/cate_id/{{cate_id}}/group_id/{{group_id}}/sortid/{{sortid}}" class="text-info">添加{{val.title}}</a></li>
+                                                {% endfor %}
+                                                <!--<li class="divider"></li>-->
+                                                <!--<li><a href="#">添加内容</a></li>-->
+                                            </ul>
+                                            {% endif %}
+                                        </div>
+                                        <div class="btn-group">
+                                            <a class="btn btn-sm btn-info ajax-post" target-form="ids" href="/admin/article/setstatus/status/1" target-form="ids">
+                            启用
+                        </a>
+                                            <a class="btn btn-sm btn-info ajax-post" href="/admin/article/setstatus/status/0" target-form="ids">
+                            禁用
+                        </a>
+                                        </div>
+                                        <div class="btn-group">
+                                            <a class="btn btn-sm btn-info todo" target-form="ids" href="#">
+                                            移动
+                                        </a>
+                                            <a class="btn btn-sm btn-info todo" target-form="ids" href="#">
+                                            复制
+                                        </a>
+                                            <a class="btn btn-sm btn-info todo" target-form="ids" href="#">
+                                            粘贴
+                                        </a>
+                                        </div>
+                                        <a class="btn btn-sm btn-info ajax-post confirm" target-form="ids" href="/admin/article/setstatus/status/-1">
+                                            删除
+                                        </a>
+                                        <a class="btn btn-sm btn-info todo" target-form="ids" href="#">
+                                            排序
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="input-group pull-right search-form">
+                                        <input type="text" class="input-sm form-control" name="{{model.search_key|default('title', true)}}" placeholder="请输入关键字" value="{{http.get('title')}}">
+                                        <span class="input-group-btn">
+                        <button class="btn btn-sm btn-default" type="button" id="search" url="/admin/article/index/pid/{{pid}}{%if cate_id >0%}/cate_id/{{cate_id}}{%endif%}">搜索</button>
+                      </span>
+                                    </div>
+                                </div>
+                            </div>
+                            #}
+                    <div class="row">
+                        <!-- LEFT -->
+                        <div class="col-md-12 col-sm-12">
+                            <ul class="shop-item-list row list-inline nomargin">
+                    
+                    {% for val in list %} 
+                    {% set categoryname = val.category_id|get_cate %}
+                    <!-- POST ITEM -->
+                    <!-- <div class="blog-post-item padding-bottom-20 margin-bottom-20 clearfix"> -->
+                    <!-- IMAGE -->
+                    {% if val.cover_id>0 %}
+                    <li class="col-lg-4 col-md-4 col-sm-6 col-xs-6" style="margin-top:20px;">
+                        <figure class="blog-item-small-image margin-bottom-0">
+                            <div class="" style="margin-left: 10px;">
+                                <!-- <a class="shop-item-image" href="{{val.name|get_url(val.id)}}" >
+                                    <img class="img-responsive" src="{{val.cover_id|get_pic('m=1,w=200,h=120')}}" alt="shop first image" />
+                                </a> -->
+                                <a href="javascript:ShowProduct('{{val.id}}');" title="{{val.title}}">
+                                    <img class="img-responsive " src="{{val.cover_id|get_pic('m=5,w=300,h=170')}}" alt="">
+                                </a>
+                                {#
+                                {%if val.online==1%}
+                                <div class="shangjia">
+                                </div>
+                                {%endif%}
+                                #}
+                                <!-- <div class="shop-option-over">
+                                    <a class="btn btn-default add-wishlist" href="#" data-item-id="10" data-toggle="tooltip" title="Add To Wishlist"><i class="fa fa-heart nopadding"></i></a>
+                                    <a class="btn btn-default add-compare" href="#" data-item-id="10" data-toggle="tooltip" title="Add To Compare"><i class="fa fa-bar-chart-o nopadding" data-toggle="tooltip"></i></a>
+                                    <a class="btn btn-default add-compare" href="#" data-item-id="10" data-toggle="tooltip" title="Add To Compare"><i class="fa fa-bar-chart-o nopadding" data-toggle="tooltip"></i></a>
+                                </div> -->
+                            </div>
+                            <div class="text-center" style="margin-top:5px;text-align: center;">
+                                <h5>{{val.title|block(25)}}</h5>
+                            </div>
+                            <div style="margin-left:20px;text-align: center;">
+                                <button  class="btn btn-primary btn-left" style="margin-left: 30px;">发起人:{{val.nickname}}</button>
+                                
+                                <button onclick="bmgl('{{val.infoid}}','{{val.openid}}');" class="btn btn-success btn-right" style="margin-left:5px;">报名管理</button>
+                                <button onclick="WxListCode('{{val.infoid}}','{{val.id}}');" class="btn btn-success btn-right" style="margin-left:5px; 
+">二维码</button>
+                            </div>
+                            
+                        </figure>
+                    </li>
+                    {% endif %} 
+                    {#
+                    <div class="blog-item-small-content">
+                        <h2><a href="{{val.name|get_url(val.id)}}"  title="{{val.title}}">{{val.title}}</a></h2>
+                        <ul class="blog-post-info list-inline padding-bottom-10">
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-clock-o"></i>
+                                    <span class="font-lato">开始时间:{{val.stime|dateformat('Y-m-d H:i')}}</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-clock-o"></i>
+                                    <span class="font-lato">结束时间:{{val.etime|dateformat('Y-m-d H:i')}}</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-comment-o"></i>
+                                    <span class="font-lato">{{val.view}}</span>
+                                </a>
+                            </li>
+                            <li>
+                                <i class="fa fa-folder-open-o"></i>
+                                <a class="category" href="{{categoryname.url}}">
+                                    <span class="font-lato">{{categoryname.name}}</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-user"></i>
+                                    <span class="font-lato">{{val.uid|get_nickname}}</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <p>{{val.description|truncate(90, true, "...")}}</p>
+                    </div>
+                    #}
+                    <!-- </div> -->
+                    <!-- /POST ITEM -->
+                    {%endfor%}
+                </ul>
+                <div class="text-center" style="margin-top: 30px;">
+                    <!-- Pagination Default -->
+                    {{pagination | safe}}
+                    <!-- /Pagination Default -->
+                </div>
+            </div>
+        </div>
+        
+                            {#
+                            <div class="table-responsive">
+                                <table class="table table-striped b-t b-light">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:20px;">
+                                                <label class="checkbox m-n i-checks">
+                                                    <input type="checkbox"><i></i></label>
+                                            </th>
+                                            {% for field in list_grids %}
+                                            <th>{{field.title}}</th>
+                                            {% endfor %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for data in list %}
+                                        <tr>
+                                            <td>
+                                                <label class="checkbox m-n i-checks">
+                                                    <input class="ids" type="checkbox" name="ids" value="{{data.id}}"><i></i></label>
+                                            </td>
+                                            {% for grid in list_grids %}
+                                            <td>{{data|get_list_field(grid,http.controller)| safe}}</td>
+                                            {% endfor %}
+                                        </tr>
+                                        {% else %}
+                                        <tr>
+                                            <td colspan="{{list_grids|length + 1}}">
+                                                <div class="alert alert-warning alert-block">
+                                                    <button data-dismiss="alert" class="close" type="button">×</button>
+                                                    <p>This would display if the 'item' collection were empty</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            #}
+                            <!-- <footer class="panel-footer">
+                                <div class="row">
+                                     <div class="col-md-3">
+                                          <div class="btn-group">
+                                                <a class="btn btn-sm btn-default todo" target-form="ids" href="#">
+                                                    微信图文
+                                                </a>
+                                                <a class="btn btn-sm btn-default todo" target-form="ids" href="#">
+                                                    高级图文
+                                                </a>
+                                                <a class="btn btn-sm btn-default todo" target-form="ids" href="#">
+                                                    推送
+                                                </a>
+                                            </div>
+                                     </div>
+                                  
+                                    <div class="col-md-9 text-right text-center-xs">
+                                        {{pagerData | safe}}
+                                    </div>
+                                </div>
+                            </footer> -->
+                        </section>
+                    </section>
+                </section>
+            </section>
+        </section>
+    </section>
+</section>
+<!--查看的弹出框-->
+    <div class="modal fade bs-example-modal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="myLargeModalLabel" id="wx_look_modal">
+        <div class="modal-dialog ">
+            <div class="modal-content">
+                <!-- 模块框头部 -->
+                <div class="modal-header text-center">
+                    <h4 class="modal-title" id="myModalLabel">预览</h4>
+                </div>
+                <!-- 模态框内容 -->
+                <div class="modal-body">
+                    <div class="">
+                        <iframe src="" id="wx_iframepage" name="iframepage" frameborder="0" scrolling="auto" width="100%" height="700px"></iframe>
+                    </div>
+                </div>
+                <!-- 模态框脚注 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="wx_modal_close">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--二维码-->
+    <div class="modal fade" id="wx_qr_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                    <h4 class="modal-title">请扫码下面的二维码</h4>
+                </div>
+                <div class="modal-body bg-success text-center">
+                    <div style="
+    width: 120px;
+    margin-left: 40%;" id="wx_qr_modal_code"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">关闭</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript" src="/static/admin/js/wechat/jquery.qrcode.min.js"></script>
+<script type="text/javascript" src="/static/admin/js/wechat/enroll.js"></script>
+<script type="text/javascript">
+function ShowProduct(id) {
+
+    if ('{{userinfo.uid}}' == 0) {
+        alert('请先登录，谢谢！');
+        return;
+    }
+    window.location.href='/admin/yqx/yqx/id/'+ id;
+    // $('#wx_iframepage').attr('src', '/uc/weixin/tuoke/id/' + id);
+    // $('#wx_look_modal').modal('show');
+}
+
+function WxListCode(id,wxuid) {
+    $("#wx_qr_modal_code").html("");
+    $("#wx_qr_modal_code").qrcode({
+        width: 120,
+        height: 120,
+        text: '{{wxhttp}}/uc/kanjia/kanjia/id/' + id+'/wxuid/'+wxuid
+    });
+    $('#wx_qr_modal').modal('show');
+}
+
+function bmgl(id,openid) {
+    console.log("did=" + id);
+    window.location.href='/admin/tuoke/kjbmlist/id/'+ id+'/openid/'+openid;
+    //模板拷贝
+    // $.ajax({
+    //     headers: {
+    //         'x-__CSRF__': $.cookie('__CSRF__')
+    //     },
+    //     url: "/uc/weixin/tuokecopy",
+    //     method: "post",
+    //     data: {
+    //         "docId": id,
+    //         "uid":{{userid}},
+    //         "cname":"mytuoke"
+    //         // "name": user_name.val(),
+    //         // "phone": user_phone.val(),
+    //         // csrfmiddlewaretoken: $.cookie("csrftoken")
+    //     },
+    //     success: function(data) {
+    //         console.log(JSON.stringify(data));
+    //         if (data.data.name) {
+    //             alert(data.data.name);
+    //             window.location.href = window.location.href;
+    //         }
+    //     },
+    //     error: function(XMLHttpRequest, textStatus, errorThrown) {
+    //         alert(XMLHttpRequest.status);
+    //         alert(XMLHttpRequest.readyState);
+    //         alert(textStatus);
+    //     }
+    // });
+}
+
+function tuokeDelete(id) {
+    console.log("did=" + id);
+    var msg = "您真的确定要删除吗？";
+    if (confirm(msg) == true) {
+        $.ajax({
+            headers: {
+                'x-__CSRF__': $.cookie('__CSRF__')
+            },
+            url: "/admin/article/setstatus/status/-1/ids/" + id,
+            method: "post",
+            data: {
+                // model:"document_tuoke",
+                // "name": user_name.val(),
+                // "phone": user_phone.val(),
+                // csrfmiddlewaretoken: $.cookie("csrftoken")
+            },
+            success: function(data) {
+                console.log(JSON.stringify(data));
+                if (data.data.name) {
+                    alert(data.data.name);
+                    window.location.href = window.location.href;
+                }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+    } else {
+        return false;
+    }
+
+}
+
+function tuokeupdown(id,updown) {
+
+    $.ajax({
+        headers: {
+            'x-__CSRF__': $.cookie('__CSRF__')
+        },
+        url: "/admin/article/setstatus/status/"+updown+"/ids/" + id,
+        method: "post",
+        data: {
+            model:"document_tuoke",
+            // "name": user_name.val(),
+            // "phone": user_phone.val(),
+            // csrfmiddlewaretoken: $.cookie("csrftoken")
+        },
+        success: function(data) {
+            console.log(JSON.stringify(data));
+            if (data.data && data.data.name) {
+                alert(data.data.name);
+                window.location.href = window.location.href;
+            }else if(data.errmsg){
+                alert(data.errmsg);
+            }
+
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+        }
+    });
+}
+</script>
+{% endblock %}}

@@ -23,6 +23,62 @@
     <link rel="stylesheet" href="/static/yqx/css/iconfonts.min.css">
     <link rel="stylesheet" href="/static/yqx/css/yqx.min.css">
     <link rel="stylesheet" href="/static/admin/css/wechat/bootstrap.min.css">
+    <style>
+        #ewm_btns {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            z-index: 200;
+            width: 50px;
+            height: 50px;
+            background-repeat: no-repeat;
+            background-image: url(/static/kanjia/img/erweima.png);
+        }
+        #bm_btns {
+            position: absolute;
+            left: 10px;
+            top: 50px;
+            z-index: 200;
+            width: 50px;
+            height: 50px;
+            background-repeat: no-repeat;
+            background-image: url(/static/kanjia/img/erweima.png);
+        }
+        .qrtext{
+            position: relative;z-index: 0
+        }
+        .qrtext p{
+            position: absolute;
+            margin-left: 130px;
+            z-index: 10;
+            font-size: 20px;
+            margin-top: -250px;
+        }
+        .qrtext p1{
+            position: absolute;
+            margin-left: -90px;
+            z-index: 20;
+            font-size: 20px;
+            margin-top: -300px;
+        }
+        .qrtext img {
+            position: absolute;
+            top: 0;left: 0;
+            width: 100%;
+            /*height: 500px;*/
+            
+            box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.1);
+            /*margin: 20px;*/
+            margin-top: 20px;
+        }
+        .qr {
+            position: absolute;
+            z-index: 30;
+            box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.1);
+            margin-left: 40%;
+            margin-top: -200px;
+        }
+    </style>
     {% block style %}{% endblock %}
 </head>
 
@@ -34,6 +90,80 @@
             <div class="loadbg"></div>
         </div>
         <div class="loading-tip">美媒课堂</div>
+    </div>
+    <div id="ewm_btns" >
+    </div>
+    <div id="bm_btns" >
+    </div>
+    <div id="myCanvas"  style="width: 414px; height: 545; ">
+                    <div id="qr_code" class="text-center ">
+                        <img class="img-thumbnail" width="100%" src="/static/kanjia/img/kanjiaewm2.png">
+                        
+                    </div>
+                    <div class="qr"  id="wx_qr_modal_code">
+                        
+                    </div>
+                    
+                    <div class="qrtext" style="text-align: center;">
+                            <p1>{{info.nickname}}正在参加活动</p1>
+                            <p>&nbsp;&nbsp;快来参加吧</p>
+                            <p style="margin-top: -40px;margin-left: 110px;">长按识别二维码参与</p>
+                    </div>
+                    
+    </div>
+    <div class="modal fade" id="wx_qr_modal" >
+        <div class="modal-dialog" style="background-color: transparent;">
+            <div class="modal-content" style="background-color: transparent;">
+                <!-- <div class="modal-header" ">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                
+                </div> -->
+                <div class="modal-body">
+                    <div style="text-align: center;background-color: #04be02;">
+                            <p>1.长按保存图片</p>
+                            <p>2.图片发圈通知朋友来参与</p>
+                    </div>
+                    <div >
+                        <img  width="100%" id="down_button" >
+                    </div>
+                </div>
+                <!-- <div class="modal-footer" style="text-align: center;">
+                    <button type="button" class="btn btn-success" data-dismiss="modal" style="width: 80px;height: 40px">关闭</button>
+                </div> -->
+            </div>
+            
+        </div>
+        
+    </div>
+    <div class="modal fade" id="enroll_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">x</button>
+                    <h3 class="text-center text-primary" id="modal_title">轻松两步，完成报名</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="col-sm-12 center-block" id="modal_body">
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" id="user_name" placeholder="请输入你的姓名">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control input-lg" id="user_phone" placeholder="请输入你的手机号">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-success btn-lg btn-block" onclick="myplayjoin('{{info.id}}','{{info.wxuid}}')" id="enroll_btn">立即报名</button>
+                        </div>
+                    </div>
+                    <div id="qr_code_two" class="hidden text-center">
+                        <img class="img-thumbnail" width="100%" src="{{info.twourl}}">
+                        <h2>请支付{{info.cpprice}}元</h2>
+                    </div>
+                    <div id="free_show" class="hidden text-center" style="height: 100px;line-height: 100px;background-color: #eeeeee">
+                        <span style="font-size: 16px;color: #999999;">恭喜您已报名成功，稍后店家将会联系您。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     {% block content %}
     {% endblock %}
@@ -83,28 +213,72 @@
     <script src="/static/admin/js/wechat/jquery.qrcode.min.js"></script>
     <script src="/static/yqx/js/yqx.min.js"></script>
     <script src="/static/yqx/js/depth.js" async></script>
-    <!-- <script>
+
+    <script src="/static/kanjia/js/jquery.knob.js"></script>
+    <script src="/static/kanjia/js/jquery.throttle.js"></script><!-- 
+    <script src="/static/kanjia/js/jquery.classycountdown.js"></script>
+    <script type="text/javascript" src="/static/admin/js/wechat/jquery.qrcode.min.js"></script> -->
+    <script src="/static/kanjia/js/html2canvas.min.js" ></script>
+    <script>
     $(function() {
-        function e() {
-            var e = window.scene;
-            if (e) {
-                var t = "//da.eqxiu.com/c.gif?",
-                    n = window.screen,
-                    i = n.availWidth + "x" + n.availHeight,
-                    o = window.navigator,
-                    r = {
-                        lag: o.userLanguage || o.language
-                    };
-                r.event_description = e.description, r.event_id = e.id, r.scene_type = e.type, r.creator_id = e.userId, r.creator_type = e.userType;
-                var a = "action_name=" + encodeURIComponent(document.title) + "&idsite=2&url=" + encodeURIComponent(document.location) + "&urlref=" + encodeURIComponent(document.referrer) + "&res=" + i + "&data=" + encodeURIComponent(JSON.stringify(r));
-                a += "&cookie=" + (o.cookieEnabled ? 1 : 0), a += "&ct=" + (new Date).getTime(), t += a;
-                var c = document.createElement("img");
-                c.setAttribute("src", t), c.setAttribute("height", "0"), c.setAttribute("width", "0"), document.body.appendChild(c)
+        // function e() {
+        //     var e = window.scene;
+        //     if (e) {
+        //         var t = "//da.eqxiu.com/c.gif?",
+        //             n = window.screen,
+        //             i = n.availWidth + "x" + n.availHeight,
+        //             o = window.navigator,
+        //             r = {
+        //                 lag: o.userLanguage || o.language
+        //             };
+        //         r.event_description = e.description, r.event_id = e.id, r.scene_type = e.type, r.creator_id = e.userId, r.creator_type = e.userType;
+        //         var a = "action_name=" + encodeURIComponent(document.title) + "&idsite=2&url=" + encodeURIComponent(document.location) + "&urlref=" + encodeURIComponent(document.referrer) + "&res=" + i + "&data=" + encodeURIComponent(JSON.stringify(r));
+        //         a += "&cookie=" + (o.cookieEnabled ? 1 : 0), a += "&ct=" + (new Date).getTime(), t += a;
+        //         var c = document.createElement("img");
+        //         c.setAttribute("src", t), c.setAttribute("height", "0"), c.setAttribute("width", "0"), document.body.appendChild(c)
+        //     }
+        // }
+        // e()
+        $("#wx_qr_modal_code").qrcode({
+            width: 150,
+            height: 150,
+            text: '{{wxhttp}}/uc/kanjia/yqx/id/{{info.id}}' 
+        });
+        
+        console.log('myCanvas ok');
+        html2canvas($("#myCanvas"), {
+            onrendered: function(canvas) {
+                $('#down_button').attr('src', canvas.toDataURL("image/png"));
+                // $('#down_button').attr('download', 'myjobdeer.jpg');
+                //$('#down_button').css('display','inline-block');
+                // var html_canvas = canvas.toDataURL();
+                // $.post('', {
+                //     order_id: 1,
+                //     type_id: 2,
+                //     html_canvas: html_canvas
+                // }, function(json) {
+                //     // console.log('myCanvas ok');
+                // }, 'json');
             }
+        });
+        setTimeout(function(){
+            $("#myCanvas").css('display','none');
+        },1000);
+        $("#ewm_btns").click(function() {
+            $("#wx_qr_modal").modal('show');
+            // $("#qr_code_two").removeClass("hidden");
+            // $("#enroll_modal").modal('show');
+        });
+        $("#bm_btns").click(function() {
+            // $("#qr_code_two").removeClass("hidden");
+            $("#enroll_modal").modal('show');
+        });
+        function qrcodeshow(){
+            $("#qr_code_two").removeClass("hidden");
+            $("#enroll_modal").modal('show');
         }
-        e()
     })
-    </script> -->
+    </script>
 {% block script %}{% endblock %}
 </body>
 </html>

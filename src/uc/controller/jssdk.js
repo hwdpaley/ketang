@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const request = require('request');
 const fs = require('fs');
+const qs = require('qs');
 const debug = require('debug')('jswechat:jssdk');
 
 function JSSDK(appId, appSecret) {
@@ -146,6 +147,56 @@ JSSDK.prototype = {
     writeCacheFile: function (filename, data) {
         return fs.writeFileSync(filename, JSON.stringify(data));
     },
+    getToken(code) {
+      let reqUrl = 'https://api.weixin.qq.com/sns/oauth2/access_token?';
+      let params = {
+        appid: this.appId,
+        secret: this.appSecret,
+        code: code,
+        grant_type: 'authorization_code'
+      };
+
+      let options = {
+        method: 'get',
+        url: reqUrl+qs.stringify(params)
+      
+        // url: 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='+this.setup.wx_AppID+'&secret='+this.setup.wx_AppSecret+'&code='+code+'&grant_type=authorization_code'
+      };
+      // console.log("getToken---"+options.url);
+      return new Promise((resolve, reject) => {
+        request(options, function (err, res, body) {
+          if (res) {
+            resolve(JSON.parse(body));
+          } else {
+            reject(err);
+          }
+        });
+      });
+    },
+    getUserInfo(AccessToken, openId) {
+      let reqUrl = 'https://api.weixin.qq.com/sns/userinfo?';
+      let params = {
+        access_token: AccessToken,
+        openid: openId,
+        lang: 'zh_CN'
+      };
+
+      let options = {
+        method: 'get',
+        url:reqUrl+qs.stringify(params)
+        // url: 'https://api.weixin.qq.com/sns/userinfo?access_token='+AccessToken+'&openid='+openId+'&lang=zh_CN'
+      };
+      
+      return new Promise((resolve, reject) => {
+        request(options, function (err, res, body) {
+          if (res) {
+            resolve(JSON.parse(body));
+          } else {
+            reject(err);
+          }
+        });
+      });
+    }
 };
 
 const jssdk = new JSSDK('wx31783e0b591a7f4b', 'c4cca2d1622fd3e6f70aa78d2621db3b');

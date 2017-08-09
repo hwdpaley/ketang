@@ -148,11 +148,13 @@ class WechatPay {
 
     /**
      * 获取微信的 AccessToken
+     http://ketang.gzxinbibo.com/uc/kanjia/kanjia/id/472/wxuid/9
      */
     getAccessToken(obj, cb){
         var that = this;
-        var getAccessTokenUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid="+config.wxappid+"&secret="+config.wxappsecret+"&code="+that.userInfo.code+"&grant_type=authorization_code";
-        request.post({url : getAccessTokenUrl}, function (error, response, body) {
+        var getAccessTokenUrl = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxb2f228dd2a965317&secret=ec9b5b93eb0f7b1d6a32b03e9e2bcf7c&code="+that.userInfo.code+"&grant_type=authorization_code";
+        console.log("getAccessTokenUrl-----"+JSON.stringify(getAccessTokenUrl));
+        request.get({url : getAccessTokenUrl}, function (error, response, body) {
             if (!error && response.statusCode == 200){
                 if (40029 == body.errcode) {
                     cb(error, body);
@@ -163,7 +165,10 @@ class WechatPay {
                     that.userInfo.refresh_token = body.refresh_token;
                     that.userInfo.openid = body.openid;
                     that.userInfo.scope = body.scope;
-                    // console.log(that.userInfo);
+                    // console.log("that.userInfo----"+JSON.stringify(that.userInfo));
+                    // console.log("body----"+JSON.stringify(body));
+                    // var url='https://api.weixin.qq.com/sns/user/info?access_token='+that.userInfo.refresh_token+'&openid='+that.userInfo.openid+'&lang=zh_CN';
+                    // console.log("getusers url-------------" + JSON.stringify(url));
                     // 拼接微信的支付的参数
                     that.getBrandWCPayParams(obj, function (error, responseData) {
                         if (error) {

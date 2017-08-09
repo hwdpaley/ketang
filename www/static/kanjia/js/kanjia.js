@@ -30,6 +30,9 @@ $(document).ready(function() {
     $("#helpBtn").click(function() {
         $("#wx_qr_modal").modal('show');
     });
+    $("#zhifuBtn").click(function() {
+        $("#qrcodel_modal").modal('show');
+    });
     //     // 支付弹窗
     //     // $("#qr_code").removeClass("hidden");
     //     // var pay_type = $("#pay_type");
@@ -51,6 +54,54 @@ $(document).ready(function() {
 
 });
 
+    function kanjiajoin(did,wxuid) {
+        console.log("did=" + did);
+        console.log("wxuid=" + wxuid);
+        var user_name = $("#user_nickname");
+        var user_phone = $("#user_nickphone");
+        document.getElementById('kanjiaenroll_btn').disabled=true;
+        if (user_name.val().length == 0 || user_phone.val().length == 0) {
+            alert("用户名和手机号不能为空");
+            document.getElementById('kanjiaenroll_btn').disabled=false;
+            return;
+        }
+        if (user_phone.val().length != 11||isNaN(user_phone.val())) {
+            alert("请输入正确的手机号");
+            document.getElementById('kanjiaenroll_btn').disabled=false;
+            return;
+        }
+        $("#phone_modal").modal("hide");
+        //报名参加
+        $.ajax({
+            url: "/uc/kanjia/taplayjoin",
+            method: "post",
+            data: {
+                "docid": did,
+                "name": user_name.val(),
+                "phone": user_phone.val(),
+                "wxuid":wxuid
+            },
+            success: function(data) {
+                document.getElementById('kanjiaenroll_btn').disabled=false;
+                $("#phone_modal").modal("hide");
+                console.log(JSON.stringify(data));
+                if (data.msg ) {
+                    alert(data.msg);
+                }
+
+                // if (data.url) {
+                //     window.location.href=data.url;
+                // }
+
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                document.getElementById('kanjiaenroll_btn').disabled=false;
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+    };
     function myplayjoin(did,wxuid) {
         console.log("did=" + did);
         console.log("wxuid=" + wxuid);
@@ -62,7 +113,7 @@ $(document).ready(function() {
             document.getElementById('enroll_btn').disabled=false;
             return;
         }
-        if (user_phone.val().length != 11) {
+        if (user_phone.val().length != 11||isNaN(user_phone.val())) {
             alert("请输入正确的手机号");
             document.getElementById('enroll_btn').disabled=false;
             return;
@@ -98,6 +149,7 @@ $(document).ready(function() {
             }
         });
     };
+    //
     function takanjia(did,wxuid,lprice,hprice,djprice,nowprice,url) {
         console.log("did=" + did);
         console.log("wxuid=" + wxuid);
@@ -126,7 +178,13 @@ $(document).ready(function() {
                 if (data.url) {
                     window.location.href=data.url;
                 }
-
+                //未填写手机号，则先填写手机
+                if(data.status==2){
+                    $("#phone_modal").modal('show');
+                }
+                if(data.status==0){
+                    $("#kjtwourl_modal").modal('show');
+                }
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 // document.getElementById('enroll_btn').disabled=false;
@@ -161,7 +219,6 @@ $(document).ready(function() {
                 if(data.status==1){
                     $("#enroll_modal").modal('show');
                 }
-
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 // document.getElementById('enroll_btn').disabled=false;

@@ -126,23 +126,26 @@ export default class extends think.controller.base {
                 console.log("首次关注------" + message.FromUserName);
                 let userinfo = await getUser(this.api, message.FromUserName);
                 console.log("userinfo-----------" + JSON.stringify(userinfo));
-                let member=await this.model("member").where({ username: userinfo.nickname }).find();
-                // console.log("member-----------" + JSON.stringify(member));
-                if (!think.isEmpty(member)) {
-                    userinfo.uid=member.id;
-                }else{
-                    userinfo.username=userinfo.nickname;
-                    userinfo.real_name=userinfo.nickname;
-                    userinfo.email=userinfo.nickname+'@qq.com';
-                    userinfo.password='7fe293a2a8994cca42668d5a37747d4f';
-                    member=await this.model("member").add(userinfo);
-                    userinfo.uid=member;
-                    // console.log("member-----------" + JSON.stringify(member));
-                }
+                // let member=await this.model("member").where({ username: userinfo.nickname }).find();
+                // // console.log("member-----------" + JSON.stringify(member));
+                // if (!think.isEmpty(member)) {
+                //     userinfo.uid=member.id;
+                // }else{
+                //     userinfo.username=userinfo.nickname;
+                //     userinfo.real_name=userinfo.nickname;
+                //     userinfo.email=userinfo.nickname+'@qq.com';
+                //     userinfo.password='7fe293a2a8994cca42668d5a37747d4f';
+                //     // member=await this.model("member").add(userinfo);
+                //     userinfo.uid=member;
+                //     // console.log("member-----------" + JSON.stringify(member));
+                // }
                 let resuser =await this.model("wx_user").where({ openid: userinfo.openid }).find();
                 if (think.isEmpty(resuser.openid)) {
                     await this.model("wx_user").add(userinfo);
                     console.log("添加，userinfo-----------" + JSON.stringify(userinfo));
+                }else{
+                    await this.model("wx_user").where({openid:userinfo.openid}).update(userinfo);
+                    console.log("更新，userinfo-----------" + JSON.stringify(userinfo));
                 }
 
                 let datas = await this.model("wx_replylist").where({ reply_type: 1 }).order("create_time DESC").select();
